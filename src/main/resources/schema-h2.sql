@@ -1,3 +1,24 @@
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS following_user CASCADE;
+DROP TABLE IF EXISTS blocking_user CASCADE;
+DROP TABLE IF EXISTS user_category_keyword CASCADE;
+DROP TYPE IF EXISTS board_status CASCADE;
+DROP TABLE IF EXISTS board CASCADE;
+DROP TABLE IF EXISTS following_board CASCADE;
+DROP TABLE IF EXISTS chatting_room CASCADE;
+DROP TYPE IF EXISTS chatting_category CASCADE;
+DROP TABLE IF EXISTS chatting_content CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TYPE IF EXISTS my_dong_range CASCADE;
+DROP TABLE IF EXISTS my_dong CASCADE;
+DROP TABLE IF EXISTS dong CASCADE;
+DROP TABLE IF EXISTS city_gu_gun CASCADE;
+DROP TABLE IF EXISTS city_do CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS upload_photo CASCADE;
+DROP TABLE IF EXISTS admin CASCADE;
+DROP TABLE IF EXISTS notice CASCADE;
+
 CREATE TABLE users
 (
     id           bigint generated always as identity,
@@ -47,6 +68,49 @@ CREATE TABLE user_category_keyword
     CONSTRAINT fk_user_category_keyword_to_users FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE category
+(
+    id          bigint generated always as identity,
+    name        varchar(50) NOT NULL,
+    created_at  timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at timestamp            DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+
+CREATE TABLE city_do
+(
+    id           bigint generated always as identity,
+    city_do_name varchar(50) NOT NULL,
+    created_at   timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at  timestamp            DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE city_gu_gun
+(
+    id               bigint generated always as identity,
+    city_gu_gun_name varchar(50) NOT NULL,
+    city_do_id       bigint      NOT NULL,
+    created_at       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at      timestamp            DEFAULT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_city_gu_gun_to_city_do FOREIGN KEY (city_do_id) REFERENCES city_do (id)
+);
+
+CREATE TABLE dong
+(
+    id             bigint generated always as identity,
+    dong_name      varchar(50) NOT NULL,
+    x              float       NOT NULL,
+    y              float       NOT NULL,
+    city_gu_gun_id bigint      NOT NULL,
+    created_at     timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at    timestamp            DEFAULT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_dong_to_city_gu_gun FOREIGN KEY (city_gu_gun_id) REFERENCES city_gu_gun (id)
+);
+
 CREATE TYPE board_status AS ENUM ('SALE', 'RESERVE', 'SOLD');
 CREATE TABLE board
 (
@@ -73,7 +137,7 @@ CREATE TABLE following_board
     created_at  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp          DEFAULT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT unique_user_board UNIQUE (user_id, board_id),
+    CONSTRAINT unique_following_user_board UNIQUE (user_id, board_id),
     CONSTRAINT fk_following_board_to_users FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_following_board_to_board FOREIGN KEY (board_id) REFERENCES board (id)
 );
@@ -86,7 +150,7 @@ CREATE TABLE chatting_room
     created_at  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp          DEFAULT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT unique_user_board UNIQUE (user_id, board_id),
+    CONSTRAINT unique_chatting_user_board UNIQUE (user_id, board_id),
     CONSTRAINT fk_chatting_room_to_user FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_chatting_room_to_board FOREIGN KEY (board_id) REFERENCES board (id)
 );
@@ -134,48 +198,6 @@ CREATE TABLE my_dong
     PRIMARY KEY (id),
     CONSTRAINT fk_my_dong_to_users FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_my_dong_to_dong FOREIGN KEY (dong_id) REFERENCES dong (id)
-);
-
-CREATE TABLE dong
-(
-    id             bigint generated always as identity,
-    dong_name      varchar(50) NOT NULL,
-    x              float       NOT NULL,
-    y              float       NOT NULL,
-    city_gu_gun_id bigint      NOT NULL,
-    created_at     timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at    timestamp            DEFAULT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT fk_dong_to_city_gu_gun FOREIGN KEY (city_gu_gun_id) REFERENCES city_gu_gun (id)
-);
-
-CREATE TABLE city_gu_gun
-(
-    id               bigint generated always as identity,
-    city_gu_gun_name varchar(50) NOT NULL,
-    city_do_id       bigint      NOT NULL,
-    created_at       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at      timestamp            DEFAULT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT fk_city_gu_gun_to_city_do FOREIGN KEY (city_do_id) REFERENCES city_do (id)
-);
-
-CREATE TABLE city_do
-(
-    id           bigint generated always as identity,
-    city_do_name varchar(50) NOT NULL,
-    created_at   timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at  timestamp            DEFAULT NULL,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE category
-(
-    id          bigint generated always as identity,
-    name        varchar(50) NOT NULL,
-    created_at  timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at timestamp            DEFAULT NULL,
-    PRIMARY KEY (id)
 );
 
 CREATE TABLE upload_photo
