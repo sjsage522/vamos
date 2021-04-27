@@ -15,7 +15,7 @@ spring:
   datasource:
     platform: h2
     driver-class-name: org.h2.Driver
-    url: "jdbc:h2:mem:order_db;MODE=PostgreSQL"
+    url: "jdbc:h2:mem:vamos;MODE=PostgreSQL"
     data-username: sa
     data-password:
 server:
