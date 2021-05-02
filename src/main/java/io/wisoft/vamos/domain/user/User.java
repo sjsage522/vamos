@@ -1,6 +1,7 @@
 package io.wisoft.vamos.domain.user;
 
 import io.wisoft.vamos.domain.BaseTimeEntity;
+import lombok.Getter;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = {"phone_number", "nick_name"})
         })
+@Getter
 public class User extends BaseTimeEntity {
 
     @Id
