@@ -5,7 +5,10 @@ import io.wisoft.vamos.domain.BaseTimeEntity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"phone_number", "nick_name"})
+        })
 public class User extends BaseTimeEntity {
 
     @Id
