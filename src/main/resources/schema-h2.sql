@@ -142,11 +142,13 @@ CREATE TABLE following_board
     CONSTRAINT fk_following_board_to_board FOREIGN KEY (board_id) REFERENCES board (id)
 );
 
+CREATE TYPE chatting_category as ENUM ('NORMAL', 'TRADE');
 CREATE TABLE chatting_room
 (
     id          bigint generated always as identity,
     user_id     bigint    NOT NULL,
     board_id    bigint    NOT NULL,
+    chatting_category chatting_category     DEFAULT 'NORMAL' NOT NULL,
     created_at  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp          DEFAULT NULL,
     PRIMARY KEY (id),
@@ -155,14 +157,12 @@ CREATE TABLE chatting_room
     CONSTRAINT fk_chatting_room_to_board FOREIGN KEY (board_id) REFERENCES board (id)
 );
 
-CREATE TYPE chatting_category as ENUM ('NORMAL', 'TRADE');
 CREATE TABLE chatting_content
 (
     id                bigint generated always as identity,
     user_id           bigint       NOT NULL,
     chatting_room_id  bigint       NOT NULL,
     content           varchar(500) NOT NULL,
-    chatting_category chatting_category     DEFAULT 'NORMAL' NOT NULL,
     is_read           int          NOT NULL,
     created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at       timestamp             DEFAULT NULL,
@@ -215,7 +215,7 @@ CREATE TABLE upload_photo
 CREATE TABLE admin
 (
     id          bigint generated always as identity,
-    nickname    varchar(50) NOT NULL,
+    nick_name    varchar(50) NOT NULL,
     password    varchar(50) NOT NULL,
     created_at  timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp            DEFAULT NULL,
