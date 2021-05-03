@@ -6,10 +6,7 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"phone_number", "nick_name"})
-        })
+@Table(name = "users")
 @Getter
 public class User extends BaseTimeEntity {
 
@@ -18,9 +15,9 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phone_number;
 
-    @Column(name = "nick_name")
+    @Column(name = "nick_name", unique = true)
     private String nickName;
 }
