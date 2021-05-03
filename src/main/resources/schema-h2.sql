@@ -27,7 +27,8 @@ CREATE TABLE users
     created_at   timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at  timestamp            DEFAULT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT unique_phone_number_nick_name UNIQUE (phone_number, nick_name)
+    CONSTRAINT unique_phone_number UNIQUE (phone_number),
+    CONSTRAINT unique_nick_name UNIQUE (nick_name)
 );
 
 CREATE TABLE following_user
@@ -145,12 +146,12 @@ CREATE TABLE following_board
 CREATE TYPE chatting_category as ENUM ('NORMAL', 'TRADE');
 CREATE TABLE chatting_room
 (
-    id          bigint generated always as identity,
-    user_id     bigint    NOT NULL,
-    board_id    bigint    NOT NULL,
-    chatting_category chatting_category     DEFAULT 'NORMAL' NOT NULL,
-    created_at  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at timestamp          DEFAULT NULL,
+    id                bigint generated always as identity,
+    user_id           bigint    NOT NULL,
+    board_id          bigint    NOT NULL,
+    chatting_category chatting_category  DEFAULT 'NORMAL' NOT NULL,
+    created_at        timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at       timestamp          DEFAULT NULL,
     PRIMARY KEY (id),
     CONSTRAINT unique_chatting_user_board UNIQUE (user_id, board_id),
     CONSTRAINT fk_chatting_room_to_user FOREIGN KEY (user_id) REFERENCES users (id),
@@ -159,13 +160,13 @@ CREATE TABLE chatting_room
 
 CREATE TABLE chatting_content
 (
-    id                bigint generated always as identity,
-    user_id           bigint       NOT NULL,
-    chatting_room_id  bigint       NOT NULL,
-    content           varchar(500) NOT NULL,
-    is_read           int          NOT NULL,
-    created_at        timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    modified_at       timestamp             DEFAULT NULL,
+    id               bigint generated always as identity,
+    user_id          bigint       NOT NULL,
+    chatting_room_id bigint       NOT NULL,
+    content          varchar(500) NOT NULL,
+    is_read          int          NOT NULL,
+    created_at       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    modified_at      timestamp             DEFAULT NULL,
     PRIMARY KEY (id),
     CONSTRAINT unique_user_chatting_room UNIQUE (user_id, chatting_room_id),
     CONSTRAINT fk_chatting_content_to_users FOREIGN KEY (user_id) REFERENCES users (id),
@@ -215,7 +216,7 @@ CREATE TABLE upload_photo
 CREATE TABLE admin
 (
     id          bigint generated always as identity,
-    nick_name    varchar(50) NOT NULL,
+    nick_name   varchar(50) NOT NULL,
     password    varchar(50) NOT NULL,
     created_at  timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at timestamp            DEFAULT NULL,
