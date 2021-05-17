@@ -23,9 +23,20 @@ public class User extends BaseTimeEntity {
             generator = "user_sequence_generator")
     private Long id;
 
-    @Column(name = "phone_number", unique = true)
-    private String phone_number;
+    @Embedded
+    private PhoneNumber phoneNumber;
 
     @Column(name = "nick_name", unique = true)
     private String nickName;
+
+    protected User() { /* empty */ }
+
+    private User(PhoneNumber phoneNumber, String nickName) {
+        this.phoneNumber = phoneNumber;
+        this.nickName = nickName;
+    }
+
+    public static User from(PhoneNumber phoneNumber, String nickName) {
+        return new User(phoneNumber, nickName);
+    }
 }
