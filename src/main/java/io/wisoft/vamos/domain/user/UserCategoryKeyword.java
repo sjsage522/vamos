@@ -11,11 +11,19 @@ import javax.persistence.*;
                 @UniqueConstraint(columnNames = {"user_id", "keyword_name"})
         })
 @Getter
+@SequenceGenerator(
+        name = "user_category_keyword_sequence_generator",
+        sequenceName = "user_category_keyword_sequence",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class UserCategoryKeyword extends BaseTimeEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_category_keyword_sequence_generator")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

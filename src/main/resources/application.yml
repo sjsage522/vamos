@@ -6,14 +6,16 @@ spring:
       enabled: true
       path: /h2-console
   jpa:
-    database: h2
+    database: postgresql
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
-      hibernate.dialect: org.hibernate.dialect.H2Dialect
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        format_sql: true
   datasource:
-    platform: h2
+#    platform: h2
     driver-class-name: org.h2.Driver
     url: "jdbc:h2:mem:vamos;MODE=PostgreSQL"
     data-username: sa

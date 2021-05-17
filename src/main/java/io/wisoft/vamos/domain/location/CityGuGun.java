@@ -8,11 +8,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "city_gu_gun")
 @Getter
+@SequenceGenerator(
+        name = "city_gu_gun_sequence_generator",
+        sequenceName = "city_gu_gun_sequence",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class CityGuGun extends BaseTimeEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "city_gu_gun_sequence_generator")
     private Long id;
 
     @Column(name = "city_gu_gun_name")

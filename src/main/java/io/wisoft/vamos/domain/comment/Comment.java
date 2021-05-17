@@ -10,11 +10,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "comment")
 @Getter
+@SequenceGenerator(
+        name = "comment_sequence_generator",
+        sequenceName = "comment_sequence",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class Comment extends BaseTimeEntity {
 
     @Id
     @Column(name = "comment")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "comment_sequence_generator")
     private Long id;
 
     @Column(name = "content")

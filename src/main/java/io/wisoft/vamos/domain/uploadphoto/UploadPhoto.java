@@ -9,11 +9,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "upload_photo")
 @Getter
+@SequenceGenerator(
+        name = "upload_photo_sequence_generator",
+        sequenceName = "upload_photo_sequence",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class UploadPhoto extends BaseTimeEntity {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "upload_photo_sequence_generator")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
