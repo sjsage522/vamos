@@ -23,6 +23,12 @@ public class User extends BaseTimeEntity {
             generator = "user_sequence_generator")
     private Long id;
 
+    @Column(name = "user_id", unique = true)
+    private String userId;
+
+    @Column(name = "password")
+    private String password;
+
     @Embedded
     private PhoneNumber phoneNumber;
 
@@ -31,12 +37,18 @@ public class User extends BaseTimeEntity {
 
     protected User() { /* empty */ }
 
-    private User(PhoneNumber phoneNumber, String nickName) {
+    private User(String userId, String password, PhoneNumber phoneNumber, String nickName) {
+        this.userId = userId;
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.nickName = nickName;
     }
 
-    public static User from(PhoneNumber phoneNumber, String nickName) {
-        return new User(phoneNumber, nickName);
+    public static User from(String userId, String password, PhoneNumber phoneNumber, String nickName) {
+        return new User(userId, password, phoneNumber, nickName);
+    }
+
+    public void setEncodedPassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

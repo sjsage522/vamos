@@ -27,32 +27,25 @@ public class UserController {
 
     @PostMapping("/join")
     public ApiResult<UserResponse> join(@Valid @RequestBody UserJoinRequest request) {
-        return succeed(
-                new UserResponse(
-                        userService.
-                                join(PhoneNumber.of(request.getPhoneNumber()), request.getNickName())
-                )
-        );
+
+        User newUser = getUser(request);
+        return succeed(new UserResponse(userService.join(newUser)));
     }
 
     @Getter
     protected static class UserJoinRequest {
 
-        @NotBlank(message = "전화번호를 입력해 주세요.")
-        private String phoneNumber;
+        @NotBlank(message = "사용자 아이디를 입력해 주세요.")
+        private String userId;
+
+        @NotBlank(message = "비밀번호를 입력해 주세요.")
+        private String password;
 
         @NotBlank(message = "별명을 입력해 주세요.")
         private String nickName;
 
-        private UserJoinRequest() {}
-        protected UserJoinRequest(String phoneNumber, String nickName) {
-            this.phoneNumber = phoneNumber;
-            this.nickName = nickName;
-        }
-
-        public static UserJoinRequest from(String phoneNumber, String nickName) {
-            return new UserJoinRequest(phoneNumber, nickName);
-        }
+        @NotBlank(message = "전화번호를 입력해 주세요.")
+        private String phoneNumber;
     }
 
     @Getter
@@ -61,14 +54,26 @@ public class UserController {
 
         private Long id;
 
-        @JsonProperty("phone_number")
-        private PhoneNumber phoneNumber;
+        @JsonProperty("user_id")
+        private String userId;
 
         @JsonProperty("nick_name")
         private String nickName;
 
+        @JsonProperty("phone_number")
+        private PhoneNumber phoneNumber;
+
         public UserResponse(User source) {
             BeanUtils.copyProperties(source, this);
         }
+    }
+
+    private User getUser(UserJoinRequest request) {
+        return User.from(
+                request.getUserId(),
+                request.getPassword(),
+                PhoneNumber.of(request.getPhoneNumber()),
+                request.getNickName()
+        );
     }
 }
