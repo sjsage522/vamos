@@ -36,13 +36,13 @@ public class UserController {
     protected static class UserJoinRequest {
 
         @NotBlank(message = "사용자 아이디를 입력해 주세요.")
-        private String userId;
+        private String username;
 
         @NotBlank(message = "비밀번호를 입력해 주세요.")
         private String password;
 
         @NotBlank(message = "별명을 입력해 주세요.")
-        private String nickName;
+        private String nickname;
 
         @NotBlank(message = "전화번호를 입력해 주세요.")
         private String phoneNumber;
@@ -54,11 +54,11 @@ public class UserController {
 
         private Long id;
 
-        @JsonProperty("user_id")
-        private String userId;
+        @JsonProperty("username")
+        private String username;
 
-        @JsonProperty("nick_name")
-        private String nickName;
+        @JsonProperty("nickname")
+        private String nickname;
 
         @JsonProperty("phone_number")
         private PhoneNumber phoneNumber;
@@ -70,10 +70,10 @@ public class UserController {
 
     private User getUser(UserJoinRequest request) {
         return User.from(
-                request.getUserId(),
+                request.getUsername(),
                 request.getPassword(),
                 PhoneNumber.of(request.getPhoneNumber()),
-                request.getNickName()
+                request.getNickname()
         );
     }
 }

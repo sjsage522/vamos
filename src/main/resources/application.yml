@@ -22,3 +22,9 @@ spring:
     data-password:
 server:
   port: 8080
+
+jwt:
+  header: Authorization
+  #echo 'shinjunseok-project-spring-boot-jwt-authorization-secret-shinjunseok-project-spring-boot-jwt-authorization-secret'|base64
+  secret: c2hpbmp1bnNlb2stcHJvamVjdC1zcHJpbmctYm9vdC1qd3QtYXV0aG9yaXphdGlvbi1zZWNyZXQtc2hpbmp1bnNlb2stcHJvamVjdC1zcHJpbmctYm9vdC1qd3QtYXV0aG9yaXphdGlvbi1zZWNyZXQK
+  token-validity-in-seconds: 86400

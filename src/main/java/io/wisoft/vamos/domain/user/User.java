@@ -4,6 +4,8 @@ import io.wisoft.vamos.domain.BaseTimeEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -23,8 +25,8 @@ public class User extends BaseTimeEntity {
             generator = "user_sequence_generator")
     private Long id;
 
-    @Column(name = "user_id", unique = true)
-    private String userId;
+    @Column(name = "username", unique = true)
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -32,16 +34,24 @@ public class User extends BaseTimeEntity {
     @Embedded
     private PhoneNumber phoneNumber;
 
-    @Column(name = "nick_name", unique = true)
-    private String nickName;
+    @Column(name = "nickname", unique = true)
+    private String nickname;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")}
+    )
+    private Set<Authority> authorities = new HashSet<>();
 
     protected User() { /* empty */ }
 
-    private User(String userId, String password, PhoneNumber phoneNumber, String nickName) {
-        this.userId = userId;
+    private User(String username, String password, PhoneNumber phoneNumber, String nickname) {
+        this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.nickName = nickName;
+        this.nickname = nickname;
     }
 
     public static User from(String userId, String password, PhoneNumber phoneNumber, String nickName) {
@@ -50,5 +60,9 @@ public class User extends BaseTimeEntity {
 
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public void setAuthority(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 }

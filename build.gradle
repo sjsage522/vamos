@@ -22,13 +22,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation group: 'org.springframework.security', name: 'spring-security-core'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation("com.google.guava:guava:30.1.1-jre")
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+	runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+	runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 }
 
 test {
