@@ -1,5 +1,6 @@
 package io.wisoft.vamos.controller.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 /**
@@ -11,6 +12,7 @@ public class ApiResult<T> {
 
     private final T data;
 
+    @JsonProperty("error_message")
     private final String errorMessage;
 
     private ApiResult(T data, String errorMessage) {

@@ -1,5 +1,6 @@
 package io.wisoft.vamos.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ public class Authority {
 
     @Id
     @Column(name = "authority_name")
+    @JsonProperty("role_name")
     private String authorityName;
 
     protected Authority() {}

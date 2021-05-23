@@ -1,6 +1,7 @@
 package io.wisoft.vamos.controller.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.service.UserService;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+
+import java.util.Set;
 
 import static io.wisoft.vamos.controller.api.ApiResult.*;
 
@@ -62,6 +65,9 @@ public class UserController {
 
         @JsonProperty("phone_number")
         private PhoneNumber phoneNumber;
+
+        @JsonProperty("user_roles")
+        private Set<Authority> authorities;
 
         public UserResponse(User source) {
             BeanUtils.copyProperties(source, this);
