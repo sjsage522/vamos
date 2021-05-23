@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPhoneNumber(PhoneNumber phoneNumber);
 
+    Optional<User> findByUsername(String username);
+
     @Query("select count(u) " +
             "from User u " +
             "where u.username = :username " +
