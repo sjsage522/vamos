@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @Getter
-    protected static class UserJoinRequest {
+    private static class UserJoinRequest {
 
         @NotBlank(message = "사용자 아이디를 입력해 주세요.")
         private String username;
