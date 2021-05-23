@@ -2,6 +2,7 @@ package io.wisoft.vamos.controller.api.handler;
 
 import io.wisoft.vamos.controller.api.ApiResult;
 import io.wisoft.vamos.exception.DataAlreadyExistsException;
+import io.wisoft.vamos.exception.DataNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,13 @@ public class RestControllersExceptionHandler {
     @ResponseBody
     protected ApiResult<Object> dataAlreadyExistsException(
             DataAlreadyExistsException ex) {
+        return ApiResult.failed(ex.getMessage());
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    @ResponseBody
+    protected ApiResult<Object> dataNotFoundException(
+            DataNotFoundException ex) {
         return ApiResult.failed(ex.getMessage());
     }
 }
