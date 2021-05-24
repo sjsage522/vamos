@@ -26,9 +26,7 @@ public class UserService {
         if (0 < userRepository.findDuplicateUserCount(newUser.getUsername(), newUser.getPhoneNumber(), newUser.getNickname()))
             throw new DataAlreadyExistsException("이미 존재하는 사용자 입니다.");
 
-        newUser.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
-        newUser.setEncodedPassword(passwordEncoder.encode(newUser.getPassword()));
-
+        settingUser(newUser);
         return userRepository.save(newUser);
     }
 
@@ -41,5 +39,13 @@ public class UserService {
     public List<User> findAll() {
         //TODO 페이징 처리
         return userRepository.findAll();
+    }
+
+    /**
+     * 사용자 권한 설정과 비밀번호 암호화
+     */
+    private void settingUser(User user) {
+        user.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
+        user.setEncodedPassword(passwordEncoder.encode(user.getPassword()));
     }
 }
