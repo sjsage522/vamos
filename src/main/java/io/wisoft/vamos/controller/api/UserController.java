@@ -28,6 +28,11 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 사용자 회원가입
+     * @param request dto
+     * @return user info
+     */
     @PostMapping("/join")
     public ApiResult<UserResponse> join(@Valid @RequestBody UserJoinRequest request) {
 
@@ -35,11 +40,20 @@ public class UserController {
         return succeed(new UserResponse(userService.join(newUser)));
     }
 
+    /**
+     * 쿼리 파라미터를 통해 특정 사용자 조회
+     * @param username
+     * @return user info
+     */
     @GetMapping("/user")
     public ApiResult<UserResponse> userInfo(@RequestParam String username) {
         return succeed(new UserResponse(userService.findByUsername(username)));
     }
 
+    /**
+     * 전체 사용자 조회
+     * @return user infos
+     */
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ApiResult<List<UserResponse>> allUsers() {
