@@ -20,6 +20,10 @@ spring:
     url: "jdbc:h2:mem:vamos;MODE=PostgreSQL"
     data-username: sa
     data-password:
+  redis:
+    host: 127.0.0.1
+    password:
+    port: 6379
 server:
   port: 8080
 
