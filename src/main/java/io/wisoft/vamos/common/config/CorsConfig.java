@@ -1,4 +1,4 @@
-package io.wisoft.vamos.config;
+package io.wisoft.vamos.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

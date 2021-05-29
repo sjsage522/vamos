@@ -2,8 +2,8 @@ package io.wisoft.vamos.service;
 
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.User;
-import io.wisoft.vamos.exception.DataAlreadyExistsException;
-import io.wisoft.vamos.exception.DataNotFoundException;
+import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
+import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
