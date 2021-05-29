@@ -1,8 +1,9 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.jwt.TokenProvider;
+import io.wisoft.vamos.domain.user.PhoneNumber;
+import io.wisoft.vamos.common.jwt.TokenProvider;
+import io.wisoft.vamos.service.SmsCertificationService;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -31,16 +32,19 @@ public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final StringRedisTemplate redisTemplate;
+    private final SmsCertificationService smsCertificationService;
     private final long tokenValidityInSeconds;
 
     public AuthController(
             TokenProvider tokenProvider,
             AuthenticationManagerBuilder authenticationManagerBuilder,
             StringRedisTemplate redisTemplate,
+            SmsCertificationService smsCertificationService,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.redisTemplate = redisTemplate;
+        this.smsCertificationService = smsCertificationService;
         this.tokenValidityInSeconds = tokenValidityInSeconds;
     }
 
@@ -60,16 +64,32 @@ public class AuthController {
 
     /**
      * redis 를 이용한 logout 처리
-     * @param request .
      */
     @PostMapping("/logout")
     public ApiResult<?> logout(HttpServletRequest request) {
         String token = request.getHeader("Authorization").split(" ")[1];
         ValueOperations<String, String> logoutValueOperations = redisTemplate.opsForValue();
         logoutValueOperations.set(token, token, Duration.ofSeconds(tokenValidityInSeconds));
-//        User principal = (User) tokenProvider.getAuthentication(jwt).getPrincipal();
-//        System.out.println(principal.getUsername());
         return succeed(ResponseEntity.ok("로그아웃 되었습니다."));
+    }
+
+    /**
+     * 문자 메시지 인증번호를 얻기위한 요청
+     * @param request 사용자 핸드폰 번호가 포함된 요청
+     */
+    @PostMapping("/sms-certification/sends")
+    public ApiResult<?> sendSms(@RequestBody SmsPhoneNumberRequest request) {
+        smsCertificationService.sendSms(PhoneNumber.of(request.getPhoneNumber()));
+        return succeed(ResponseEntity.ok("인증번호를 요청했습니다."));
+    }
+
+    /**
+     * 인증번호 검증 요청
+     */
+    @PostMapping("/sms-certification/confirms")
+    public ApiResult<?> SmsVerification(@RequestBody SmsCertificationRequest request) {
+        smsCertificationService.verifySms(request.getFrom(), request.getCertification());
+        return succeed(ResponseEntity.ok("인증에 성공했습니다."));
     }
 
     @Getter
@@ -90,5 +110,21 @@ public class AuthController {
 
         @NotBlank(message = "비밀번호를 입력해 주세요.")
         private String password;
+    }
+
+    @Getter
+    private static class SmsPhoneNumberRequest {
+
+        @NotBlank(message = "전화번호를 입력해 주세요.")
+        private String phoneNumber;
+    }
+
+    @Getter
+    private static class SmsCertificationRequest {
+
+        private String from; /* phoneNumber */
+
+        @NotBlank(message = "인증번호를 입력해 주세요.")
+        private String certification;
     }
 }
