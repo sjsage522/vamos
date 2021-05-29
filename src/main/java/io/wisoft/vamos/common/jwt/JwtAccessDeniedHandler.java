@@ -1,4 +1,4 @@
-package io.wisoft.vamos.jwt;
+package io.wisoft.vamos.common.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

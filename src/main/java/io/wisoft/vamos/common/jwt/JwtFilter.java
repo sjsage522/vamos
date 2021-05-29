@@ -1,4 +1,4 @@
-package io.wisoft.vamos.jwt;
+package io.wisoft.vamos.common.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

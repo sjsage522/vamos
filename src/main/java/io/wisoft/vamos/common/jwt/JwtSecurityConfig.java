@@ -1,4 +1,4 @@
-package io.wisoft.vamos.jwt;
+package io.wisoft.vamos.common.jwt;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

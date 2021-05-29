@@ -1,4 +1,4 @@
-package io.wisoft.vamos.jwt;
+package io.wisoft.vamos.common.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

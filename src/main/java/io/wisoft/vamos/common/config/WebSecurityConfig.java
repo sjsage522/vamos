@@ -1,9 +1,9 @@
-package io.wisoft.vamos.config;
+package io.wisoft.vamos.common.config;
 
-import io.wisoft.vamos.jwt.JwtAccessDeniedHandler;
-import io.wisoft.vamos.jwt.JwtAuthenticationEntryPoint;
-import io.wisoft.vamos.jwt.JwtSecurityConfig;
-import io.wisoft.vamos.jwt.TokenProvider;
+import io.wisoft.vamos.common.jwt.JwtAccessDeniedHandler;
+import io.wisoft.vamos.common.jwt.JwtAuthenticationEntryPoint;
+import io.wisoft.vamos.common.jwt.JwtSecurityConfig;
+import io.wisoft.vamos.common.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

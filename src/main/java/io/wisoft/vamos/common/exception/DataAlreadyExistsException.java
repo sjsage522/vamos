@@ -1,4 +1,4 @@
-package io.wisoft.vamos.exception;
+package io.wisoft.vamos.common.exception;
 
 public class DataAlreadyExistsException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package io.wisoft.vamos.jwt;
+package io.wisoft.vamos.common.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
