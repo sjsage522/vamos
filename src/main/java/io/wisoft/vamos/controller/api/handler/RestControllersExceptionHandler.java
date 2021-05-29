@@ -1,8 +1,8 @@
 package io.wisoft.vamos.controller.api.handler;
 
 import io.wisoft.vamos.controller.api.ApiResult;
-import io.wisoft.vamos.exception.DataAlreadyExistsException;
-import io.wisoft.vamos.exception.DataNotFoundException;
+import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
+import io.wisoft.vamos.common.exception.DataNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +21,13 @@ public class RestControllersExceptionHandler {
                 .getAllErrors()
                 .get(0)
                 .getDefaultMessage());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseBody
+    protected ApiResult<Object> illegalStateException(
+            IllegalStateException ex) {
+        return ApiResult.failed(ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
