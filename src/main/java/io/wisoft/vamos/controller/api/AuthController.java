@@ -3,6 +3,7 @@ package io.wisoft.vamos.controller.api;
 import io.wisoft.vamos.jwt.TokenProvider;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import java.time.Duration;
+
 import static io.wisoft.vamos.controller.api.ApiResult.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuthController {
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final StringRedisTemplate redisTemplate;
+    private final long tokenValidityInSeconds;
+
+    public AuthController(
+            TokenProvider tokenProvider,
+            AuthenticationManagerBuilder authenticationManagerBuilder,
+            StringRedisTemplate redisTemplate,
+            @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
+        this.redisTemplate = redisTemplate;
+        this.tokenValidityInSeconds = tokenValidityInSeconds;
+    }
 
     @PostMapping("/login")
     public ApiResult<TokenDto> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -52,7 +66,7 @@ public class AuthController {
     public ApiResult<?> logout(HttpServletRequest request) {
         String token = request.getHeader("Authorization").split(" ")[1];
         ValueOperations<String, String> logoutValueOperations = redisTemplate.opsForValue();
-        logoutValueOperations.set(token, token);
+        logoutValueOperations.set(token, token, Duration.ofSeconds(tokenValidityInSeconds));
 //        User principal = (User) tokenProvider.getAuthentication(jwt).getPrincipal();
 //        System.out.println(principal.getUsername());
         return succeed(ResponseEntity.ok("로그아웃 되었습니다."));
