@@ -71,6 +71,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/join").permitAll()
+                .antMatchers("/api/sms-certification/sends").permitAll()
+                .antMatchers("/api/sms-certification/confirms").permitAll()
                 .antMatchers("/").hasRole("USER")
                 .anyRequest().authenticated()
 
