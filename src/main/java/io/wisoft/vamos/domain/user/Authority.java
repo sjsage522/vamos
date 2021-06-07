@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "authority")
@@ -29,5 +30,19 @@ public class Authority {
 
     public static Authority of(String authorityName) {
         return new Authority(authorityName);
+    }
+
+    /* hashcode 가 같을 경우 동등성 비교 */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Authority authority = (Authority) o;
+        return Objects.equals(getAuthorityName(), authority.getAuthorityName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAuthorityName());
     }
 }

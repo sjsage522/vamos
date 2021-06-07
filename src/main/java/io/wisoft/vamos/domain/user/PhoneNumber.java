@@ -6,6 +6,8 @@ import lombok.Getter;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import java.util.Objects;
+
 import static com.google.common.base.Preconditions.*;
 import static java.util.regex.Pattern.*;
 
@@ -30,5 +32,18 @@ public class PhoneNumber {
 
     private boolean checkPhoneNumber(String phoneNumber) {
         return matches("^\\d{2,3}\\d{3,4}\\d{4}$", phoneNumber);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneNumber that = (PhoneNumber) o;
+        return Objects.equals(getPhoneNumber(), that.getPhoneNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPhoneNumber());
     }
 }
