@@ -78,9 +78,9 @@ public class AuthController {
      * @param request 사용자 핸드폰 번호가 포함된 요청
      */
     @PostMapping("/sms-certification/sends")
-    public ApiResult<?> sendSms(@RequestBody SmsPhoneNumberRequest request) {
-        smsCertificationService.sendSms(PhoneNumber.of(request.getPhoneNumber()));
-        return succeed(ResponseEntity.ok("인증번호를 요청했습니다."));
+    public ApiResult<SmsResponse> sendSms(@RequestBody SmsPhoneNumberRequest request) {
+        String certification = smsCertificationService.sendSms(PhoneNumber.of(request.getPhoneNumber()));
+        return succeed(new SmsResponse("인증번호를 성공적으로 요청했습니다.", certification));
     }
 
     /**
@@ -126,5 +126,17 @@ public class AuthController {
 
         @NotBlank(message = "인증번호를 입력해 주세요.")
         private String certification;
+    }
+
+    @Getter
+    private static class SmsResponse {
+
+        private String content;
+        private String certification;
+
+        public SmsResponse(String content, String certification) {
+            this.content = content;
+            this.certification = certification;
+        }
     }
 }
