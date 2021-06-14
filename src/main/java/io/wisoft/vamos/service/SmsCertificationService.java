@@ -39,20 +39,21 @@ public class SmsCertificationService {
     private final NaverSmsProperty naverSmsProperty;
 
     @Transactional
-    public void sendSms(PhoneNumber phone) {
+    public String sendSms(PhoneNumber phone) {
 
         String currentTime = Long.toString(System.currentTimeMillis());
         String certification = generateRandomNumber();
 
         try {
             sending(phone, certification, currentTime);
-
         } catch (JsonProcessingException | URISyntaxException e) {
             throw new IllegalStateException();
         }
 
         /* 발송 정보를 redis 에 저장 */
         smsCertificationRepository.createSmsCertification(phone.getPhoneNumber(), certification);
+
+        return certification;
     }
 
     @Transactional
