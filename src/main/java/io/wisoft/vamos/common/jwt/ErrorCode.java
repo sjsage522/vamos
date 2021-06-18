@@ -7,7 +7,8 @@ public enum ErrorCode {
     MALFORMED_TOKEN(401, "JWT003", "잘못된 JWT 서명 입니다."),
     EXPIRED_TOKEN(401, "JWT004", "만료된 JWT 입니다."),
     UNSUPPORTED_TOKEN(401, "JWT005", "지원되지 않는 JWT 입니다."),
-    ILLEGAL_TOKEN(401, "JWT006", "잘못된 JWT 입니다.")
+    ILLEGAL_TOKEN(401, "JWT006", "잘못된 JWT 입니다."),
+    FORBIDDEN_ACCESS(403, "C001", "접근 허용이 거부되었습니다.")
     ;
 
     private final int status;
