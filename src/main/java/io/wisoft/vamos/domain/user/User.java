@@ -1,11 +1,13 @@
 package io.wisoft.vamos.domain.user;
 
+import com.google.common.base.Preconditions;
 import io.wisoft.vamos.domain.BaseTimeEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "users")
@@ -48,10 +50,15 @@ public class User extends BaseTimeEntity {
     protected User() { /* empty */ }
 
     private User(String username, String password, PhoneNumber phoneNumber, String nickname) {
+        Preconditions.checkArgument(checkUserId(username), "아이디는 영 소대문자, 숫자 5~20 자리로 입력해주세요.");
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
+    }
+
+    private boolean checkUserId(String username) {
+        return Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{4,19}$", username);
     }
 
     public static User from(String userId, String password, PhoneNumber phoneNumber, String nickName) {
