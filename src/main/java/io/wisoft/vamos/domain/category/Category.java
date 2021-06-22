@@ -24,5 +24,6 @@ public class Category extends BaseTimeEntity {
     private Long id;
 
     @Column(name = "name")
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private CategoryName name;
 }
