@@ -21,8 +21,16 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         // 유효한 자격증명을 제공하지 않고 접근하려 할때 401
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         final String exception = (String) request.getAttribute("exception");
+        if (exception == null) {
+            ErrorCode unknownAccess = ErrorCode.UNKNOWN_ACCESS;
+            response.setStatus(unknownAccess.getStatus());
+            setResponse(response, unknownAccess);
+            return;
+        }
+
         logger.info("exception : {}", exception);
 
         ErrorCode[] errorCodes = ErrorCode.values();
@@ -42,7 +50,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().println("{ \"message\" : \"" + errorCode.getMessage()
                 + "\", \"code\" : \"" + errorCode.getCode()
                 + "\", \"status\" : " + errorCode.getStatus()
