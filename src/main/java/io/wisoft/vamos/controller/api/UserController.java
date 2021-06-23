@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Set;
@@ -77,6 +79,14 @@ public class UserController {
 
         @NotBlank(message = "전화번호를 입력해 주세요.")
         private String phoneNumber;
+
+        @NotNull(message = "x 좌표값을 입력해 주세요.")
+        private Double x;
+        @NotNull(message = "y 좌표값을 입력해 주세요.")
+        private Double y;
+
+        @NotBlank(message = "지역 명칭을 입력해 주세요.")
+        private String addressName;
     }
 
     @Getter
@@ -97,17 +107,24 @@ public class UserController {
         @JsonProperty("user_roles")
         private Set<Authority> authorities;
 
+        @JsonProperty("location")
+        private UserLocation location;
+
         public UserResponse(User source) {
             BeanUtils.copyProperties(source, this);
         }
     }
 
     private User getUser(UserJoinRequest request) {
+
+        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
+
         return User.from(
                 request.getUsername(),
                 request.getPassword(),
                 PhoneNumber.of(request.getPhoneNumber()),
-                request.getNickname()
+                request.getNickname(),
+                location
         );
     }
 }

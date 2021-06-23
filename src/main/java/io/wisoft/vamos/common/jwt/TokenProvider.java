@@ -15,6 +15,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
@@ -108,22 +110,36 @@ public class TokenProvider implements InitializingBean {
      * @param token
      * @return 문제가 없으면 true 반환, 있으면 false 반환
      */
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token, ServletRequest request) {
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+
         try {
+            if (token == null) {
+                httpServletRequest.setAttribute("exception", ErrorCode.NON_TOKEN.getCode());
+                logger.info("헤더정보에 토큰이 존재하지 않습니다.");
+                return false;
+            }
+
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             if (redisTemplate.opsForValue().get(token) != null) {
+                httpServletRequest.setAttribute("exception", ErrorCode.LOGOUT_TOKEN.getCode());
                 logger.info("로그아웃된 토큰 입니다.");
                 return false;
             }
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            httpServletRequest.setAttribute("exception", ErrorCode.MALFORMED_TOKEN.getCode());
             logger.info("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            logger.info("만료된 JWT 토큰입니다.");
+            httpServletRequest.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
+            logger.info("만료된 JWT 입니다.");
         } catch (UnsupportedJwtException e) {
-            logger.info("지원되지 않는 JWT 토큰입니다.");
+            httpServletRequest.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN.getCode());
+            logger.info("지원되지 않는 JWT 입니다.");
         } catch (IllegalArgumentException e) {
-            logger.info("JWT 토큰이 잘못되었습니다.");
+            httpServletRequest.setAttribute("exception", ErrorCode.ILLEGAL_TOKEN.getCode());
+            logger.info("JWT 이 잘못되었습니다.");
         }
         return false;
     }

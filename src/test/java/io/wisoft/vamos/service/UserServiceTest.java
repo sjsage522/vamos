@@ -4,6 +4,7 @@ import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,9 @@ class UserServiceTest {
         //given
 
         PhoneNumber phoneNumber = PhoneNumber.of("01012345678");
-        User user = User.from("testId", "1234", phoneNumber, "tester");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+
+        User user = User.from("testId", "1234", phoneNumber, "tester", userLocation);
 
         given(userRepository.save(user))
                 .willReturn(user);
@@ -65,7 +68,9 @@ class UserServiceTest {
 
         //given
         PhoneNumber phoneNumber = PhoneNumber.of("01023456789");
-        User user = User.from("testId2", "1234", phoneNumber, "tester");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+
+        User user = User.from("testId2", "1234", phoneNumber, "tester", userLocation);
 
         given(userRepository.findDuplicateUserCount("testId2", phoneNumber, "tester"))
                 .willReturn(1);
@@ -82,7 +87,9 @@ class UserServiceTest {
 
         //given
         PhoneNumber phoneNumber = PhoneNumber.of("01023456789");
-        User user = User.from("testId", "1234", phoneNumber, "tester2");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+
+        User user = User.from("testId", "1234", phoneNumber, "tester2", userLocation);
 
         given(userRepository.findDuplicateUserCount("testId", phoneNumber, "tester2"))
                 .willReturn(1);
@@ -99,7 +106,9 @@ class UserServiceTest {
 
         //given
         PhoneNumber phoneNumber = PhoneNumber.of("01023456789");
-        User user = User.from("testId", "1234", phoneNumber, "tester");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+
+        User user = User.from("testId", "1234", phoneNumber, "tester", userLocation);
 
         given(userRepository.findDuplicateUserCount("testId", phoneNumber, "tester"))
                 .willReturn(1);

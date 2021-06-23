@@ -4,6 +4,7 @@ import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.domain.user.UserLocation;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,8 @@ class UserRepositoryTest {
                 "testId",
                 "1234",
                 PhoneNumber.of("01012345678"),
-                "tester"
+                "tester",
+                UserLocation.from(0.0, 0.0, "test location")
         );
         settingUser(user);
     }

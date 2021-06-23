@@ -33,11 +33,14 @@ public class User extends BaseTimeEntity {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "nickname", unique = true)
+    private String nickname;
+
     @Embedded
     private PhoneNumber phoneNumber;
 
-    @Column(name = "nickname", unique = true)
-    private String nickname;
+    @Embedded
+    private UserLocation location;
 
     @ManyToMany
     @JoinTable(
@@ -49,20 +52,21 @@ public class User extends BaseTimeEntity {
 
     protected User() { /* empty */ }
 
-    private User(String username, String password, PhoneNumber phoneNumber, String nickname) {
+    private User(String username, String password, PhoneNumber phoneNumber, String nickname, UserLocation location) {
         Preconditions.checkArgument(checkUserId(username), "아이디는 영 소대문자, 숫자 5~20 자리로 입력해주세요.");
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
+        this.location = location;
     }
 
     private boolean checkUserId(String username) {
         return Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{4,19}$", username);
     }
 
-    public static User from(String userId, String password, PhoneNumber phoneNumber, String nickName) {
-        return new User(userId, password, phoneNumber, nickName);
+    public static User from(String userId, String password, PhoneNumber phoneNumber, String nickName, UserLocation location) {
+        return new User(userId, password, phoneNumber, nickName, location);
     }
 
     public void setEncodedPassword(String encodedPassword) {

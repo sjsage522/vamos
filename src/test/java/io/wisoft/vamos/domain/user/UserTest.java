@@ -15,8 +15,9 @@ class UserTest {
     void create_user_test() {
 
         PhoneNumber phoneNumber = PhoneNumber.of("01012345678");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
 
-        User user = User.from("testId", "1234", phoneNumber, "tester");
+        User user = User.from("testId", "1234", phoneNumber, "tester", userLocation);
         settingUser(user);
 
         assertAll(
@@ -33,12 +34,21 @@ class UserTest {
     void create_user_failed_test() {
 
         PhoneNumber phoneNumber = PhoneNumber.of("01012345678");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
 
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class, () -> User.from("1234", "1234", phoneNumber, "tester"), "아이디는 숫자로 시작할 수 없습니다."),
-                () -> assertThrows(IllegalArgumentException.class, () -> User.from("abc1", "1234", phoneNumber, "tester"), "아이디는 5자리이상 20자리 이하여야 합니다."),
-                () -> assertThrows(IllegalArgumentException.class, () -> User.from("_testId", "1234", phoneNumber, "tester"), "특수문자를 사용할 수 없습니다."),
-                () -> assertThrows(IllegalArgumentException.class, () -> User.from("testIdAAAAAAAAAAAAAAE", "1234", phoneNumber, "tester"), "아이디는 20자리 이하여야 합니다.")
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> User.from("1234", "1234", phoneNumber, "tester", userLocation),
+                        "아이디는 숫자로 시작할 수 없습니다."),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> User.from("abc1", "1234", phoneNumber, "tester", userLocation),
+                        "아이디는 5자리이상 20자리 이하여야 합니다."),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> User.from("_testId", "1234", phoneNumber, "tester", userLocation),
+                        "특수문자를 사용할 수 없습니다."),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> User.from("testIdAAAAAAAAAAAAAAE", "1234", phoneNumber, "tester", userLocation),
+                        "아이디는 20자리 이하여야 합니다.")
         );
     }
 
