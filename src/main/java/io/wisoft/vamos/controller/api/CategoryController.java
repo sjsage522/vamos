@@ -38,11 +38,15 @@ public class CategoryController {
         private Long id;
 
         @JsonProperty("category_name")
-        private String categoryName;
+        private String[] names = new String[2];
 
         CategoryResponse(Category category) {
             this.id = category.getId();
-            this.categoryName = category.getName().toString();
+            CategoryName name = category.getName();
+            String kr = name.getKr();
+            String en = name.getEn();
+            names[0] = kr;
+            names[1] = en;
         }
     }
 }
