@@ -33,7 +33,7 @@ public class CategoryController {
 
     @Getter
     @Setter
-    private static class CategoryResponse {
+    protected static class CategoryResponse {
 
         private Long id;
 

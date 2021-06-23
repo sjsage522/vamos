@@ -91,7 +91,7 @@ public class UserController {
 
     @Getter
     @Setter
-    private static class UserResponse {
+    protected static class UserResponse {
 
         private Long id;
 
