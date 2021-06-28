@@ -42,7 +42,7 @@ class BoardControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    private final User user = User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester"
+    private final User user = User.from("testId2", "1234", PhoneNumber.of("01023456789"), "tester2"
             , UserLocation.from(0.0, 0.0, "test location"));
 
     @BeforeAll
@@ -54,7 +54,7 @@ class BoardControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testId", password = "1234")
+    @WithMockUser(username = "testId2", password = "1234")
     @DisplayName("01. 게시글 업로드 성공 테스트 (첨부파일 O)")
     void _01_upload_board_succeed_test() throws Exception {
 
@@ -81,20 +81,16 @@ class BoardControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id", is(1)))
                 .andExpect(jsonPath("$.data.title", is("글제목")))
                 .andExpect(jsonPath("$.data.content", is("글내용")))
                 .andExpect(jsonPath("$.data.price", is(1)))
-                .andExpect(jsonPath("$.data.user_info.id", is(1)))
-                .andExpect(jsonPath("$.data.user_info.username", is("testId")))
-                .andExpect(jsonPath("$.data.user_info.nickname", is("tester")))
-                .andExpect(jsonPath("$.data.user_info.phone_number.value", is("01012345678")))
-                .andExpect(jsonPath("$.data.category_info.id", is(1)))
+                .andExpect(jsonPath("$.data.user_info.username", is("testId2")))
+                .andExpect(jsonPath("$.data.user_info.nickname", is("tester2")))
+                .andExpect(jsonPath("$.data.user_info.phone_number.value", is("01023456789")))
                 .andExpect(jsonPath("$.data.category_info.category_name[0]", is("디지털기기")))
                 .andExpect(jsonPath("$.data.category_info.category_name[1]", is("DIGITAL_DEVICE")))
                 .andExpect(jsonPath("$.data.status", is("SALE")))
                 .andExpect(jsonPath("$.data.photos.length()", is(1)))
-                .andExpect(jsonPath("$.data.photos[0].id", is(1)))
                 .andExpect(jsonPath("$.data.photos[0].original_file_name", is("penguin.png")))
                 .andExpect(jsonPath("$.data.photos[0].extension", is("png")))
                 .andExpect(jsonPath("$.error_message").doesNotExist())
@@ -102,7 +98,7 @@ class BoardControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testId", password = "1234")
+    @WithMockUser(username = "testId2", password = "1234")
     @DisplayName("02. 게시글 업로드 성공 테스트 (첨부파일 X)")
     void _02_upload_board_succeed_test() throws Exception {
 
@@ -121,15 +117,13 @@ class BoardControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id", is(2)))
                 .andExpect(jsonPath("$.data.title", is("글제목")))
                 .andExpect(jsonPath("$.data.content", is("글내용")))
                 .andExpect(jsonPath("$.data.price", is(1)))
                 .andExpect(jsonPath("$.data.user_info.id", is(1)))
-                .andExpect(jsonPath("$.data.user_info.username", is("testId")))
-                .andExpect(jsonPath("$.data.user_info.nickname", is("tester")))
-                .andExpect(jsonPath("$.data.user_info.phone_number.value", is("01012345678")))
-                .andExpect(jsonPath("$.data.category_info.id", is(1)))
+                .andExpect(jsonPath("$.data.user_info.username", is("testId2")))
+                .andExpect(jsonPath("$.data.user_info.nickname", is("tester2")))
+                .andExpect(jsonPath("$.data.user_info.phone_number.value", is("01023456789")))
                 .andExpect(jsonPath("$.data.category_info.category_name[0]", is("디지털기기")))
                 .andExpect(jsonPath("$.data.category_info.category_name[1]", is("DIGITAL_DEVICE")))
                 .andExpect(jsonPath("$.data.status", is("SALE")))
@@ -139,7 +133,7 @@ class BoardControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "testId", password = "1234")
+    @WithMockUser(username = "testId2", password = "1234")
     @DisplayName("03. 게시글 업로드 실패 테스트 (유효하지 않은 파일 확장자)")
     void _03_upload_board_failed_test() throws Exception {
 

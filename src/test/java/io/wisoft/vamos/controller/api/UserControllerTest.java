@@ -81,7 +81,6 @@ class UserControllerTest {
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.length()", is(6)))
-                .andExpect(jsonPath("$.data.id", is(1)))
                 .andExpect(jsonPath("$.data.username", is("testId")))
                 .andExpect(jsonPath("$.data.nickname", is("tester")))
                 .andExpect(jsonPath("$.data.phone_number.value", is("01012345678")))
@@ -229,7 +228,6 @@ class UserControllerTest {
 
         result.andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id", is(1)))
                 .andExpect(jsonPath("$.data.username", is("testId")))
                 .andExpect(jsonPath("$.data.nickname", is("tester")))
                 .andExpect(jsonPath("$.data.phone_number.value", is("01012345678")))
