@@ -21,7 +21,7 @@ class BoardTest {
 
         Board board = Board.from("test title", "test content", 1,
                 User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
-                Category.of(CategoryName.BOOKS_TICKETS_RECORDS));
+                Category.of("BOOKS_TICKETS_RECORDS"));
 
 
         assertThat(board.getTitle()).isEqualTo("test title");
@@ -36,7 +36,7 @@ class BoardTest {
         assertAll(
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", "test content", 1,
                         null,
-                        Category.of(CategoryName.DIGITAL_DEVICE)), "사용자는 반드시 존재해야 합니다."),
+                        Category.of("DIGITAL_DEVICE")), "사용자는 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", "test content", 1,
                         User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
@@ -44,15 +44,15 @@ class BoardTest {
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("", "test conetent", 1,
                         User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
-                        Category.of(CategoryName.DIGITAL_DEVICE)), "title 은 반드시 존재해야 합니다."),
+                        Category.of("DIGITAL_DEVICE")), "title 은 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", null, 1,
                         User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
-                        Category.of(CategoryName.DIGITAL_DEVICE)), "content 은 반드시 존재해야 합니다."),
+                        Category.of("DIGITAL_DEVICE")), "content 은 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", "test content", 0,
                         User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
-                        Category.of(CategoryName.DIGITAL_DEVICE)), "가격은 0 보다 커야합니다.")
+                        Category.of("DIGITAL_DEVICE")), "가격은 0 보다 커야합니다.")
         );
     }
 }

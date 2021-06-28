@@ -13,7 +13,7 @@ class CategoryTest {
     @DisplayName("카테고리 생성 성공 테스트")
     void create_category_test() {
 
-        Category category = Category.of(CategoryName.DIGITAL_DEVICE);
+        Category category = Category.of("DIGITAL_DEVICE");
         Assertions.assertThat(category.getName()).isEqualTo(CategoryName.DIGITAL_DEVICE);
     }
 
