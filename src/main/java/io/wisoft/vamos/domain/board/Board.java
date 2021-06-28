@@ -1,17 +1,18 @@
 package io.wisoft.vamos.domain.board;
 
-import com.google.common.base.Preconditions;
 import io.wisoft.vamos.domain.BaseTimeEntity;
 import io.wisoft.vamos.domain.category.Category;
+import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import lombok.Getter;
 
 import javax.persistence.*;
-
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity
 @Table(name = "board")
@@ -52,6 +53,9 @@ public class Board extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private BoardStatus status;     /* default -> SALE */
 
+    @OneToMany(mappedBy = "board") /* owner 가 아닌쪽을 정의 */
+    private List<UploadFile> uploadFiles = new ArrayList<>();
+
     protected Board() {}
 
     private Board(String title, String content, int price, User user, Category category) {
@@ -85,5 +89,10 @@ public class Board extends BaseTimeEntity {
     private boolean checkObjectValid(Object... objects) {
         return Arrays.stream(objects)
                 .noneMatch(Objects::isNull);
+    }
+
+    /* 응답 데이터 설정 */
+    public void addFiles(List<UploadFile> uploadFiles) {
+        this.uploadFiles.addAll(uploadFiles);
     }
 }
