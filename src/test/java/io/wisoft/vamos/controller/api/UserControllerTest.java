@@ -40,8 +40,8 @@ class UserControllerTest {
 
     static String token;
 
-    @BeforeEach
-    void before() throws ServletException {
+    @BeforeAll
+    void init() throws ServletException {
 
         DelegatingFilterProxy delegatingFilterProxy = new DelegatingFilterProxy();
         delegatingFilterProxy.init(
