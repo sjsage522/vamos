@@ -26,6 +26,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation("com.google.guava:guava:30.1.1-jre")
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+
+	/* file feat */
+	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	implementation group: 'org.apache.tika', name: 'tika-core', version: '1.26'
+	/*           */
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
