@@ -4,32 +4,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.board.BoardStatus;
 import io.wisoft.vamos.domain.category.Category;
-import io.wisoft.vamos.domain.category.CategoryName;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.repository.CategoryRepository;
 import io.wisoft.vamos.service.BoardService;
 import io.wisoft.vamos.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static io.wisoft.vamos.controller.api.ApiResult.*;
-import static io.wisoft.vamos.controller.api.UserController.*;
+import static io.wisoft.vamos.common.util.SecurityUtils.*;
+import static io.wisoft.vamos.controller.api.ApiResult.succeed;
+import static io.wisoft.vamos.controller.api.UserController.UserResponse;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api")
+@Slf4j
 public class BoardController {
 
     private final BoardService boardService;
@@ -37,18 +37,35 @@ public class BoardController {
     private final CategoryRepository categoryRepository;
 
     @PostMapping("/board")
-    public ApiResult<BoardResponse> uploadBoard(@Valid @RequestBody BoardUploadRequest boardUploadRequest) {
+    public ApiResult<BoardResponse> uploadBoard(
+            @ModelAttribute BoardUploadRequest boardUploadRequest,
+            @RequestPart(value = "files", required = false) MultipartFile[] files) {
+        log.info("files = {}", Arrays.toString(files));
         Board uploadBoard = getBoard(boardUploadRequest);
         return succeed(new BoardResponse(
-                boardService.upload(uploadBoard)
+                        boardService.upload(uploadBoard, files)
                 )
         );
     }
 
+    //TODO 사용자 반경 몇 키로미터 내의 게시글들 조회, 페이징
+    @GetMapping("/boards")
+    public ApiResult<List<BoardResponse>> getBoardsByEarthDistance() {
+        User user = findCurrentUser();
+        List<Board> boards = boardService.findByEarthDistance(user);
+
+        List<BoardResponse> boardResponses = boards.stream()
+                .map(BoardResponse::new)
+                .collect(Collectors.toList());
+
+        return succeed(boardResponses);
+    }
+
+    //TODO PATCH BOARD
+    //TODO DELETE BOARD
+
     private Board getBoard(BoardUploadRequest boardUploadRequest) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
+        User user = findCurrentUser();
         Category category = getCategory(boardUploadRequest);
 
         Board board = Board.from(
@@ -64,11 +81,19 @@ public class BoardController {
     }
 
     private Category getCategory(BoardUploadRequest boardUploadRequest) {
-        return categoryRepository.findByName(boardUploadRequest.getCategoryNameEN())
+        Category instance = Category.of(boardUploadRequest.getCategoryNameEN());
+        return categoryRepository.findByName(instance.getName())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리 입니다."));
     }
 
+    private User findCurrentUser() {
+        String username = getCurrentUsername();
+        return userService.findByUsername(username);
+    }
+
     @Getter
+    @Setter
+    @ToString
     private static class BoardUploadRequest {
 
         @NotBlank(message = "제목을 입력해 주세요.")
@@ -80,11 +105,13 @@ public class BoardController {
         @Min(value = 1, message = "가격은 0보다 커야합니다.")
         private int price;
 
-        private CategoryName categoryNameEN;
+        private String categoryNameEN;
     }
 
     @Getter
     private static class BoardResponse {
+
+        private Long id;
 
         @JsonProperty("title")
         private String title;
@@ -105,15 +132,19 @@ public class BoardController {
         private BoardStatus boardStatus;
 
         @JsonProperty("photos")
-        private List<UploadPhotoController.UploadPhotoResponse> uploadPhotos;
+        private final List<UploadFileController.UploadFileResponse> uploadFiles;
 
         public BoardResponse(Board board) {
+            this.id = board.getId();
             this.title = board.getTitle();
             this.content = board.getContent();
             this.price = board.getPrice();
             this.user = new UserResponse(board.getUser());
             this.category = new CategoryController.CategoryResponse(board.getCategory());
             this.boardStatus = board.getStatus();
+            this.uploadFiles = board.getUploadFiles().stream()
+                    .map(UploadFileController.UploadFileResponse::new)
+                    .collect(Collectors.toList());
         }
     }
 }
