@@ -1,25 +1,25 @@
 spring:
   application:
     name: vamos
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
   jpa:
     database: postgresql
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
         format_sql: true
   datasource:
-    #    platform: h2
-    driver-class-name: org.h2.Driver
-    url: "jdbc:h2:mem:vamos;MODE=PostgreSQL"
-    data-username: sa
-    data-password:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/vamos
+    data-username: jun
+    data-password: 2457
+    initialization-mode: always
   redis:
     host: 127.0.0.1
     password:
