@@ -8,11 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
-public class SecurityUtil {
+public class SecurityUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityUtils.class);
 
-    private SecurityUtil() {
+    private SecurityUtils() {
     }
 
     /**

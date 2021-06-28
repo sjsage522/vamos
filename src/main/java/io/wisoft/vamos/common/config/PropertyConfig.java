@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(value = {NaverSmsProperty.class})
-public class PropertyConfiguration {
+public class PropertyConfig {
 }
