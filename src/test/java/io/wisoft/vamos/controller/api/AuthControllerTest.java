@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,13 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 @DisplayName("인증 API 테스트")
 class AuthControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -41,6 +41,18 @@ class AuthControllerTest {
 
     private static final String value = "01053402457";
     private static String certification;
+
+    @Autowired
+    private Environment environment;
+
+    @Test
+    @DisplayName("프로파일 확인 테스트")
+    void __checkCurrentProfiles() {
+        for (String activeProfile : environment.getActiveProfiles()) {
+            logger.info("Active profile = {}", activeProfile);
+        }
+        logger.info("profile log end");
+    }
 
     @BeforeEach
     void before() {
