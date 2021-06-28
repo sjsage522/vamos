@@ -30,19 +30,19 @@ public class Category extends BaseTimeEntity {
 
     protected Category() {}
 
-    private Category(CategoryName categoryName) {
-        Preconditions.checkArgument(isValid(categoryName), "존재하지 않는 카테고리 입니다.");
-        this.name = categoryName;
+    private Category(String categoryNameEN) {
+        Preconditions.checkArgument(isValid(categoryNameEN), "존재하지 않는 카테고리 입니다.");
+        this.name = CategoryName.valueOf(categoryNameEN);
     }
 
-    public static Category of(CategoryName categoryName) {
-        return new Category(categoryName);
+    public static Category of(String categoryNameEN) {
+        return new Category(categoryNameEN);
     }
 
-    private boolean isValid(CategoryName categoryName) {
+    private boolean isValid(String categoryNameEN) {
         boolean isMatch = false;
         for (CategoryName name : CategoryName.values()) {
-            if (name.equals(categoryName)) {
+            if (name.getEn().equals(categoryNameEN)) {
                 isMatch = true;
                 break;
             }
