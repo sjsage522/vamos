@@ -33,9 +33,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         logger.info("exception : {}", exception);
 
-        ErrorCode[] errorCodes = ErrorCode.values();
-
-        filterError(errorCodes,
+        filterError(ErrorCode.values(),
                 errorCode -> {
                     if (exception.equals(errorCode.getCode())) {
                         try {
