@@ -45,7 +45,7 @@ public class UploadFile extends BaseTimeEntity {
 
     protected UploadFile() {}
 
-    public UploadFile(Board board, String originalFileName, String storedFileName, String fileDownloadUri, String fileType, Long fileSize) {
+    private UploadFile(Board board, String originalFileName, String storedFileName, String fileDownloadUri, String fileType, Long fileSize) {
         this.board = board;
         this.originalFileName = originalFileName;
         this.storedFileName = storedFileName;
