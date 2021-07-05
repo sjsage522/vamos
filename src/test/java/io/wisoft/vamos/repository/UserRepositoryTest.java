@@ -1,25 +1,26 @@
 package io.wisoft.vamos.repository;
 
-import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.persistence.EntityManager;
 import java.util.Collections;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
+@ActiveProfiles("test")
 @DisplayName("사용자 레포지토리 테스트")
 class UserRepositoryTest {
 

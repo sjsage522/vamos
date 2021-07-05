@@ -13,12 +13,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
+@DisplayName("사용자 서비스 테스트")
 class UserServiceTest {
 
     @Mock

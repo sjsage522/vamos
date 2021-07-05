@@ -135,7 +135,6 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.data.title", is("글제목")))
                 .andExpect(jsonPath("$.data.content", is("글내용")))
                 .andExpect(jsonPath("$.data.price", is(1)))
-                .andExpect(jsonPath("$.data.user_info.id", is(1)))
                 .andExpect(jsonPath("$.data.user_info.username", is("testId2")))
                 .andExpect(jsonPath("$.data.user_info.nickname", is("고등동 사람")))
                 .andExpect(jsonPath("$.data.user_info.phone_number.value", is("01023456789")))
