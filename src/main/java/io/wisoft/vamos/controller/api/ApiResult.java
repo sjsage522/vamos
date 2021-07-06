@@ -12,12 +12,12 @@ public class ApiResult<T> {
 
     private final T data;
 
-    @JsonProperty("error_message")
-    private final String errorMessage;
+    @JsonProperty("error")
+    private final ErrorTemplate errorTemplate;
 
-    private ApiResult(T data, String errorMessage) {
+    private ApiResult(T data, ErrorTemplate errorTemplate) {
         this.data = data;
-        this.errorMessage = errorMessage;
+        this.errorTemplate = errorTemplate;
     }
 
     /**
@@ -31,15 +31,15 @@ public class ApiResult<T> {
         return new ApiResult<>(data, null);
     }
 
-    public static <T> ApiResult<T> failed(String message) {
-        return new ApiResult<>(null, message);
+    public static <T> ApiResult<T> failed(ErrorTemplate errorTemplate) {
+        return new ApiResult<>(null, errorTemplate);
     }
 
     @Override
     public String toString() {
         return "ApiResult{" +
                 "data=" + data +
-                ", errorMessage='" + errorMessage + '\'' +
+                ", errorTemplate=" + errorTemplate +
                 '}';
     }
 }

@@ -48,10 +48,13 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().println("{ \"message\" : \"" + errorCode.getMessage()
+        response.getWriter().println("{  \n");
+        response.getWriter().println("\"data\" : " + null + ",\n");
+        response.getWriter().println("\"error\" : " + "{ \"message\" : \"" + errorCode.getMessage()
                 + "\", \"code\" : \"" + errorCode.getCode()
                 + "\", \"status\" : " + errorCode.getStatus()
-                + " }");
+                + " }\n");
+        response.getWriter().println("}");
     }
 
     private void filterError(ErrorCode[] errorCodes, Consumer<ErrorCode> filter) {

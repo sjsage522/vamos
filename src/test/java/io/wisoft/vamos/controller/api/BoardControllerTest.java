@@ -173,8 +173,10 @@ class BoardControllerTest {
         );
 
         result.andDo(print())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.error_message", is("올바른 파일형식이 아닙니다.")));
+                .andExpect(jsonPath("$.error.message", is("올바른 파일형식이 아닙니다.")))
+        ;
     }
 
     @Test

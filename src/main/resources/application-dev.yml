@@ -1,10 +1,11 @@
 spring:
   application:
     name: vamos
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
   jpa:
     database: postgresql
     show-sql: true

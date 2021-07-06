@@ -118,9 +118,9 @@ class UserControllerTest {
         );
 
         result.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.error_message").exists())
+                .andExpect(jsonPath("$.error").exists())
         ;
     }
 
@@ -147,9 +147,9 @@ class UserControllerTest {
         );
 
         result.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.error_message").exists())
+                .andExpect(jsonPath("$.error").exists())
         ;
     }
 
@@ -176,9 +176,9 @@ class UserControllerTest {
         );
 
         result.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.error_message").exists());
+                .andExpect(jsonPath("$.error").exists());
     }
 
     @Test
@@ -214,7 +214,7 @@ class UserControllerTest {
         result.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.token", is(token)))
-                .andExpect(jsonPath("$.error_message").doesNotExist())
+                .andExpect(jsonPath("$.error").doesNotExist())
         ;
     }
 
@@ -249,9 +249,9 @@ class UserControllerTest {
         );
 
         result.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.error_message", is("존재하지 않는 사용자 입니다.")))
+                .andExpect(jsonPath("$.error.message", is("존재하지 않는 사용자 입니다.")))
         ;
     }
 
@@ -267,9 +267,10 @@ class UserControllerTest {
 
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message", is("잘못된 JWT 서명 입니다.")))
-                .andExpect(jsonPath("$.code", is("JWT003")))
-                .andExpect(jsonPath("$.status", is(401)))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.error.message", is("잘못된 JWT 서명 입니다.")))
+                .andExpect(jsonPath("$.error.code", is("JWT003")))
+                .andExpect(jsonPath("$.error.status", is(401)))
         ;
     }
 
@@ -285,9 +286,8 @@ class UserControllerTest {
 
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message", is("접근 허용이 거부되었습니다.")))
-                .andExpect(jsonPath("$.code", is("C001")))
-                .andExpect(jsonPath("$.status", is(403)))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.error").exists())
         ;
     }
 
@@ -320,9 +320,10 @@ class UserControllerTest {
 
         result.andDo(print())
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message", is("로그아웃된 토큰입니다.")))
-                .andExpect(jsonPath("$.code", is("JWT002")))
-                .andExpect(jsonPath("$.status", is(401)))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.error.message", is("로그아웃된 토큰입니다.")))
+                .andExpect(jsonPath("$.error.code", is("JWT002")))
+                .andExpect(jsonPath("$.error.status", is(401)))
         ;
     }
 

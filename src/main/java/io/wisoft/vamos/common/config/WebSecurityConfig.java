@@ -1,6 +1,5 @@
 package io.wisoft.vamos.common.config;
 
-import io.wisoft.vamos.common.jwt.JwtAccessDeniedHandler;
 import io.wisoft.vamos.common.jwt.JwtAuthenticationEntryPoint;
 import io.wisoft.vamos.common.jwt.JwtSecurityConfig;
 import io.wisoft.vamos.common.jwt.TokenProvider;
@@ -27,7 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -54,9 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
 
-                // enable h2-console
                 .and()
                 .headers()
                 .frameOptions()
