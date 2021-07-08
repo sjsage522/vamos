@@ -77,6 +77,13 @@ public class Board extends BaseTimeEntity {
         this.status = status;
     }
 
+    public void updateBoard(Board updateBoard) {
+        this.title = updateBoard.getTitle();
+        this.content = updateBoard.getContent();
+        this.price = updateBoard.getPrice();
+        this.category = updateBoard.getCategory();
+    }
+
     private boolean checkStringValid(String... values) {
         return Arrays.stream(values)
                 .noneMatch(value -> value == null || value.isBlank());
@@ -94,5 +101,19 @@ public class Board extends BaseTimeEntity {
     /* 응답 데이터 설정 */
     public void addFiles(List<UploadFile> uploadFiles) {
         this.uploadFiles.addAll(uploadFiles);
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", price=" + price +
+                ", user=" + user +
+                ", category=" + category +
+                ", status=" + status +
+                ", uploadFiles=" + uploadFiles +
+                '}';
     }
 }

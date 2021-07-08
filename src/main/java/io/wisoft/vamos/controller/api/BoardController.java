@@ -16,13 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.wisoft.vamos.common.util.SecurityUtils.*;
+import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
 import static io.wisoft.vamos.controller.api.ApiResult.succeed;
 import static io.wisoft.vamos.controller.api.UserController.UserResponse;
 
@@ -35,12 +33,14 @@ public class BoardController {
     private final BoardService boardService;
     private final UserService userService;
     private final CategoryRepository categoryRepository;
+    private static final int MAX_FILE_LENGTH = 5;
 
     @PostMapping("/board")
     public ApiResult<BoardResponse> uploadBoard(
             @ModelAttribute BoardUploadRequest boardUploadRequest,
             @RequestPart(value = "files", required = false) MultipartFile[] files) {
         log.info("files = {}", Arrays.toString(files));
+        if (files.length > MAX_FILE_LENGTH) throw new IllegalArgumentException("이미지 갯수는 5개를 초과할 수 없습니다.");
         Board uploadBoard = getBoard(boardUploadRequest);
         return succeed(new BoardResponse(
                         boardService.upload(uploadBoard, files)
@@ -61,8 +61,22 @@ public class BoardController {
         return succeed(boardResponses);
     }
 
-    //TODO PATCH BOARD
+    @GetMapping("/board/{boardId}")
+    public ApiResult<BoardResponse> boardInfo(@PathVariable Long boardId) {
+        return succeed(new BoardResponse(boardService.findById(boardId)));
+    }
+
+    @PatchMapping("/board/{boardId}")
+    public ApiResult<BoardResponse> boardUpdate(
+            @PathVariable Long boardId,
+            @ModelAttribute BoardUploadRequest request) {
+        Board updateBoard = getBoard(request);
+        return succeed(new BoardResponse(boardService.update(boardId, updateBoard)));
+    }
+
+
     //TODO DELETE BOARD
+    //@DeleteMapping("/board/{boardId}")
 
     private Board getBoard(BoardUploadRequest boardUploadRequest) {
         User user = findCurrentUser();
@@ -95,22 +109,14 @@ public class BoardController {
     @Setter
     @ToString
     private static class BoardUploadRequest {
-
-        @NotBlank(message = "제목을 입력해 주세요.")
         private String title;
-
-        @NotBlank(message = "내용을 입력해 주세요.")
         private String content;
-
-        @Min(value = 1, message = "가격은 0보다 커야합니다.")
         private int price;
-
         private String categoryNameEN;
     }
 
     @Getter
     private static class BoardResponse {
-
         private Long id;
 
         @JsonProperty("title")

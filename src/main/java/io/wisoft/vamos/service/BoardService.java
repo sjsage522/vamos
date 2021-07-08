@@ -51,6 +51,19 @@ public class BoardService {
     }
 
     public Board findById(Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(() -> new DataNotFoundException("존재하지 않는 게시글 입니다."));
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 게시글 입니다."));
+    }
+
+    @Transactional
+    public Board update(Long boardId, Board updateBoard) {
+        Board findBoard = findById(boardId);
+        User user = updateBoard.getUser();
+
+        if (!user.equals(findBoard.getUser()))
+            throw new IllegalStateException("다른 사용자의 게시글은 수정할 수 없습니다.");
+
+        findBoard.updateBoard(updateBoard);
+        return findBoard;
     }
 }
