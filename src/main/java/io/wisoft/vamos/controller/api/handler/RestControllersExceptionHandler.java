@@ -2,8 +2,8 @@ package io.wisoft.vamos.controller.api.handler;
 
 import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.common.exception.DataNotFoundException;
-import io.wisoft.vamos.controller.api.ApiResult;
-import io.wisoft.vamos.controller.api.ErrorTemplate;
+import io.wisoft.vamos.dto.ApiResult;
+import io.wisoft.vamos.dto.ErrorTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import static io.wisoft.vamos.controller.api.ApiResult.failed;
+import static io.wisoft.vamos.dto.ApiResult.failed;
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice

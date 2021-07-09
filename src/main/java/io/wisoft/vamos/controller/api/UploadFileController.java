@@ -1,9 +1,7 @@
 package io.wisoft.vamos.controller.api;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.repository.UploadFileRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -42,36 +40,6 @@ public class UploadFileController {
         try (FileInputStream inputStream = new FileInputStream(filePath)) {
             byte[] binaryFile = IOUtils.toByteArray(inputStream);
             return new ResponseEntity<>(binaryFile, headers, HttpStatus.OK);
-        }
-    }
-
-    @Getter
-    protected static class UploadFileResponse {
-
-        private Long id;
-
-        @JsonProperty("original_file_name")
-        private String originalFileName;
-
-        @JsonProperty("stored_file_name")
-        private String storedFileName;
-
-        @JsonProperty("file_path")
-        private String fileDownloadUri;
-
-        @JsonProperty("extension")
-        private String fileType;
-
-        @JsonProperty("file_size")
-        private Long fileSize;
-
-        public UploadFileResponse(UploadFile uploadFile) {
-            this.id = uploadFile.getId();
-            this.originalFileName = uploadFile.getOriginalFileName();
-            this.storedFileName = uploadFile.getStoredFileName();
-            this.fileDownloadUri = uploadFile.getFileDownloadUri();
-            this.fileType = uploadFile.getFileType();
-            this.fileSize = uploadFile.getFileSize();
         }
     }
 }

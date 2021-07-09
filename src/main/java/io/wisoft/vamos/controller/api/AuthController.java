@@ -2,6 +2,7 @@ package io.wisoft.vamos.controller.api;
 
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.common.jwt.TokenProvider;
+import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.service.SmsCertificationService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ import javax.validation.constraints.NotBlank;
 
 import java.time.Duration;
 
-import static io.wisoft.vamos.controller.api.ApiResult.*;
+import static io.wisoft.vamos.dto.ApiResult.*;
 
 @RestController
 @RequestMapping("/api")

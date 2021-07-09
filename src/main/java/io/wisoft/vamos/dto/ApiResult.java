@@ -1,4 +1,4 @@
-package io.wisoft.vamos.controller.api;
+package io.wisoft.vamos.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
