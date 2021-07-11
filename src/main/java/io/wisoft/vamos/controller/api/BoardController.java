@@ -1,13 +1,10 @@
 package io.wisoft.vamos.controller.api;
 
 import io.wisoft.vamos.domain.board.Board;
-import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.dto.board.BoardResponse;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
-import io.wisoft.vamos.repository.CategoryRepository;
 import io.wisoft.vamos.service.BoardService;
-import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +22,6 @@ import static io.wisoft.vamos.dto.ApiResult.succeed;
 public class BoardController {
 
     private final BoardService boardService;
-    private final UserService userService;
-    private final CategoryRepository categoryRepository;
 
     @PostMapping("/board")
     public ApiResult<BoardResponse> uploadBoard(
