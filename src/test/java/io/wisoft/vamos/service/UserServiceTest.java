@@ -5,15 +5,18 @@ import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
+import io.wisoft.vamos.dto.user.UserJoinRequest;
 import io.wisoft.vamos.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,45 +27,33 @@ import static org.mockito.BDDMockito.given;
 @DisplayName("사용자 서비스 테스트")
 class UserServiceTest {
 
+    @InjectMocks
+    UserService userService;
+
     @Mock
     UserRepository userRepository;
 
     @Mock
     PasswordEncoder passwordEncoder;
 
-    UserService userService;
-
-    @BeforeEach
-    void serviceInit() {
-        userService = new UserService(userRepository, passwordEncoder);
-    }
-
-    @BeforeEach
-    void userCreate() {
-
-    }
-
     @Test
     @DisplayName("사용자 회원가입 성공 테스트")
     void _01_user_join_success_test() {
 
         //given
-
-        PhoneNumber phoneNumber = PhoneNumber.of("01012345678");
-        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
-
-        User user = User.from("testId", "1234", phoneNumber, "tester", userLocation);
+        UserJoinRequest userJoinRequest = getUserJoinRequest();
+        User user = getUser(userJoinRequest);
 
         given(userRepository.save(user))
                 .willReturn(user);
-        given(userRepository.findDuplicateUserCount("testId", phoneNumber, "tester"))
+        given(userRepository.findDuplicateUserCount("testId", PhoneNumber.of("01012345678"), "tester"))
                 .willReturn(0);
 
         //when
-        userService.join(user);
+        User saveUser = userService.join(userJoinRequest);
 
         //then
-        assertThat(user.getAuthorities().contains(Authority.of("ROLE_USER"))).isTrue();
+        assertThat(saveUser.getAuthorities().contains(Authority.of("ROLE_USER"))).isTrue();
     }
 
     @Test
@@ -70,18 +61,16 @@ class UserServiceTest {
     void _02_user_join_failed_test() {
 
         //given
-        PhoneNumber phoneNumber = PhoneNumber.of("01023456789");
-        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+        UserJoinRequest userJoinRequest = getUserJoinRequest();
 
-        User user = User.from("testId2", "1234", phoneNumber, "tester", userLocation);
 
-        given(userRepository.findDuplicateUserCount("testId2", phoneNumber, "tester"))
+        given(userRepository.findDuplicateUserCount("testId", PhoneNumber.of("01012345678"), "tester"))
                 .willReturn(1);
 
         //when
 
         //then
-        assertThrows(DataAlreadyExistsException.class, () -> userService.join(user));
+        assertThrows(DataAlreadyExistsException.class, () -> userService.join(userJoinRequest));
     }
 
     @Test
@@ -89,18 +78,15 @@ class UserServiceTest {
     void _03_user_join_failed_test() {
 
         //given
-        PhoneNumber phoneNumber = PhoneNumber.of("01023456789");
-        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+        UserJoinRequest userJoinRequest = getUserJoinRequest();
 
-        User user = User.from("testId", "1234", phoneNumber, "tester2", userLocation);
-
-        given(userRepository.findDuplicateUserCount("testId", phoneNumber, "tester2"))
+        given(userRepository.findDuplicateUserCount("testId", PhoneNumber.of("01012345678"), "tester"))
                 .willReturn(1);
 
         //when
 
         //then
-        assertThrows(DataAlreadyExistsException.class, () -> userService.join(user));
+        assertThrows(DataAlreadyExistsException.class, () -> userService.join(userJoinRequest));
     }
 
     @Test
@@ -108,17 +94,48 @@ class UserServiceTest {
     void _04_user_join_failed_test() {
 
         //given
-        PhoneNumber phoneNumber = PhoneNumber.of("01023456789");
-        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+        UserJoinRequest userJoinRequest = getUserJoinRequest();
 
-        User user = User.from("testId", "1234", phoneNumber, "tester", userLocation);
-
-        given(userRepository.findDuplicateUserCount("testId", phoneNumber, "tester"))
+        given(userRepository.findDuplicateUserCount("testId", PhoneNumber.of("01012345678"), "tester"))
                 .willReturn(1);
 
         //when
 
         //then
-        assertThrows(DataAlreadyExistsException.class, () -> userService.join(user));
+        assertThrows(DataAlreadyExistsException.class, () -> userService.join(userJoinRequest));
+    }
+
+    private User getUser(UserJoinRequest request) {
+
+        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
+
+        final User user = User.from(
+                request.getUsername(),
+                request.getPassword(),
+                PhoneNumber.of(request.getPhoneNumber()),
+                request.getNickname(),
+                location
+        );
+        settingUser(user);
+
+        return user;
+    }
+
+    private void settingUser(User user) {
+        user.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
+        user.setEncodedPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    private UserJoinRequest getUserJoinRequest() {
+        UserJoinRequest userJoinRequest = new UserJoinRequest();
+        userJoinRequest.setUsername("testId");
+        userJoinRequest.setPassword("1234");
+        userJoinRequest.setNickname("tester");
+        userJoinRequest.setPhoneNumber("01012345678");
+        userJoinRequest.setX(0.0);
+        userJoinRequest.setY(0.0);
+        userJoinRequest.setAddressName("test location");
+        return userJoinRequest;
     }
 }
+
