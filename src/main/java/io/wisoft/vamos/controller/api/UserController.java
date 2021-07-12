@@ -32,8 +32,7 @@ public class UserController {
     @PostMapping("/join")
     public ApiResult<UserResponse> join(@Valid @RequestBody UserJoinRequest request) {
 
-        User newUser = getUser(request);
-        return succeed(new UserResponse(userService.join(newUser)));
+        return succeed(new UserResponse(userService.join(request)));
     }
 
     /**
@@ -57,18 +56,5 @@ public class UserController {
                 .stream()
                 .map(UserResponse::new)
                 .collect(Collectors.toList()));
-    }
-
-    private User getUser(UserJoinRequest request) {
-
-        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
-
-        return User.from(
-                request.getUsername(),
-                request.getPassword(),
-                PhoneNumber.of(request.getPhoneNumber()),
-                request.getNickname(),
-                location
-        );
     }
 }

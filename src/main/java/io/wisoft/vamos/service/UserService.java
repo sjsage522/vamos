@@ -1,9 +1,12 @@
 package io.wisoft.vamos.service;
 
 import io.wisoft.vamos.domain.user.Authority;
+import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.common.exception.DataNotFoundException;
+import io.wisoft.vamos.domain.user.UserLocation;
+import io.wisoft.vamos.dto.user.UserJoinRequest;
 import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,11 +25,12 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public User join(User newUser) {
+    public User join(UserJoinRequest request) {
+        User newUser = getUser(request);
+
         if (0 < userRepository.findDuplicateUserCount(newUser.getUsername(), newUser.getPhoneNumber(), newUser.getNickname()))
             throw new DataAlreadyExistsException("이미 존재하는 사용자 입니다.");
 
-        settingUser(newUser);
         return userRepository.save(newUser);
     }
 
@@ -39,6 +43,22 @@ public class UserService {
     public List<User> findAll() {
         //TODO 페이징 처리
         return userRepository.findAll();
+    }
+
+    private User getUser(UserJoinRequest request) {
+
+        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
+
+        final User user = User.from(
+                request.getUsername(),
+                request.getPassword(),
+                PhoneNumber.of(request.getPhoneNumber()),
+                request.getNickname(),
+                location
+        );
+        settingUser(user);
+
+        return user;
     }
 
     /**
