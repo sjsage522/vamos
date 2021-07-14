@@ -7,6 +7,7 @@ import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.user.UserJoinRequest;
+import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +44,16 @@ public class UserService {
     public List<User> findAll() {
         //TODO 페이징 처리
         return userRepository.findAll();
+    }
+
+    @Transactional
+    public User updateUserLocation(String username, UserLocationUpdateRequest request) {
+        User findUser = findByUsername(username);
+
+        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
+        findUser.changeUserLocation(location);
+
+        return findUser;
     }
 
     private User getUser(UserJoinRequest request) {

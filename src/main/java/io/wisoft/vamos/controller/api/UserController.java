@@ -5,6 +5,7 @@ import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.dto.user.UserJoinRequest;
+import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.dto.user.UserResponse;
 import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +57,12 @@ public class UserController {
                 .stream()
                 .map(UserResponse::new)
                 .collect(Collectors.toList()));
+    }
+
+    @PatchMapping("/user/{username}/location")
+    public ApiResult<UserResponse> updateUserLocation(
+            @PathVariable String username,
+            @RequestBody UserLocationUpdateRequest request) {
+        return succeed(new UserResponse(userService.updateUserLocation(username, request)));
     }
 }

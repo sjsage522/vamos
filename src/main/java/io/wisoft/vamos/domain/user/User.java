@@ -70,6 +70,10 @@ public class User extends BaseTimeEntity {
         return new User(userId, password, phoneNumber, nickName, location);
     }
 
+    public void changeUserLocation(UserLocation location) {
+        this.location = location;
+    }
+
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
     }

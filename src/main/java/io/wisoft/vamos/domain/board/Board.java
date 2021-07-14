@@ -4,6 +4,7 @@ import io.wisoft.vamos.domain.BaseTimeEntity;
 import io.wisoft.vamos.domain.category.Category;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.domain.user.UserLocation;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -49,6 +50,9 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Embedded
+    private BoardLocation location;
+
     @Column(name = "board_status")
     @Enumerated(EnumType.STRING)
     private BoardStatus status;     /* default -> SALE */
@@ -62,6 +66,8 @@ public class Board extends BaseTimeEntity {
         checkArgument(checkStringValid(title, content), "제목이나 내용은 비워둘 수 없습니다.");
         checkArgument(checkPriceValid(price), "가격은 0 보다 커야합니다.");
         checkArgument(checkObjectValid(user, category), "사용자 또는 카테고리가 유효하지 않습니다.");
+        UserLocation userLocation = user.getLocation();
+        this.location = BoardLocation.from(userLocation.getX(), userLocation.getY(), userLocation.getAddressName());
         this.title = title;
         this.content = content;
         this.price = price;
