@@ -5,6 +5,7 @@ import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.dto.ErrorTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,6 +28,7 @@ public class RestControllersExceptionHandler {
     protected ApiResult<Object> runtimeException(
             Exception ex) {
         log.info("interval server error message = {}",ex.getMessage());
+        log.info("exception info = ", ex);
         return failed(ErrorTemplate.from(ex.getMessage(), INTERNAL_SERVER_ERROR.value()));
     }
 
@@ -52,6 +54,14 @@ public class RestControllersExceptionHandler {
             NoHandlerFoundException ex) {
         log.info("not found error message = {}",ex.getMessage());
         return failed(ErrorTemplate.from(ex.getMessage(), NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(BAD_REQUEST)
+    protected ApiResult<Object> httpMessageNotReadableException(
+            HttpMessageNotReadableException ex) {
+        log.info("bad request message = {}",ex.getMessage());
+        return failed(ErrorTemplate.from(ex.getMessage(), BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

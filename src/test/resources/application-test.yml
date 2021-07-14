@@ -25,7 +25,7 @@ spring:
     password:
     port: 6379
 server:
-  port: 8080
+  port: 5000
 
 jwt:
   header: ${jwt_header:header}
