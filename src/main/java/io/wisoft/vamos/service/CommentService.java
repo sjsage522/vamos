@@ -17,7 +17,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -36,6 +35,7 @@ public class CommentService {
     }
 
     //TODO 페이징
+    @Transactional(readOnly = true)
     public List<Comment> findAllByBoardIdIfParentIsNull(Long boardId) {
         return commentRepository.findAllByBoardIdIfParentIsNull(boardId);
     }

@@ -2,6 +2,7 @@ package io.wisoft.vamos.service;
 
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,15 +15,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component("userDetailsService")
-@Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(final String username) {
         return userRepository.findOneWithAuthoritiesByUsername(username)
                 .map(user -> createUser(username, user))

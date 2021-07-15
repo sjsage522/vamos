@@ -25,7 +25,6 @@ import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -53,6 +52,7 @@ public class BoardService {
         return board;
     }
 
+    @Transactional(readOnly = true)
     public List<Board> findByEarthDistance() {
         User user = findCurrentUser();
 
@@ -65,6 +65,7 @@ public class BoardService {
         return boardRepository.findByEarthDistance(x, y, radius);
     }
 
+    @Transactional(readOnly = true)
     public Board findById(Long boardId) {
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new DataNotFoundException("존재하지 않는 게시글 입니다."));
