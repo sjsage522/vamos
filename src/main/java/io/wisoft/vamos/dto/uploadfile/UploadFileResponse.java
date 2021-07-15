@@ -17,9 +17,6 @@ public class UploadFileResponse {
     @JsonProperty("stored_file_name")
     private String storedFileName;
 
-    @JsonProperty("file_path")
-    private String fileDownloadUri;
-
     @JsonProperty("extension")
     private String fileType;
 
@@ -30,7 +27,6 @@ public class UploadFileResponse {
         this.id = uploadFile.getId();
         this.originalFileName = uploadFile.getOriginalFileName();
         this.storedFileName = uploadFile.getStoredFileName();
-        this.fileDownloadUri = uploadFile.getFileDownloadUri();
         this.fileType = uploadFile.getFileType();
         this.fileSize = uploadFile.getFileSize();
     }

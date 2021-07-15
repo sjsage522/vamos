@@ -47,14 +47,22 @@ public class BoardController {
 
     @GetMapping("/board/{boardId}")
     public ApiResult<BoardResponse> boardInfo(@PathVariable Long boardId) {
-        return succeed(new BoardResponse(boardService.findById(boardId)));
+        return succeed(
+                new BoardResponse(
+                        boardService.findById(boardId)
+                )
+        );
     }
 
     @PatchMapping("/board/{boardId}")
     public ApiResult<BoardResponse> boardUpdate(
             @PathVariable Long boardId,
             @ModelAttribute BoardUploadRequest request) {
-        return succeed(new BoardResponse(boardService.update(boardId, request)));
+        return succeed(
+                new BoardResponse(
+                        boardService.update(boardId, request)
+                )
+        );
     }
 
 

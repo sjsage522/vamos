@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -15,4 +16,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "order by c.id asc")
     @EntityGraph(attributePaths = {"user"})
     List<Comment> findAllByBoardIdIfParentIsNull(Long boardId);
+
+    @Query("select c from Comment c where c.id = :commentId")
+    @EntityGraph(attributePaths = {"user"})
+    Optional<Comment> findByIdWithUser(Long commentId);
 }

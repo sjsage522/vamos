@@ -1,5 +1,6 @@
 package io.wisoft.vamos.domain.user;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,7 @@ class UserTest {
         PhoneNumber phoneNumber = PhoneNumber.of("01012345678");
         UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
 
-        User user = User.from("testId", "1234", phoneNumber, "tester", userLocation);
-        settingUser(user);
+        User user = getUser(phoneNumber, userLocation, "testId", "1234", "tester");
 
         assertAll(
                 () -> assertNotNull(user),
@@ -38,18 +38,36 @@ class UserTest {
 
         assertAll(
                 () -> assertThrows(IllegalArgumentException.class,
-                        () -> User.from("1234", "1234", phoneNumber, "tester", userLocation),
+                        () -> getUser(phoneNumber, userLocation, "1234", "1234", "tester"),
                         "아이디는 숫자로 시작할 수 없습니다."),
                 () -> assertThrows(IllegalArgumentException.class,
-                        () -> User.from("abc1", "1234", phoneNumber, "tester", userLocation),
+                        () -> getUser(phoneNumber, userLocation, "abc1", "1234", "tester"),
                         "아이디는 5자리이상 20자리 이하여야 합니다."),
                 () -> assertThrows(IllegalArgumentException.class,
-                        () -> User.from("_testId", "1234", phoneNumber, "tester", userLocation),
+                        () -> getUser(phoneNumber, userLocation, "_testId", "1234", "tester"),
                         "특수문자를 사용할 수 없습니다."),
                 () -> assertThrows(IllegalArgumentException.class,
-                        () -> User.from("testIdAAAAAAAAAAAAAAE", "1234", phoneNumber, "tester", userLocation),
+                        () -> getUser(phoneNumber, userLocation, "testIdAAAAAAAAAAAAAAE", "1234", "tester"),
                         "아이디는 20자리 이하여야 합니다.")
         );
+    }
+
+    @Test
+    @DisplayName("사용자 비교 테스트")
+    void user_equals_test() {
+        PhoneNumber phoneNumber = PhoneNumber.of("01012345678");
+        UserLocation userLocation = UserLocation.from(0.0, 0.0, "test location");
+
+        User user1 = getUser(phoneNumber, userLocation, "testId", "1234", "tester");
+        User user2 = getUser(phoneNumber, userLocation, "testId", "1234", "tester");
+
+        Assertions.assertThat(user1.equals(user2)).isTrue();
+    }
+
+    private User getUser(PhoneNumber phoneNumber, UserLocation userLocation, String username, String password, String nickName) {
+        User user = User.from(username, password, phoneNumber, nickName, userLocation);
+        settingUser(user);
+        return user;
     }
 
     private void settingUser(User user) {

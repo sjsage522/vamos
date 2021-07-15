@@ -44,12 +44,16 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
     private final List<Comment> children = new ArrayList<>();
 
     public void addChildComment(Comment child) {
         this.children.add(child);
         child.setParent(this);
+    }
+
+    public void updateContent(String modifiedContent) {
+        this.content = modifiedContent;
     }
 
     private void setParent(Comment parent) {
