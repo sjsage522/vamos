@@ -31,8 +31,7 @@ public class UserController {
      * @return user info
      */
     @PostMapping("/join")
-    public ApiResult<UserResponse> join(@Valid @RequestBody UserJoinRequest request) {
-
+    public ApiResult<UserResponse> userJoin(@Valid @RequestBody UserJoinRequest request) {
         return succeed(new UserResponse(userService.join(request)));
     }
 
@@ -42,7 +41,7 @@ public class UserController {
      * @return user info
      */
     @GetMapping("/user")
-    public ApiResult<UserResponse> userInfo(@RequestParam String username) {
+    public ApiResult<UserResponse> getUser(@RequestParam String username) {
         return succeed(new UserResponse(userService.findByUsername(username)));
     }
 
@@ -52,7 +51,7 @@ public class UserController {
      */
     @GetMapping("/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ApiResult<List<UserResponse>> allUsers() {
+    public ApiResult<List<UserResponse>> getUserList() {
         return succeed(userService.findAll()
                 .stream()
                 .map(UserResponse::new)
@@ -60,9 +59,16 @@ public class UserController {
     }
 
     @PatchMapping("/user/{username}/location")
-    public ApiResult<UserResponse> updateUserLocation(
+    public ApiResult<UserResponse> userLocationUpdate(
             @PathVariable String username,
             @RequestBody UserLocationUpdateRequest request) {
         return succeed(new UserResponse(userService.updateUserLocation(username, request)));
+    }
+
+    //TODO DELETE USER
+    @DeleteMapping("/user/{username}")
+    public ApiResult<String> userDelete(@PathVariable String username) {
+        userService.delete(username);
+        return succeed("user is deleted successfully");
     }
 }

@@ -57,7 +57,7 @@ public class Board extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private BoardStatus status;     /* default -> SALE */
 
-    @OneToMany(mappedBy = "board") /* owner 가 아닌쪽을 정의 */
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE) /* owner 가 아닌쪽을 정의 */
     private List<UploadFile> uploadFiles = new ArrayList<>();
 
     protected Board() {}
@@ -83,11 +83,11 @@ public class Board extends BaseTimeEntity {
         this.status = status;
     }
 
-    public void updateBoard(Board updateBoard) {
-        this.title = updateBoard.getTitle();
-        this.content = updateBoard.getContent();
-        this.price = updateBoard.getPrice();
-        this.category = updateBoard.getCategory();
+    public void updateBoard(Board modifiedBoard) {
+        this.title = modifiedBoard.getTitle();
+        this.content = modifiedBoard.getContent();
+        this.price = modifiedBoard.getPrice();
+        this.category = modifiedBoard.getCategory();
     }
 
     private boolean checkStringValid(String... values) {

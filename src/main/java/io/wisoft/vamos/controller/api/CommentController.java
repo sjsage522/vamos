@@ -24,7 +24,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comment/board/{boardId}")
-    public ApiResult<CommentResponse> applyComment(
+    public ApiResult<CommentResponse> commentApply(
             @PathVariable Long boardId,
             @Valid @RequestBody CommentApplyRequest request) {
         return succeed(
@@ -35,7 +35,7 @@ public class CommentController {
     }
 
     @GetMapping("/comments/board/{boardId}")
-    public ApiResult<List<CommentResponse>> allComments(@PathVariable Long boardId) {
+    public ApiResult<List<CommentResponse>> getCommentList(@PathVariable Long boardId) {
         return succeed(commentService.findAllByBoardIdIfParentIsNull(boardId)
                 .stream()
                 .map(this::getCommentResponse)
@@ -44,7 +44,7 @@ public class CommentController {
     }
 
     @PatchMapping("/comment/{commentId}")
-    public ApiResult<CommentResponse> updateComment(
+    public ApiResult<CommentResponse> commentUpdate(
             @PathVariable Long commentId,
             @Valid @RequestBody CommentUpdateRequest request) {
         return succeed(
@@ -55,7 +55,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/comment/{commentId}")
-    public ApiResult<String> deleteComment(
+    public ApiResult<String> commentDelete(
             @PathVariable Long commentId) {
         commentService.delete(commentId);
         return succeed("comment is deleted successfully");

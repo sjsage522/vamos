@@ -13,6 +13,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
+        default_batch_fetch_size: 1000
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
         format_sql: true
   datasource:

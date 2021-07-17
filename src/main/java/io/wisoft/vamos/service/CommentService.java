@@ -46,7 +46,7 @@ public class CommentService {
         Comment updateComment = findCommentWithUser(commentId);
         User currentUser = findCurrentUser();
 
-        checkValidation(updateComment.getUser(), currentUser);
+        compareUser(updateComment.getUser(), currentUser);
         updateComment.updateContent(request.getContent());
 
         return updateComment;
@@ -57,11 +57,11 @@ public class CommentService {
         Comment deleteComment = findCommentWithUser(commentId);
         User currentUser = findCurrentUser();
 
-        checkValidation(deleteComment.getUser(), currentUser);
+        compareUser(deleteComment.getUser(), currentUser);
         commentRepository.delete(deleteComment);
     }
 
-    private void checkValidation(User target, User current) {
+    private void compareUser(User target, User current) {
         if (!current.equals(target)) throw new IllegalStateException("다른 사용자의 답글입니다.");
     }
 

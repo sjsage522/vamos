@@ -4,14 +4,12 @@ import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.board.BoardStatus;
 import io.wisoft.vamos.domain.category.Category;
+import io.wisoft.vamos.domain.comment.Comment;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
-import io.wisoft.vamos.repository.BoardRepository;
-import io.wisoft.vamos.repository.CategoryRepository;
-import io.wisoft.vamos.repository.UploadFileRepository;
-import io.wisoft.vamos.repository.UserRepository;
+import io.wisoft.vamos.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.wisoft.vamos.common.util.FileUtils.saveFilesOnDisc;
 import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
@@ -31,12 +30,14 @@ public class BoardService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final UploadFileRepository uploadFileRepository;
+    private final CommentRepository commentRepository;
     private static final int MAX_FILE_LENGTH = 5;
 
     @Transactional
     public Board upload(BoardUploadRequest boardUploadRequest, MultipartFile[] files) throws IllegalArgumentException {
 
-        if (files != null && files.length > MAX_FILE_LENGTH) throw new IllegalArgumentException("이미지 갯수는 5개를 초과할 수 없습니다.");
+        if (files != null && files.length > MAX_FILE_LENGTH)
+            throw new IllegalArgumentException("이미지 갯수는 5개를 초과할 수 없습니다.");
         Board uploadBoard = getBoard(boardUploadRequest);
 
         Board board = boardRepository.save(uploadBoard);
@@ -73,14 +74,31 @@ public class BoardService {
 
     @Transactional
     public Board update(Long boardId, BoardUploadRequest request) {
-        Board updateBoard = getBoard(request);
-        Board findBoard = findById(boardId);
-        User user = updateBoard.getUser();
+        Board modifiedBoard = getBoard(request);
+        Board updateBoard = findById(boardId);
 
-        if (!user.equals(findBoard.getUser())) throw new IllegalStateException("다른 사용자의 게시글은 수정할 수 없습니다.");
+        compareUser(updateBoard.getUser(), modifiedBoard.getUser());
 
-        findBoard.updateBoard(updateBoard);
-        return findBoard;
+        updateBoard.updateBoard(modifiedBoard);
+        return updateBoard;
+    }
+
+    @Transactional
+    public void delete(Long boardId) {
+        User currentUser = findCurrentUser();
+        Board deleteBoard = findById(boardId);
+
+        compareUser(deleteBoard.getUser(), currentUser);
+
+        deleteComments(boardId);
+        boardRepository.delete(deleteBoard);
+    }
+
+    private void deleteComments(Long boardId) {
+        List<Long> commentIds = commentRepository.findAllByBoardId(boardId).stream()
+                .map(Comment::getId)
+                .collect(Collectors.toList());
+        commentRepository.deleteWithIds(commentIds);
     }
 
     private Board getBoard(BoardUploadRequest boardUploadRequest) {
@@ -97,6 +115,10 @@ public class BoardService {
         board.changeStatus(BoardStatus.SALE);
 
         return board;
+    }
+
+    private void compareUser(User target, User current) {
+        if (!current.equals(target)) throw new IllegalStateException("다른 사용자의 게시글입니다.");
     }
 
     private User findCurrentUser() {

@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -50,11 +52,29 @@ public class UserService {
     @Transactional
     public User updateUserLocation(String username, UserLocationUpdateRequest request) {
         User findUser = findByUsername(username);
+        User currentUser = findCurrentUser();
+
+        compareUser(findUser, currentUser);
 
         UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
         findUser.changeUserLocation(location);
 
         return findUser;
+    }
+
+    @Transactional
+    public void delete(String username) {
+
+    }
+
+    private void compareUser(User target, User current) {
+        if (!current.equals(target)) throw new IllegalStateException("다른 사용자의 정보입니다.");
+    }
+
+    private User findCurrentUser() {
+        String username = getCurrentUsername();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자 입니다."));
     }
 
     private User getUser(UserJoinRequest request) {
