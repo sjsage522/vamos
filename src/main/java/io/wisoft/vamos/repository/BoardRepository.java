@@ -2,6 +2,7 @@ package io.wisoft.vamos.repository;
 
 import io.wisoft.vamos.domain.board.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -16,4 +17,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             nativeQuery = true
     )
     List<Board> findByEarthDistance(@Param("longitude") Double x, @Param("latitude") Double y, int radius);
+
+    List<Board> findAllByUserId(Long userId);
+
+    @Modifying
+    @Query("DELETE FROM Board b WHERE b.id IN :ids")
+    void deleteWithIds(List<Long> ids);
 }

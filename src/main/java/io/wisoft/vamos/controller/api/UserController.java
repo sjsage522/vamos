@@ -65,7 +65,7 @@ public class UserController {
         return succeed(new UserResponse(userService.updateUserLocation(username, request)));
     }
 
-    //TODO DELETE USER
+
     @DeleteMapping("/user/{username}")
     public ApiResult<String> userDelete(@PathVariable String username) {
         userService.delete(username);

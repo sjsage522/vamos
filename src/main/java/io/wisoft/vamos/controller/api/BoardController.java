@@ -67,7 +67,6 @@ public class BoardController {
 
 
     /**
-     * TODO DELETE BOARD
      * 게시글을 삭제하면 게시글에 달려있는 댓글들과 파일들이 먼저 삭제되어야 한다. (참조)
      * 게시글 내의 답글들을 삭제할 떄는 게시글에 물려있는 모든 답글들을 in 절로 삭제한다.
      * 첨부파일의 경우에는 cascade 옵션을 통해 삭제한다.

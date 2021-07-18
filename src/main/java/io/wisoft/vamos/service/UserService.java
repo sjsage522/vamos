@@ -1,5 +1,8 @@
 package io.wisoft.vamos.service;
 
+import io.wisoft.vamos.domain.board.Board;
+import io.wisoft.vamos.domain.comment.Comment;
+import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
@@ -8,6 +11,9 @@ import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.user.UserJoinRequest;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
+import io.wisoft.vamos.repository.BoardRepository;
+import io.wisoft.vamos.repository.CommentRepository;
+import io.wisoft.vamos.repository.UploadFileRepository;
 import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +33,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommentRepository commentRepository;
+    private final BoardRepository boardRepository;
+    private final UploadFileRepository uploadFileRepository;
 
     @Transactional
     public User join(UserJoinRequest request) {
@@ -64,7 +75,39 @@ public class UserService {
 
     @Transactional
     public void delete(String username) {
+        User currentUser = findCurrentUser();
+        User deleteUser = findByUsername(username);
 
+        compareUser(deleteUser, currentUser);
+
+        deleteBoards(deleteUser.getId());
+        userRepository.delete(deleteUser);
+    }
+
+    private void deleteBoards(Long userId) {
+        List<Long> boardIds = boardRepository.findAllByUserId(userId).stream()
+                .map(Board::getId)
+                .collect(toList());
+
+        for (Long boardId : boardIds) {
+            deleteComments(boardId);
+            deleteFiles(boardId);
+        }
+        boardRepository.deleteWithIds(boardIds);
+    }
+
+    private void deleteComments(Long boardId) {
+        List<Long> commentIds = commentRepository.findAllByBoardId(boardId).stream()
+                .map(Comment::getId)
+                .collect(toList());
+        commentRepository.deleteWithIds(commentIds);
+    }
+
+    private void deleteFiles(Long boardId) {
+        List<Long> fileIds = uploadFileRepository.findAllByBoardId(boardId).stream()
+                .map(UploadFile::getId)
+                .collect(toList());
+        uploadFileRepository.deleteWithIds(fileIds);
     }
 
     private void compareUser(User target, User current) {
