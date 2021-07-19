@@ -1,13 +1,13 @@
 package io.wisoft.vamos.service;
 
+import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
+import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.comment.Comment;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
-import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
-import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.user.UserJoinRequest;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
@@ -22,10 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
