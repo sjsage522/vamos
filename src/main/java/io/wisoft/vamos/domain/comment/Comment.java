@@ -23,7 +23,7 @@ import static com.google.common.base.Preconditions.*;
 public class Comment extends BaseTimeEntity {
 
     @Id
-    @Column(name = "comment")
+    @Column(name = "id")
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "comment_sequence_generator")
@@ -77,5 +77,16 @@ public class Comment extends BaseTimeEntity {
 
     private boolean isContentValid(String content) {
         return content != null && !content.isBlank();
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", user=" + user.getUsername() +
+                ", board=" + board.getId() +
+                ", parent=" + (parent == null ? "[no]" : parent.getId())  +
+                '}';
     }
 }

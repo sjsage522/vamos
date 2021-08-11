@@ -1,8 +1,5 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.domain.user.PhoneNumber;
-import io.wisoft.vamos.domain.user.User;
-import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.dto.user.UserJoinRequest;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
@@ -27,26 +24,33 @@ public class UserController {
 
     /**
      * 사용자 회원가입
+     *
      * @param request dto
      * @return user info
      */
     @PostMapping("/join")
     public ApiResult<UserResponse> userJoin(@Valid @RequestBody UserJoinRequest request) {
-        return succeed(new UserResponse(userService.join(request)));
+        return succeed(
+                new UserResponse(userService.join(request))
+        );
     }
 
     /**
      * 쿼리 파라미터를 통해 특정 사용자 조회
+     *
      * @param username
      * @return user info
      */
     @GetMapping("/user")
     public ApiResult<UserResponse> getUser(@RequestParam String username) {
-        return succeed(new UserResponse(userService.findByUsername(username)));
+        return succeed(
+                new UserResponse(userService.findByUsername(username))
+        );
     }
 
     /**
      * 전체 사용자 조회
+     *
      * @return user infos
      */
     @GetMapping("/users")
@@ -62,7 +66,9 @@ public class UserController {
     public ApiResult<UserResponse> userLocationUpdate(
             @PathVariable String username,
             @RequestBody UserLocationUpdateRequest request) {
-        return succeed(new UserResponse(userService.updateUserLocation(username, request)));
+        return succeed(
+                new UserResponse(userService.updateUserLocation(username, request))
+        );
     }
 
 

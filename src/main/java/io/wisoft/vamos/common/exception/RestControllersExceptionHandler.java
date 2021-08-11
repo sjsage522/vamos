@@ -1,7 +1,5 @@
-package io.wisoft.vamos.controller.api.handler;
+package io.wisoft.vamos.common.exception;
 
-import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
-import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.dto.ErrorTemplate;
 import lombok.extern.slf4j.Slf4j;
