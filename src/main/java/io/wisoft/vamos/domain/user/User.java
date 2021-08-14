@@ -55,6 +55,7 @@ public class User extends BaseTimeEntity {
 
     private User(String username, String password, PhoneNumber phoneNumber, String nickname, UserLocation location) {
         Preconditions.checkArgument(checkUserId(username), "아이디는 영 소대문자, 숫자 5~20 자리로 입력해주세요.");
+        //TODO 필드 체크
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
@@ -62,12 +63,45 @@ public class User extends BaseTimeEntity {
         this.location = location;
     }
 
-    private boolean checkUserId(String username) {
-        return Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{4,19}$", username);
+    public static class Builder {
+        private String username;
+        private String password;
+        private PhoneNumber phoneNumber;
+        private String nickname;
+        private UserLocation location;
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder phoneNumber(PhoneNumber phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public Builder nickname(String nickname) {
+            this.nickname = nickname;
+            return this;
+        }
+
+        public Builder userLocation(UserLocation location) {
+            this.location = location;
+            return this;
+        }
+
+        public User build() {
+            return new User(username, password, phoneNumber, nickname, location);
+        }
     }
 
-    public static User from(String userId, String password, PhoneNumber phoneNumber, String nickName, UserLocation location) {
-        return new User(userId, password, phoneNumber, nickName, location);
+    public static User from(String username, String password, PhoneNumber phoneNumber, String nickName, UserLocation location) {
+        return new User(username, password, phoneNumber, nickName, location);
     }
 
     public void changeUserLocation(UserLocation location) {
@@ -93,5 +127,9 @@ public class User extends BaseTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getUsername(), getNickname());
+    }
+
+    private boolean checkUserId(String username) {
+        return Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{4,19}$", username);
     }
 }
