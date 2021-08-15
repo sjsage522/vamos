@@ -1,5 +1,8 @@
 package io.wisoft.vamos.common.jwt;
 
+/**
+ * TODO 에러 관한 부분 리팩토링 필요
+ */
 public enum ErrorCode {
 
     NON_TOKEN(401, "JWT001", "토큰이 존재하지 않습니다."),
