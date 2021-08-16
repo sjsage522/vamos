@@ -26,6 +26,9 @@ import java.time.Duration;
 
 import static io.wisoft.vamos.dto.ApiResult.*;
 
+/**
+ * TODO 로그인 방식 OAuth 를 이용하도록 변경.. 문자인증은 남겨두고 JWT는 삭제.. 레디스도 삭제..
+ */
 @RestController
 @RequestMapping("/api")
 public class AuthController {
