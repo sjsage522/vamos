@@ -1,6 +1,6 @@
-package io.wisoft.vamos.common.config;
+package io.wisoft.vamos.config;
 
-import io.wisoft.vamos.common.property.NaverSmsProperty;
+import io.wisoft.vamos.property.NaverSmsProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

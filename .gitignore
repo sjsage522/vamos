@@ -212,4 +212,6 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
-# End of https://www.toptal.com/developers/gitignore/api/intellij+all,vscode,macos,windows,gradle,maven
+# Custom
+application-oauth.yml
+application-property.yml

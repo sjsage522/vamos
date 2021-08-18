@@ -23,7 +23,7 @@ class UserTest {
         assertAll(
                 () -> assertNotNull(user),
                 () -> assertEquals("testId", user.getUsername()),
-                () -> assertEquals("1234", user.getPassword()),
+                () -> assertEquals("1234", user.getEmail()),
                 () -> assertEquals("01012345678", phoneNumber.getPhoneNumber()),
                 () -> assertEquals("tester", user.getNickname()),
                 () -> assertTrue(user.getAuthorities().contains(Authority.of("ROLE_USER"))));
@@ -72,6 +72,6 @@ class UserTest {
 
     private void settingUser(User user) {
         user.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
-        user.setEncodedPassword(user.getPassword());
+        user.setEncodedPassword(user.getEmail());
     }
 }

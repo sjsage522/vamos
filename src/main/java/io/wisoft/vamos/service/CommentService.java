@@ -1,12 +1,11 @@
 package io.wisoft.vamos.service;
 
-import io.wisoft.vamos.common.exception.DataNotFoundException;
-import io.wisoft.vamos.common.util.SecurityUtils;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.comment.Comment;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.dto.comment.CommentApplyRequest;
 import io.wisoft.vamos.dto.comment.CommentUpdateRequest;
+import io.wisoft.vamos.exception.DataNotFoundException;
 import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CommentRepository;
 import io.wisoft.vamos.repository.UserRepository;
@@ -84,9 +83,10 @@ public class CommentService {
     }
 
     private User findCurrentUser() {
-        String username = SecurityUtils.getCurrentUsername();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자입니다."));
+//        String username = SecurityUtils.getCurrentUsername();
+//        return userRepository.findByUsername(username)
+//                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자입니다."));
+        return null;
     }
 
     private Board findBoard(Long boardId) {

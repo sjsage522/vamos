@@ -1,6 +1,6 @@
 package io.wisoft.vamos.service;
 
-import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
+import io.wisoft.vamos.exception.DataAlreadyExistsException;
 import io.wisoft.vamos.domain.user.Authority;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
@@ -123,7 +123,7 @@ class UserServiceTest {
 
     private void settingUser(User user) {
         user.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
-        user.setEncodedPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEncodedPassword(passwordEncoder.encode(user.getEmail()));
     }
 
     private UserJoinRequest getUserJoinRequest() {

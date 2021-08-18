@@ -14,7 +14,7 @@ spring:
     database: postgresql
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         default_batch_fetch_size: 1000
@@ -36,16 +36,4 @@ spring:
     port: 6379
 
 server:
-  port: 5000
-
-jwt:
-  header: ${jwt_header:header}
-  secret: ${jwt_secret:secret}
-  token-validity-in-seconds: ${jwt_token_validity_in_seconds:validity}
-
-ncs:
-  accessKey: ${ncs_access_key:key}
-  secretKey: ${ncs_secret:secret}
-  serviceId: ${ncs_service_id:id}
-  from: ${ncs_from:from}
-
+  port: 8080

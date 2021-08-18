@@ -2,7 +2,7 @@ package io.wisoft.vamos.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.wisoft.vamos.common.property.NaverSmsProperty;
+import io.wisoft.vamos.property.NaverSmsProperty;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.repository.SmsCertificationRepository;
 import lombok.Getter;

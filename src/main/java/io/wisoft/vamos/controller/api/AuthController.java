@@ -1,7 +1,6 @@
 package io.wisoft.vamos.controller.api;
 
 import io.wisoft.vamos.domain.user.PhoneNumber;
-import io.wisoft.vamos.common.jwt.TokenProvider;
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.service.SmsCertificationService;
 import lombok.Getter;
@@ -9,22 +8,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-
 import java.time.Duration;
 
-import static io.wisoft.vamos.dto.ApiResult.*;
+import static io.wisoft.vamos.dto.ApiResult.succeed;
 
 /**
  * TODO 로그인 방식 OAuth 를 이용하도록 변경.. 문자인증은 남겨두고 JWT는 삭제.. 레디스도 삭제..
@@ -33,37 +27,20 @@ import static io.wisoft.vamos.dto.ApiResult.*;
 @RequestMapping("/api")
 public class AuthController {
 
-    private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final StringRedisTemplate redisTemplate;
     private final SmsCertificationService smsCertificationService;
     private final long tokenValidityInSeconds;
 
     public AuthController(
-            TokenProvider tokenProvider,
             AuthenticationManagerBuilder authenticationManagerBuilder,
             StringRedisTemplate redisTemplate,
             SmsCertificationService smsCertificationService,
             @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
-        this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.redisTemplate = redisTemplate;
         this.smsCertificationService = smsCertificationService;
         this.tokenValidityInSeconds = tokenValidityInSeconds;
-    }
-
-    @PostMapping("/login")
-    public ApiResult<TokenDto> login(@Valid @RequestBody LoginRequest loginRequest) {
-
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.createToken(authentication);
-
-        return succeed(new TokenDto(jwt));
     }
 
     /**

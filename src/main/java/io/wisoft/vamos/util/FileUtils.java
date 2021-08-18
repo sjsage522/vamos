@@ -1,4 +1,4 @@
-package io.wisoft.vamos.common.util;
+package io.wisoft.vamos.util;
 
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;

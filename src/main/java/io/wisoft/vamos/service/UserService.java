@@ -1,29 +1,21 @@
 package io.wisoft.vamos.service;
 
-import io.wisoft.vamos.common.exception.DataAlreadyExistsException;
-import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.comment.Comment;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
-import io.wisoft.vamos.domain.user.Authority;
-import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
-import io.wisoft.vamos.domain.user.UserLocation;
-import io.wisoft.vamos.dto.user.UserJoinRequest;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
+import io.wisoft.vamos.exception.DataNotFoundException;
 import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CommentRepository;
 import io.wisoft.vamos.repository.UploadFileRepository;
 import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
-import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -31,20 +23,10 @@ import static java.util.stream.Collectors.toList;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UploadFileRepository uploadFileRepository;
 
-    @Transactional
-    public User join(UserJoinRequest request) {
-        User newUser = getUser(request);
-
-        if (0 < userRepository.findDuplicateUserCount(newUser.getUsername(), newUser.getPhoneNumber(), newUser.getNickname()))
-            throw new DataAlreadyExistsException("이미 존재하는 사용자 입니다.");
-
-        return userRepository.save(newUser);
-    }
 
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
@@ -61,26 +43,16 @@ public class UserService {
 
     @Transactional
     public User updateUserLocation(String username, UserLocationUpdateRequest request) {
-        User findUser = findByUsername(username);
-        User currentUser = findCurrentUser();
-
-        compareUser(findUser, currentUser);
-
-        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
-        findUser.changeUserLocation(location);
-
-        return findUser;
-    }
-
-    @Transactional
-    public void delete(String username) {
-        User currentUser = findCurrentUser();
-        User deleteUser = findByUsername(username);
-
-        compareUser(deleteUser, currentUser);
-
-        deleteBoards(deleteUser.getId());
-        userRepository.delete(deleteUser);
+//        User findUser = findByUsername(username);
+//        User currentUser = findCurrentUser();
+//
+//        compareUser(findUser, currentUser);
+//
+//        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
+//        findUser.changeUserLocation(location);
+//
+//        return findUser;
+        return null;
     }
 
     private void deleteBoards(Long userId) {
@@ -111,35 +83,5 @@ public class UserService {
 
     private void compareUser(User target, User current) {
         if (!current.equals(target)) throw new IllegalStateException("다른 사용자의 정보입니다.");
-    }
-
-    private User findCurrentUser() {
-        String username = getCurrentUsername();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자 입니다."));
-    }
-
-    private User getUser(UserJoinRequest request) {
-
-        UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
-
-        final User user = User.from(
-                request.getUsername(),
-                request.getPassword(),
-                PhoneNumber.of(request.getPhoneNumber()),
-                request.getNickname(),
-                location
-        );
-        settingUser(user);
-
-        return user;
-    }
-
-    /**
-     * 사용자 권한 설정과 비밀번호 암호화
-     */
-    private void settingUser(User user) {
-        user.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
-        user.setEncodedPassword(passwordEncoder.encode(user.getPassword()));
     }
 }

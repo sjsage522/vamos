@@ -2,12 +2,11 @@ package io.wisoft.vamos.domain.user;
 
 import com.google.common.base.Preconditions;
 import io.wisoft.vamos.domain.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 @Entity
@@ -28,14 +27,21 @@ public class User extends BaseTimeEntity {
             generator = "user_sequence_generator")
     private Long id;
 
-    @Column(name = "username", unique = true)
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "nickname", unique = true)
+    @Column(name = "nickname")
     private String nickname;
+
+    @Column(name = "picture")
+    private String picture;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Embedded
     private PhoneNumber phoneNumber;
@@ -43,77 +49,31 @@ public class User extends BaseTimeEntity {
     @Embedded
     private UserLocation location;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")}
-    )
-    private Set<Authority> authorities = new HashSet<>();
-
     protected User() { /* empty */ }
 
-    private User(String username, String password, PhoneNumber phoneNumber, String nickname, UserLocation location) {
-        Preconditions.checkArgument(checkUserId(username), "아이디는 영 소대문자, 숫자 5~20 자리로 입력해주세요.");
-        //TODO 필드 체크
+    @Builder
+    private User(String email, String username, String nickname, String picture, Role role, PhoneNumber phoneNumber, UserLocation location) {
+        this.email = email;
         this.username = username;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
         this.nickname = nickname;
+        this.picture = picture;
+        this.role = role;
+        this.phoneNumber = phoneNumber;
         this.location = location;
-    }
-
-    public static class Builder {
-        private String username;
-        private String password;
-        private PhoneNumber phoneNumber;
-        private String nickname;
-        private UserLocation location;
-
-        public Builder username(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder phoneNumber(PhoneNumber phoneNumber) {
-            this.phoneNumber = phoneNumber;
-            return this;
-        }
-
-        public Builder nickname(String nickname) {
-            this.nickname = nickname;
-            return this;
-        }
-
-        public Builder userLocation(UserLocation location) {
-            this.location = location;
-            return this;
-        }
-
-        public User build() {
-            return new User(username, password, phoneNumber, nickname, location);
-        }
-    }
-
-    public static User from(String username, String password, PhoneNumber phoneNumber, String nickName, UserLocation location) {
-        return new User(username, password, phoneNumber, nickName, location);
     }
 
     public void changeUserLocation(UserLocation location) {
         this.location = location;
     }
 
-    public void setEncodedPassword(String encodedPassword) {
-        this.password = encodedPassword;
+    public User update(String username, String picture) {
+        this.username = username;
+        this.picture = picture;
+        return this;
     }
 
-    public void setAuthority(Set<Authority> authorities) {
-        this.authorities = authorities;
+    public String getRoleKey() {
+        return this.role.getKey();
     }
 
     @Override
@@ -127,6 +87,20 @@ public class User extends BaseTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getUsername(), getNickname());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", picture='" + picture + '\'' +
+                ", role=" + role +
+                ", phoneNumber=" + phoneNumber +
+                ", location=" + location +
+                '}';
     }
 
     private boolean checkUserId(String username) {

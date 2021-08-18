@@ -1,4 +1,4 @@
-package io.wisoft.vamos.common.exception;
+package io.wisoft.vamos.exception;
 
 import io.wisoft.vamos.dto.ApiResult;
 import io.wisoft.vamos.dto.ErrorTemplate;

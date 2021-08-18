@@ -51,7 +51,7 @@ class UserRepositoryTest {
 
     private static void settingUser(User user) {
         user.setAuthority(Collections.singleton(Authority.of("ROLE_USER")));
-        user.setEncodedPassword(user.getPassword());
+        user.setEncodedPassword(user.getEmail());
     }
 
     @Test

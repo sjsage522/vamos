@@ -1,6 +1,5 @@
 package io.wisoft.vamos.service;
 
-import io.wisoft.vamos.common.exception.DataNotFoundException;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.board.BoardStatus;
 import io.wisoft.vamos.domain.category.Category;
@@ -9,6 +8,7 @@ import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
+import io.wisoft.vamos.exception.DataNotFoundException;
 import io.wisoft.vamos.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.wisoft.vamos.common.util.FileUtils.saveFilesOnDisc;
-import static io.wisoft.vamos.common.util.SecurityUtils.getCurrentUsername;
+import static io.wisoft.vamos.util.FileUtils.saveFilesOnDisc;
 
 @Service
 @RequiredArgsConstructor
@@ -122,9 +121,10 @@ public class BoardService {
     }
 
     private User findCurrentUser() {
-        String username = getCurrentUsername();
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자 입니다."));
+//        String username = getCurrentUsername();
+//        return userRepository.findByUsername(username)
+//                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자 입니다."));
+        return null;
     }
 
     private Category getCategory(BoardUploadRequest boardUploadRequest) {
