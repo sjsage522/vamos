@@ -1,19 +1,23 @@
 package io.wisoft.vamos.exception;
 
-import io.wisoft.vamos.dto.ApiResult;
-import io.wisoft.vamos.dto.ErrorTemplate;
+import io.wisoft.vamos.dto.api.ApiResult;
+import io.wisoft.vamos.dto.api.ErrorCode;
+import io.wisoft.vamos.dto.api.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import static io.wisoft.vamos.dto.ApiResult.failed;
+import static io.wisoft.vamos.dto.api.ApiResult.failed;
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
@@ -21,89 +25,152 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class RestControllersExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(INTERNAL_SERVER_ERROR)
-    protected ApiResult<Object> runtimeException(
-            Exception ex) {
-        log.info("interval server error message = {}",ex.getMessage());
-        log.info("exception info = ", ex);
-        return failed(ErrorTemplate.from(ex.getMessage(), INTERNAL_SERVER_ERROR.value()));
+    @ExceptionHandler(HttpMediaTypeException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleHttpMediaTypeException(
+            final HttpMediaTypeException ex) {
+        log.error("HttpMediaTypeException", ex);
+
+        final ErrorResponse response = ErrorResponse.from(
+                ErrorCode.UNSUPPORTED_MEDIA_TYPE
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
     }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(METHOD_NOT_ALLOWED)
-    protected ApiResult<Object> methodNotAllowedException(
-            HttpRequestMethodNotSupportedException ex) {
-        log.info("method not allowed error message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), METHOD_NOT_ALLOWED.value()));
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(FORBIDDEN)
-    protected ApiResult<Object> accessDeniedException(
-            AccessDeniedException ex) {
-        log.info("forbidden error message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), FORBIDDEN.value()));
-    }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(NOT_FOUND)
-    protected ApiResult<Object> noHandlerFoundException(
-            NoHandlerFoundException ex) {
-        log.info("not found error message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), NOT_FOUND.value()));
-    }
-
+    /**
+     * HTTP 요청 BODY 형식 불일치
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiResult<Object> httpMessageNotReadableException(
-            HttpMessageNotReadableException ex) {
-        log.info("bad request message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), BAD_REQUEST.value()));
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleHttpMessageNotReadableException(
+            final HttpMessageNotReadableException ex) {
+        log.error("HttpMessageNotReadableException", ex);
+
+        final ErrorResponse response = ErrorResponse.from(
+                ErrorCode.INCORRECT_HTTP_BODY_FORMAT
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiResult<Object> methodArgumentNotValidException(
-            MethodArgumentNotValidException ex) {
-        log.info("bad request message = {}",ex.getMessage());
-        return failed(
-                ErrorTemplate.from(ex
-                        .getBindingResult()
-                        .getAllErrors()
-                        .get(0)
-                        .getDefaultMessage(), BAD_REQUEST.value()));
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiResult<Object> illegalStateException(
-            IllegalStateException ex) {
-        log.info("bad request message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), BAD_REQUEST.value()));
-    }
-
+    /**
+     * 잘못된 매개변수 요청
+     */
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiResult<Object> illegalArgumentException(
-            IllegalArgumentException ex) {
-        log.info("bad request message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), BAD_REQUEST.value()));
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleIllegalArgumentException(
+            final IllegalArgumentException ex) {
+        log.error("IllegalArgumentException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getMessage(), ErrorCode.ILLEGAL_ARGUMENT
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
     }
 
-    @ExceptionHandler(DataAlreadyExistsException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiResult<Object> dataAlreadyExistsException(
-            DataAlreadyExistsException ex) {
-        log.info("bad request message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), BAD_REQUEST.value()));
+    /**
+     * servlet request binding 실패
+     */
+    @ExceptionHandler(ServletRequestBindingException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleServletRequestBindingException(
+            final ServletRequestBindingException ex) {
+        log.error("ServletRequestBindingException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getMessage(), ErrorCode.INCORRECT_SERVLET_REQUEST
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
     }
 
-    @ExceptionHandler(DataNotFoundException.class)
-    @ResponseStatus(BAD_REQUEST)
-    protected ApiResult<Object> dataNotFoundException(
-            DataNotFoundException ex) {
-        log.info("bad request message = {}",ex.getMessage());
-        return failed(ErrorTemplate.from(ex.getMessage(), BAD_REQUEST.value()));
+    /**
+     * 지원하지 않는 HTTP METHOD 요청한 경우
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleHttpRequestMethodNotSupportedException(
+            final HttpRequestMethodNotSupportedException ex) {
+        log.error("HttpRequestMethodNotSupportedException", ex);
+
+        final ErrorResponse response = ErrorResponse.from(
+                ErrorCode.METHOD_NOT_ALLOWED
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
+    }
+
+    /**
+     * 요청 url mapping 핸들러를 찾지 못한 경우
+     */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleNoHandlerFoundException(
+            final NoHandlerFoundException ex) {
+        log.error("handleNoHandlerFoundException", ex);
+
+        final ErrorResponse response = ErrorResponse.from(
+                ErrorCode.HANDLER_NOT_FOUND
+        );
+
+        return ResponseEntity
+                .status(valueOf(response.getStatus()))
+                .body(failed(response));
+    }
+
+    /**
+     * validation 에러
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleMethodArgumentNotValidException(
+            final MethodArgumentNotValidException ex) {
+        log.error("handleMethodArgumentNotValidException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getBindingResult(), ErrorCode.INCORRECT_FORMAT
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
+    }
+
+    /**
+     * 애플리케이션 비즈니스 예외들
+     */
+    @ExceptionHandler(BusinessException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleBusinessException(
+            final BusinessException ex) {
+        log.error("handleBusinessException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getMessage(), ex.getErrorCode());
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
+    }
+
+    /**
+     * 나머지 내부 서버 예외
+     */
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleException(
+            final Exception ex) {
+        log.error("handleException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getMessage(), ErrorCode.INTERNAL_SERVER_ERROR
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
     }
 }

@@ -1,7 +1,7 @@
 package io.wisoft.vamos.controller.api;
 
 import io.wisoft.vamos.domain.board.Board;
-import io.wisoft.vamos.dto.ApiResult;
+import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.board.BoardResponse;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
 import io.wisoft.vamos.service.BoardService;
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.wisoft.vamos.dto.ApiResult.succeed;
+import static io.wisoft.vamos.dto.api.ApiResult.succeed;
 
 @RestController
 @RequiredArgsConstructor

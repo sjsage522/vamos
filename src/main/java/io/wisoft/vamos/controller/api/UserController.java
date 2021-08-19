@@ -1,19 +1,16 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.dto.ApiResult;
-import io.wisoft.vamos.dto.user.UserJoinRequest;
+import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.dto.user.UserResponse;
 import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.wisoft.vamos.dto.ApiResult.succeed;
+import static io.wisoft.vamos.dto.api.ApiResult.succeed;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package io.wisoft.vamos.dto;
+package io.wisoft.vamos.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -13,9 +13,9 @@ public class ApiResult<T> {
     private final T data;
 
     @JsonProperty("error")
-    private final ErrorTemplate errorTemplate;
+    private final ErrorResponse errorTemplate;
 
-    private ApiResult(T data, ErrorTemplate errorTemplate) {
+    private ApiResult(T data, ErrorResponse errorTemplate) {
         this.data = data;
         this.errorTemplate = errorTemplate;
     }
@@ -31,7 +31,7 @@ public class ApiResult<T> {
         return new ApiResult<>(data, null);
     }
 
-    public static <T> ApiResult<T> failed(ErrorTemplate errorTemplate) {
+    public static <T> ApiResult<T> failed(ErrorResponse errorTemplate) {
         return new ApiResult<>(null, errorTemplate);
     }
 

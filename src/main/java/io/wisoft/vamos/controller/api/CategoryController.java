@@ -1,6 +1,6 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.dto.ApiResult;
+import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.category.CategoryResponse;
 import io.wisoft.vamos.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import io.wisoft.vamos.domain.comment.Comment;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
-import io.wisoft.vamos.exception.DataNotFoundException;
+import io.wisoft.vamos.exception.NoMatchUserInfoException;
 import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CommentRepository;
 import io.wisoft.vamos.repository.UploadFileRepository;
@@ -31,7 +31,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(
-                () -> new DataNotFoundException("존재하지 않는 사용자 입니다.")
+                NoMatchUserInfoException::new
         );
     }
 

@@ -16,4 +16,13 @@ public class SessionUser implements Serializable {
         this.email = user.getEmail();
         this.picture = user.getPicture();
     }
+
+    @Override
+    public String toString() {
+        return "SessionUser{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", picture='" + picture + '\'' +
+                '}';
+    }
 }

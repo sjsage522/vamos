@@ -1,7 +1,7 @@
 package io.wisoft.vamos.controller.api;
 
 import io.wisoft.vamos.domain.comment.Comment;
-import io.wisoft.vamos.dto.ApiResult;
+import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.comment.CommentApplyRequest;
 import io.wisoft.vamos.dto.comment.CommentResponse;
 import io.wisoft.vamos.dto.comment.CommentUpdateRequest;
@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.wisoft.vamos.dto.ApiResult.*;
+import static io.wisoft.vamos.dto.api.ApiResult.*;
 
 @RestController
 @RequiredArgsConstructor

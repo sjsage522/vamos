@@ -1,8 +1,18 @@
 spring:
 
+  application:
+    name: vamos
+
   profiles:
     active: h2
     include: oauth,property
 
   session:
     store-type: jdbc
+
+  web:
+    resources:
+      add-mappings: false
+
+  mvc:
+    throw-exception-if-no-handler-found: true

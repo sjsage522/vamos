@@ -8,7 +8,8 @@ import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
-import io.wisoft.vamos.exception.DataNotFoundException;
+import io.wisoft.vamos.exception.NoMatchBoardInfoException;
+import io.wisoft.vamos.exception.NoMatchCategoryInfoException;
 import io.wisoft.vamos.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class BoardService {
     private static final int MAX_FILE_LENGTH = 5;
 
     @Transactional
-    public Board upload(BoardUploadRequest boardUploadRequest, MultipartFile[] files) throws IllegalArgumentException {
+    public Board upload(BoardUploadRequest boardUploadRequest, MultipartFile[] files) {
 
         if (files != null && files.length > MAX_FILE_LENGTH)
             throw new IllegalArgumentException("이미지 갯수는 5개를 초과할 수 없습니다.");
@@ -68,7 +69,7 @@ public class BoardService {
     @Transactional(readOnly = true)
     public Board findById(Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 게시글 입니다."));
+                .orElseThrow(NoMatchBoardInfoException::new);
     }
 
     @Transactional
@@ -117,7 +118,7 @@ public class BoardService {
     }
 
     private void compareUser(User target, User current) {
-        if (!current.equals(target)) throw new IllegalStateException("다른 사용자의 게시글입니다.");
+        if (!current.equals(target)) throw new NoMatchBoardInfoException("다른 사용자의 게시글입니다.");
     }
 
     private User findCurrentUser() {
@@ -130,6 +131,6 @@ public class BoardService {
     private Category getCategory(BoardUploadRequest boardUploadRequest) {
         Category instance = Category.of(boardUploadRequest.getCategoryNameEN());
         return categoryRepository.findByName(instance.getName())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리 입니다."));
+                .orElseThrow(NoMatchCategoryInfoException::new);
     }
 }
