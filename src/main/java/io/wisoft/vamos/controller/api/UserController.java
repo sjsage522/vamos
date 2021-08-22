@@ -45,6 +45,12 @@ public class UserController {
                 .collect(Collectors.toList()));
     }
 
+    /**
+     * 사용자 위치정보 수정
+     * @param username
+     * @param request dto
+     * @return user info
+     */
     @PatchMapping("/user/{username}/location")
     public ApiResult<UserResponse> userLocationUpdate(
             @PathVariable String username,
