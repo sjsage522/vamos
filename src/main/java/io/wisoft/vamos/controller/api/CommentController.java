@@ -23,6 +23,12 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    /**
+     * 게시글 작성
+     * @param boardId 게시글 고유 id
+     * @param request dto
+     * @return comment info
+     */
     @PostMapping("/comment/board/{boardId}")
     public ApiResult<CommentResponse> commentApply(
             @PathVariable Long boardId,
@@ -34,6 +40,12 @@ public class CommentController {
         );
     }
 
+    /**
+     * 답글의 부모 id가 null 인,
+     * 특정 게시글의 모든 답글 조회
+     * @param boardId 게시글 고유 id
+     * @return comment info
+     */
     @GetMapping("/comments/board/{boardId}")
     public ApiResult<List<CommentResponse>> getCommentList(@PathVariable Long boardId) {
         return succeed(commentService.findAllByBoardIdIfParentIsNull(boardId)
@@ -43,6 +55,12 @@ public class CommentController {
         );
     }
 
+    /**
+     * 답글 수정
+     * @param commentId 답글 고유 id
+     * @param request dto
+     * @return comment info
+     */
     @PatchMapping("/comment/{commentId}")
     public ApiResult<CommentResponse> commentUpdate(
             @PathVariable Long commentId,
@@ -54,6 +72,11 @@ public class CommentController {
         );
     }
 
+    /**
+     * 답글 삭제
+     * @param commentId 답글 고유 id
+     * @return comment info
+     */
     @DeleteMapping("/comment/{commentId}")
     public ApiResult<String> commentDelete(
             @PathVariable Long commentId) {
@@ -61,6 +84,12 @@ public class CommentController {
         return succeed("comment is deleted successfully");
     }
 
+    /**
+     * CommentResponse DTO
+     * 계층형 답글로 나타내기 위한 로직 포함
+     * @param comment comment entity
+     * @return CommentResponse DTO
+     */
     private CommentResponse getCommentResponse(Comment comment) {
         CommentResponse commentResponse = new CommentResponse(comment);
         Comment parent = comment.getParent();
