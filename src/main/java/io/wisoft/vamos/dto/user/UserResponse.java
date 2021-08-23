@@ -17,6 +17,9 @@ public class UserResponse {
     @JsonProperty("username")
     private String username;
 
+    @JsonProperty("email")
+    private String email;
+
     @JsonProperty("nickname")
     private String nickname;
 
@@ -25,6 +28,9 @@ public class UserResponse {
 
     @JsonProperty("location")
     private UserLocation location;
+
+    @JsonProperty("profile")
+    private String picture;
 
     public UserResponse(User source) {
         BeanUtils.copyProperties(source, this);
