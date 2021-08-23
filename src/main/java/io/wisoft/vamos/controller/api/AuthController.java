@@ -34,7 +34,6 @@ public class AuthController {
     @PostMapping("/sms-certification/sends")
     public ApiResult<SmsResponse> sendSms(@RequestBody SmsPhoneNumberRequest request, @LoginUser SessionUser sessionUser) {
         String certification = smsCertificationService.sendSms(PhoneNumber.of(request.getPhoneNumber()));
-        System.out.println("sessionUser = " + sessionUser);
         return succeed(new SmsResponse("인증번호를 성공적으로 요청했습니다.", certification));
     }
 

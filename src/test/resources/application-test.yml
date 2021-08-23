@@ -1,10 +1,9 @@
 spring:
-  application:
-    name: vamos
   h2:
     console:
       enabled: true
       path: /h2-console
+
   jpa:
     database: h2
     show-sql: true
@@ -15,27 +14,33 @@ spring:
         default_batch_fetch_size: 1000
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
+
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:vamos;MODE=PostgreSQL
-    data-username: sa
-    data-password:
-    platform: h2-test
+
   redis:
     host: 127.0.0.1
     password:
     port: 6379
+
+  sql:
+    init:
+      username: sa
+      password:
+
+  session:
+    store-type: jdbc
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope: profile,email
+
 server:
   port: 5000
-
-jwt:
-  header: ${jwt_header:header}
-  secret: ${jwt_secret:secret}
-  token-validity-in-seconds: ${jwt_token_validity_in_seconds:validity}
-
-ncs:
-  accessKey: ${ncs_access_key:key}
-  secretKey: ${ncs_secret:secret}
-  serviceId: ${ncs_service_id:id}
-  from: ${ncs_from:from}
 

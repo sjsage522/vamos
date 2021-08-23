@@ -71,6 +71,7 @@ public class SmsCertificationService {
     }
 
     private void sending(PhoneNumber phone, String certification, String currentTime) throws JsonProcessingException, URISyntaxException {
+        log.info("number = {}", phone.getPhoneNumber());
         HttpHeaders httpHeaders = new HttpHeaders();
         settingHeaders(httpHeaders, currentTime);
 

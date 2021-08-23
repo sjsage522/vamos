@@ -5,6 +5,7 @@ import io.wisoft.vamos.domain.category.CategoryName;
 import io.wisoft.vamos.domain.user.PhoneNumber;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,12 +16,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DisplayName("도메인 테스트 (Board)")
 class BoardTest {
 
+    private static User user;
+
+    @BeforeAll
+    static void userInit() {
+        user = User.builder()
+                .username("testId")
+                .email("junseok@gmail.com")
+                .phoneNumber(PhoneNumber.of("01012345678"))
+                .nickname("tester")
+                .location(UserLocation.from(0., 0., "test location"))
+                .build();
+    }
+
     @Test
     @DisplayName("게시글 생성 성공 테스트")
     void create_board_test() {
-
         Board board = Board.from("test title", "test content", 1,
-                User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
+                user,
                 Category.of("BOOKS_TICKETS_RECORDS"));
 
 
@@ -39,19 +52,19 @@ class BoardTest {
                         Category.of("DIGITAL_DEVICE")), "사용자는 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", "test content", 1,
-                        User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
+                        user,
                         null), "카테고리는 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("", "test conetent", 1,
-                        User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
+                        user,
                         Category.of("DIGITAL_DEVICE")), "title 은 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", null, 1,
-                        User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
+                        user,
                         Category.of("DIGITAL_DEVICE")), "content 은 반드시 존재해야 합니다."),
 
                 () -> assertThrows(IllegalArgumentException.class, () -> Board.from("test title", "test content", 0,
-                        User.from("testId", "1234", PhoneNumber.of("01012345678"), "tester", UserLocation.from(0.0, 0.0, "test location")),
+                        user,
                         Category.of("DIGITAL_DEVICE")), "가격은 0 보다 커야합니다.")
         );
     }

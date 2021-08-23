@@ -214,4 +214,4 @@ gradle-app.setting
 
 # Custom
 application-oauth.yml
-application-property.yml
+application-*property.yml
