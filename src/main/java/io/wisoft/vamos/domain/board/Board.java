@@ -65,10 +65,9 @@ public class Board extends BaseTimeEntity {
     private Board(String title, String content, int price, User user, Category category) {
         checkArgument(checkStringValid(title, content), "제목이나 내용은 비워둘 수 없습니다.");
         checkArgument(checkPriceValid(price), "가격은 0 보다 커야합니다.");
-        System.out.println("user : " + user);
-        System.out.println("category : " + category);
         checkArgument(checkObjectValid(user, category), "사용자 또는 카테고리가 유효하지 않습니다.");
         UserLocation userLocation = user.getLocation();
+        checkArgument(userLocation != null, "사용자 위치 정보가 설정되어 있지 않습니다.");
         this.location = BoardLocation.from(userLocation.getX(), userLocation.getY(), userLocation.getAddressName());
         this.title = title;
         this.content = content;
