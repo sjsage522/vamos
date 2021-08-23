@@ -72,6 +72,10 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
+    public void changeUserRole(Role role) {
+        this.role = role;
+    }
+
     public String getRoleKey() {
         return this.role.getKey();
     }
@@ -101,9 +105,5 @@ public class User extends BaseTimeEntity {
                 ", phoneNumber=" + phoneNumber +
                 ", location=" + location +
                 '}';
-    }
-
-    private boolean checkUserId(String username) {
-        return Pattern.matches("^[a-zA-Z][a-zA-Z0-9]{4,19}$", username);
     }
 }

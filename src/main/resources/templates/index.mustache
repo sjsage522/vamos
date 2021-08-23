@@ -15,6 +15,7 @@
     <!-- 로그인 기능 영역 -->
     <div class="row">
         <div class="col-md-6">
+            <a href="/board/save" role="button" class="btn btn-primary">글 등록</a>
             {{#userName}}
                 Logged in as: <span id="user">{{userName}}</span>
                 <a href="/logout" class="btn btn-info active" role="button">Logout</a>
@@ -34,19 +35,21 @@
 <table class="table table-horizontal table-bordered">
     <thead class="thead-strong">
     <tr>
-        <th>번호</th>
-        <th>로그인 사용자</th>
-        <th>이메일</th>
+        <th>게시글 번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>최종수정일</th>
     </tr>
     </thead>
     <tbody id="tbody">
-    {{#users}}
+    {{#boards}}
         <tr>
             <td>{{id}}</td>
-            <td>{{username}}</td>
-            <td>{{email}}</td>
+            <td><a href="/board/update/{{id}}">{{title}}</a></td>
+            <td>{{user.email}}</td>
+            <td>{{modifiedDate}}</td>
         </tr>
-    {{/users}}
+    {{/boards}}
     </tbody>
 </table>
 

@@ -3,6 +3,7 @@ package io.wisoft.vamos.config.auth;
 import io.wisoft.vamos.config.auth.dto.OAuthAttributes;
 import io.wisoft.vamos.config.auth.dto.SessionUser;
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.property.EmailProperty;
 import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.Collections;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
+    private final EmailProperty emailProperty;
     private final UserRepository userRepository;
     private final HttpSession httpSession;
 
@@ -58,7 +60,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private User saveOrUpdate(OAuthAttributes attributes) {
         User user = userRepository.findByEmail(attributes.getEmail())
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
-                .orElse(attributes.toEntity());
+                .orElse(attributes.toEntity(emailProperty));
 
         return userRepository.save(user);
     }

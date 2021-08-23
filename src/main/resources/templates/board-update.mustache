@@ -1,0 +1,35 @@
+{{>layout/header}}
+
+<h1>게시글 수정</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="id">글 번호</label>
+                <input type="text" class="form-control" id="id" value="{{board.id}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="title">제목</label>
+                <input type="text" class="form-control" id="title" value="{{board.title}}">
+            </div>
+            <div class="form-group">
+                <label for="contentr"> 내용 </label>
+                <input type="text" class="form-control" id="content" value="{{board.content}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="price"> 가격 </label>
+                <textarea class="form-control" id="price">{{board.price}}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="category"> 카테고리 </label>
+                <textarea class="form-control" id="category">{{board.categoryNameEN}}</textarea>
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">취소</a>
+        <button type="button" class="btn btn-primary" id="btn-update">수정 완료</button>
+        <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
+    </div>
+</div>
+
+{{>layout/footer}}

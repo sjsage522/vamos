@@ -2,6 +2,7 @@ package io.wisoft.vamos.config.auth.dto;
 
 import io.wisoft.vamos.domain.user.Role;
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.property.EmailProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -65,12 +66,16 @@ public class OAuthAttributes {
                 .build();
     }
 
-    public User toEntity() {
-        return User.builder()
+    public User toEntity(EmailProperty emailProperty) {
+        final User user = User.builder()
                 .username(name)
                 .email(email)
                 .picture(picture)
                 .role(Role.GUEST)
                 .build();
+
+//        if (emailProperty.getGmail().equals(email)) user.changeUserRole(Role.ADMIN);
+
+        return user;
     }
 }
