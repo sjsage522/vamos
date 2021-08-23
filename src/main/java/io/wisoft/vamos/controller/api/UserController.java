@@ -1,8 +1,11 @@
 package io.wisoft.vamos.controller.api;
 
+import io.wisoft.vamos.config.auth.LoginUser;
+import io.wisoft.vamos.config.auth.dto.SessionUser;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.dto.user.UserResponse;
+import io.wisoft.vamos.exception.NoMatchUserInfoException;
 import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +50,17 @@ public class UserController {
 
     /**
      * 사용자 위치정보 수정
+     *
      * @param username
-     * @param request dto
+     * @param request  dto
      * @return user info
      */
     @PatchMapping("/user/{username}/location")
     public ApiResult<UserResponse> userLocationUpdate(
             @PathVariable String username,
-            @RequestBody UserLocationUpdateRequest request) {
+            @RequestBody UserLocationUpdateRequest request,
+            @LoginUser SessionUser sessionUser) {
+        if (!username.equals(sessionUser.getUsername())) throw new NoMatchUserInfoException();
         return succeed(
                 new UserResponse(userService.updateUserLocation(username, request))
         );

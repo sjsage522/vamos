@@ -81,12 +81,12 @@ public class User extends BaseTimeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(getUsername(), user.getUsername()) && Objects.equals(getNickname(), user.getNickname());
+        return Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getUsername(), user.getUsername());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUsername(), getNickname());
+        return Objects.hash(getEmail(), getUsername());
     }
 
     @Override
