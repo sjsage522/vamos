@@ -32,9 +32,9 @@ class UserServiceTest {
     @DisplayName("사용자위치 수정 성공 테스트")
     void updateUserLocation_succeed_test() {
         //given
-        String username = "junseok";
+        String email = "junseok@gmail.com";
         User user = User.builder()
-                .username(username)
+                .email(email)
                 .location(UserLocation.from(0., 0., "test location"))
                 .build();
         UserLocationUpdateRequest request = UserLocationUpdateRequest.builder()
@@ -44,9 +44,9 @@ class UserServiceTest {
                 .build();
 
         //when
-        when(userRepository.findByUsername(username))
+        when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(user));
-        userService.updateUserLocation(username, request);
+        userService.updateUserLocation(email, request);
 
         //then
         UserLocation location = user.getLocation();

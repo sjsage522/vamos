@@ -5,6 +5,7 @@ import io.wisoft.vamos.domain.category.Category;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -62,6 +63,7 @@ public class Board extends BaseTimeEntity {
 
     protected Board() {}
 
+    @Builder
     private Board(String title, String content, int price, User user, Category category) {
         checkArgument(checkStringValid(title, content), "제목이나 내용은 비워둘 수 없습니다.");
         checkArgument(checkPriceValid(price), "가격은 0 보다 커야합니다.");
@@ -74,6 +76,7 @@ public class Board extends BaseTimeEntity {
         this.price = price;
         this.user = user;
         this.category = category;
+        this.status = BoardStatus.SALE;
     }
 
     public static Board from(String title, String content, int price, User user, Category category) {
@@ -117,8 +120,8 @@ public class Board extends BaseTimeEntity {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", price=" + price +
-                ", user=" + user +
-                ", category=" + category +
+                ", user=" + user.getEmail()+
+                ", category=" + category.getName().getEn() +
                 ", status=" + status +
                 ", uploadFiles=" + uploadFiles +
                 '}';

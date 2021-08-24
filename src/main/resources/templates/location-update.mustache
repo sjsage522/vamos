@@ -1,0 +1,26 @@
+{{>layout/header}}
+
+<h1>위치정보 등록 및 수정</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="x">위도(latitude: y)</label>
+                <input type="text" class="form-control" id="x" value="{{location.y}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="y">경도(longitude: x)</label>
+                <input type="text" class="form-control" id="y" value="{{location.x}}">
+            </div>
+            <div class="form-group">
+                <label for="address"> 주소 </label>
+                <input type="text" class="form-control" id="address" value="{{location.addressName}}" readonly>
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">취소</a>
+        <button type="button" class="btn btn-primary" id="btn-location-update">수정 완료</button>
+    </div>
+</div>
+
+{{>layout/footer}}

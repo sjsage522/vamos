@@ -32,4 +32,13 @@ public class UserLocation {
     private boolean isValid(String addressName) {
         return !addressName.isBlank();
     }
+
+    @Override
+    public String toString() {
+        return "UserLocation{" +
+                "x=" + x +
+                ", y=" + y +
+                ", addressName='" + addressName + '\'' +
+                '}';
+    }
 }

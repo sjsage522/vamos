@@ -24,20 +24,18 @@ public class UserController {
 
     /**
      * 쿼리 파라미터를 통해 특정 사용자 조회
-     *
-     * @param username
+     * @param email
      * @return user info
      */
     @GetMapping("/user")
-    public ApiResult<UserResponse> getUser(@RequestParam String username) {
+    public ApiResult<UserResponse> getUser(@RequestParam String email) {
         return succeed(
-                new UserResponse(userService.findByUsername(username))
+                new UserResponse(userService.findByEmail(email))
         );
     }
 
     /**
      * 전체 사용자 조회
-     *
      * @return user infos
      */
     @GetMapping("/users")
@@ -49,20 +47,23 @@ public class UserController {
     }
 
     /**
-     * 사용자 위치정보 수정
-     *
-     * @param username
+     * 사용자 위치정보 등록 및 수정
+     * @param email
      * @param request  dto
      * @return user info
      */
-    @PatchMapping("/user/{username}/location")
+    @PatchMapping("/user/{email}/location")
     public ApiResult<UserResponse> userLocationUpdate(
-            @PathVariable String username,
+            @PathVariable String email,
             @RequestBody UserLocationUpdateRequest request,
             @LoginUser SessionUser sessionUser) {
-        if (!username.equals(sessionUser.getUsername())) throw new NoMatchUserInfoException();
+        checkUser(email, sessionUser);
         return succeed(
-                new UserResponse(userService.updateUserLocation(username, request))
+                new UserResponse(userService.updateUserLocation(email, request))
         );
+    }
+
+    private void checkUser(@PathVariable String email, @LoginUser SessionUser sessionUser) {
+        if (!email.equals(sessionUser.getEmail())) throw new NoMatchUserInfoException();
     }
 }

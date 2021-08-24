@@ -19,6 +19,9 @@
             {{#userName}}
                 Logged in as: <span id="user">{{userName}}</span>
                 <a href="/logout" class="btn btn-info active" role="button">Logout</a>
+                {{#location}}
+
+                {{/location}}
             {{/userName}}
             {{^userName}}
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
@@ -38,7 +41,7 @@
         <th>게시글 번호</th>
         <th>제목</th>
         <th>작성자</th>
-        <th>최종수정일</th>
+        <th>게시글 상태</th>
     </tr>
     </thead>
     <tbody id="tbody">
@@ -47,7 +50,7 @@
             <td>{{id}}</td>
             <td><a href="/board/update/{{id}}">{{title}}</a></td>
             <td>{{user.email}}</td>
-            <td>{{modifiedDate}}</td>
+            <td>{{boardStatus}}</td>
         </tr>
     {{/boards}}
     </tbody>

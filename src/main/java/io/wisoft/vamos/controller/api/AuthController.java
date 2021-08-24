@@ -32,7 +32,7 @@ public class AuthController {
      * @param request 사용자 핸드폰 번호가 포함된 요청
      */
     @PostMapping("/sms-certification/sends")
-    public ApiResult<SmsResponse> sendSms(@RequestBody SmsPhoneNumberRequest request, @LoginUser SessionUser sessionUser) {
+    public ApiResult<SmsResponse> sendSms(@RequestBody SmsPhoneNumberRequest request) {
         String certification = smsCertificationService.sendSms(PhoneNumber.of(request.getPhoneNumber()));
         return succeed(new SmsResponse("인증번호를 성공적으로 요청했습니다.", certification));
     }
@@ -65,8 +65,8 @@ public class AuthController {
     @Getter
     private static class SmsResponse {
 
-        private String content;
-        private String certification;
+        private final String content;
+        private final String certification;
 
         public SmsResponse(String content, String certification) {
             this.content = content;

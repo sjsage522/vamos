@@ -63,7 +63,7 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("01. 문자 메시지 인증번호 요청 테스트")
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = {"USER", "GUEST"})
     void _01_sms_verification_request_test() throws Exception {
 
         ResultActions result = mockMvc.perform(
@@ -103,7 +103,7 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("02. 인증번호 검증 요청 테스트")
-    @WithMockUser(roles = "USER")
+    @WithMockUser(roles = {"USER", "GUEST"})
     void _02_sms_verification_check_test() throws Exception {
 
         ResultActions result = mockMvc.perform(

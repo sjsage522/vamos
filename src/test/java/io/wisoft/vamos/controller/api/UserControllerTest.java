@@ -71,7 +71,7 @@ class UserControllerTest {
         ResultActions result = mockMvc.perform(
                 get("/api/user")
                         .accept(MediaType.APPLICATION_JSON)
-                        .queryParam("username", username)
+                        .queryParam("email", email)
         );
 
         //then
@@ -100,7 +100,7 @@ class UserControllerTest {
 
         //when
         ResultActions result = mockMvc.perform(
-                patch("/api/user/junseok/location")
+                patch("/api/user/junseok@gmail.com/location")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 toJson(

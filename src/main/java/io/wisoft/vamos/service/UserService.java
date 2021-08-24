@@ -19,8 +19,8 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
                 NoMatchUserInfoException::new
         );
     }
@@ -32,8 +32,8 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUserLocation(String username, UserLocationUpdateRequest request) {
-        User findUser = findByUsername(username);
+    public User updateUserLocation(String email, UserLocationUpdateRequest request) {
+        User findUser = findByEmail(email);
         UserLocation location = UserLocation.from(request.getX(), request.getY(), request.getAddressName());
         findUser.changeUserLocation(location);
         return findUser;

@@ -1,7 +1,6 @@
 package io.wisoft.vamos.service;
 
 import io.wisoft.vamos.domain.board.Board;
-import io.wisoft.vamos.domain.board.BoardStatus;
 import io.wisoft.vamos.domain.category.Category;
 import io.wisoft.vamos.domain.comment.Comment;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
@@ -61,7 +60,6 @@ public class BoardService {
         final UserLocation location = user.getLocation();
         final Double x = location.getX(); //longitude (경도)
         final Double y = location.getY(); //latitude (위도)
-
         //TODO 페이징, EX) user.getRadius() 를 통해 사용자가 지정한 범위에 따라 조회하는 기능
         final int radius = 2000; //2km
         return boardRepository.findByEarthDistance(x, y, radius);
@@ -111,16 +109,13 @@ public class BoardService {
         User user = findCurrentUser(email);
         Category category = getCategory(boardUploadRequest);
 
-        Board board = Board.from(
+        return Board.from(
                 boardUploadRequest.getTitle(),
                 boardUploadRequest.getContent(),
                 boardUploadRequest.getPrice(),
                 user,
                 category
         );
-        board.changeStatus(BoardStatus.SALE);
-
-        return board;
     }
 
     private void compareUser(User target, User current) {

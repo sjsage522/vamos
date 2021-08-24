@@ -1,13 +1,11 @@
 package io.wisoft.vamos.domain.user;
 
-import com.google.common.base.Preconditions;
 import io.wisoft.vamos.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "users")

@@ -21,7 +21,6 @@ import static io.wisoft.vamos.dto.api.ApiResult.failed;
 import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
-@ResponseBody
 @Slf4j
 public class RestControllersExceptionHandler {
 

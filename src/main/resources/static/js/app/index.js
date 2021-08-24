@@ -14,7 +14,7 @@ var main = {
         });
     },
     save : function () {
-        const data = new FormData();
+        let data = new FormData();
         data.append("title", $('#title').val())
         data.append("content", $('#content').val())
         data.append("price", $('#price').val())
@@ -36,21 +36,22 @@ var main = {
         });
     },
     update : function () {
-        var data = {
-            title: $('#title').val(),
-            content: $('#content').val(),
-            price: $('#price').val(),
-            categoryNameEN: $('#category').val()
-        };
+        let data = new FormData();
+        data.append("title", $('#title').val())
+        data.append("content", $('#content').val())
+        data.append("price", $('#price').val())
+        data.append("categoryNameEN", $('#category').val())
 
         var id = $('#id').val();
 
         $.ajax({
-            type: 'PUT',
+            type: 'PATCH',
             url: '/api/board/'+id,
+            data: data,
             dataType: 'json',
-            contentType:'application/json; charset=utf-8',
-            data: JSON.stringify(data)
+            processData: false,
+            contentType: false,
+            cache: false,
         }).done(function() {
             alert('글이 수정되었습니다.');
             window.location.href = '/';

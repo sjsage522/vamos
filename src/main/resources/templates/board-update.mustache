@@ -15,7 +15,7 @@
             </div>
             <div class="form-group">
                 <label for="contentr"> 내용 </label>
-                <input type="text" class="form-control" id="content" value="{{board.content}}" readonly>
+                <input type="text" class="form-control" id="content" value="{{board.content}}">
             </div>
             <div class="form-group">
                 <label for="price"> 가격 </label>
@@ -23,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label for="category"> 카테고리 </label>
-                <textarea class="form-control" id="category">{{board.categoryNameEN}}</textarea>
+                <textarea class="form-control" id="category">{{board.category.names.1}}</textarea>
             </div>
         </form>
         <a href="/" role="button" class="btn btn-secondary">취소</a>
