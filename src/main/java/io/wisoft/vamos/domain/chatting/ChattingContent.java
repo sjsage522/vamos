@@ -7,10 +7,7 @@ import lombok.Getter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "chatting_content",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "chatting_room_id"})
-        })
+@Table(name = "chatting_content")
 @Getter
 @SequenceGenerator(
         name = "chatting_content_sequence_generator",
