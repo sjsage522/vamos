@@ -9,6 +9,7 @@ public enum ErrorCode {
     NOMATCH_CATEGORY_INFO(400, "존재하지 않는 카테고리 입니다."),
     NOMATCH_COMMENT_INFO(400, "존재하지 않는 답글 입니다."),
     NOMATCH_USER_INFO(400, "존재하지 않는 사용자 입니다."),
+    NOMATCH_CHAT_ROOM_INFO(400, "존재하지 않는 채팅방 입니다."),
     INCORRECT_FORMAT(400, "잘못된 형식입니다."),
     INCORRECT_SERVLET_REQUEST(400, "잘못된 서블릿 요청입니다."),
     INCORRECT_HTTP_BODY_FORMAT(400, "잘못된 HTTP BODY 요청 형식입니다."),
