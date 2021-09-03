@@ -2,6 +2,7 @@ package io.wisoft.vamos.domain.chatting;
 
 import io.wisoft.vamos.domain.BaseTimeEntity;
 import io.wisoft.vamos.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class ChattingContent extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User writer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatting_room_id")
@@ -37,4 +38,20 @@ public class ChattingContent extends BaseTimeEntity {
 
     @Column(name = "is_read")
     private boolean isRead;
+
+    @Builder
+    private ChattingContent(User writer, ChattingRoom chattingRoom, String content, boolean isRead) {
+        this.writer = writer;
+        this.chattingRoom = chattingRoom;
+        this.content = content;
+        this.isRead = isRead;
+    }
+
+    public void registerChatRoom(ChattingRoom chattingRoom) {
+        this.chattingRoom = chattingRoom;
+    }
+
+    protected ChattingContent() {
+
+    }
 }
