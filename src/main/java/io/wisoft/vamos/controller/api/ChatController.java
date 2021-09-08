@@ -1,13 +1,13 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.config.auth.LoginUser;
-import io.wisoft.vamos.config.auth.dto.SessionUser;
 import io.wisoft.vamos.domain.board.BoardInfoCriteria;
 import io.wisoft.vamos.domain.chatting.ChattingContent;
 import io.wisoft.vamos.domain.chatting.ChattingRoom;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.chat.ChatContentRequest;
 import io.wisoft.vamos.dto.chat.ChatRoomResponse;
+import io.wisoft.vamos.security.CurrentUser;
+import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.BoardService;
 import io.wisoft.vamos.service.ChatService;
 import io.wisoft.vamos.service.UserService;
@@ -38,17 +38,17 @@ public class ChatController {
      * 채팅으로 거래하기
      *
      * @param boardInfoCriteria 게시글 정보 폼데이터
-     * @param sessionUser       현재 로그인 사용자
+     * @param userPrincipal      현재 로그인 사용자
      * @return 채팅방 정보
      */
     @GetMapping("/chat")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResult<ChatRoomResponse> startChatting(
             BoardInfoCriteria boardInfoCriteria,
-            @LoginUser SessionUser sessionUser) {
+            @CurrentUser UserPrincipal userPrincipal) {
 
         Long boardId = boardInfoCriteria.getId();
-        String buyerEmail = sessionUser.getEmail();
+        String buyerEmail = userPrincipal.getEmail();
 
         ChattingRoom chatRoom = chatService.findChatRoom(boardId, buyerEmail).orElse(
                 ChattingRoom.builder()

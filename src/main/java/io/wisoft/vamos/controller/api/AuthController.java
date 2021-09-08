@@ -1,19 +1,33 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.config.auth.LoginUser;
-import io.wisoft.vamos.config.auth.dto.SessionUser;
 import io.wisoft.vamos.domain.user.PhoneNumber;
+import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.dto.api.ApiResult;
+import io.wisoft.vamos.dto.user.AuthResponse;
+import io.wisoft.vamos.dto.user.LoginRequest;
+import io.wisoft.vamos.dto.user.SignUpRequest;
+import io.wisoft.vamos.repository.UserRepository;
+import io.wisoft.vamos.security.TokenProvider;
+import io.wisoft.vamos.security.oauth2.AuthProvider;
 import io.wisoft.vamos.service.SmsCertificationService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+
+import java.net.URI;
 
 import static io.wisoft.vamos.dto.api.ApiResult.succeed;
 
@@ -22,10 +36,54 @@ import static io.wisoft.vamos.dto.api.ApiResult.succeed;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 
+    private final AuthenticationManager authenticationManager;
+    private final TokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
     private final SmsCertificationService smsCertificationService;
+    private final UserRepository userRepository;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = tokenProvider.createToken(authentication);
+        return ResponseEntity.ok(new AuthResponse(token));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+            throw new IllegalStateException("Email address already in use.");
+        }
+
+        // Creating user's account
+        User user = User.builder()
+                .nickname(signUpRequest.getName())
+                .email(signUpRequest.getEmail())
+                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .provider(AuthProvider.local)
+                .build();
+
+        User result = userRepository.save(user);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/user/me")
+                .buildAndExpand(result.getId()).toUri();
+
+        return ResponseEntity.created(location)
+                .body(succeed("User registered successfully"));
+    }
 
     /**
      * 문자 메시지 인증번호를 얻기위한 요청

@@ -1,11 +1,11 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.config.auth.LoginUser;
-import io.wisoft.vamos.config.auth.dto.SessionUser;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.board.BoardResponse;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
+import io.wisoft.vamos.security.CurrentUser;
+import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,30 +27,32 @@ public class BoardController {
 
     /**
      * 게시글 업로드
+     *
      * @param boardUploadRequest dto
-     * @param files 첨부 이미지
+     * @param files              첨부 이미지
      * @return board info
      */
     @PostMapping("/board")
     public ApiResult<BoardResponse> boardUpload(
             @ModelAttribute BoardUploadRequest boardUploadRequest,
             @RequestPart(value = "files", required = false) MultipartFile[] files,
-            @LoginUser SessionUser sessionUser
+            @CurrentUser UserPrincipal userPrincipal
     ) {
         return succeed(new BoardResponse(
-                        boardService.upload(boardUploadRequest, files, sessionUser.getEmail())
+                        boardService.upload(boardUploadRequest, files, userPrincipal.getEmail())
                 )
         );
     }
 
     /**
      * 게시글 리스트 조회
+     *
      * @return boardList info
      */
     //TODO 사용자 반경 몇 키로미터 내의 게시글들 조회, 페이징
     @GetMapping("/boards")
-    public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(@LoginUser SessionUser sessionUser) {
-        List<Board> boards = boardService.findByEarthDistance(sessionUser.getEmail());
+    public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(@CurrentUser UserPrincipal userPrincipal) {
+        List<Board> boards = boardService.findByEarthDistance(userPrincipal.getEmail());
 
         List<BoardResponse> boardResponses = boards.stream()
                 .map(BoardResponse::new)
@@ -61,6 +63,7 @@ public class BoardController {
 
     /**
      * 게시글 단건 조회
+     *
      * @param boardId 게시글 고유 id
      * @return board info
      */
@@ -75,6 +78,7 @@ public class BoardController {
 
     /**
      * 게시글 수정
+     *
      * @param boardId 게시글 고유 id
      * @param request dto
      * @return board info
@@ -83,10 +87,10 @@ public class BoardController {
     public ApiResult<BoardResponse> boardUpdate(
             @PathVariable Long boardId,
             @ModelAttribute BoardUploadRequest request,
-            @LoginUser SessionUser sessionUser) {
+            @CurrentUser UserPrincipal userPrincipal) {
         return succeed(
                 new BoardResponse(
-                        boardService.update(boardId, request, sessionUser.getEmail())
+                        boardService.update(boardId, request, userPrincipal.getEmail())
                 )
         );
     }
@@ -99,8 +103,8 @@ public class BoardController {
      */
     @DeleteMapping("/board/{boardId}")
     public ApiResult<String> boardDelete(@PathVariable Long boardId,
-                                         @LoginUser SessionUser sessionUser) {
-        boardService.delete(boardId, sessionUser.getEmail());
+                                         @CurrentUser UserPrincipal userPrincipal) {
+        boardService.delete(boardId, userPrincipal.getEmail());
         return succeed("board is deleted successfully");
     }
 }

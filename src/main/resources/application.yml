@@ -4,11 +4,11 @@ spring:
     name: vamos
 
   profiles:
-    active: h2
+    active: pg
     include: oauth,property
 
-  session:
-    store-type: jdbc
+#  session:
+#    store-type: jdbc
 
   web:
     resources:

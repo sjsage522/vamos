@@ -1,10 +1,12 @@
 package io.wisoft.vamos.domain.user;
 
 import io.wisoft.vamos.domain.BaseTimeEntity;
+import io.wisoft.vamos.security.oauth2.AuthProvider;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -37,9 +39,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "picture")
     private String picture;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    @Column(name = "password")
+    private String password;
+
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private Role role;
 
     @Embedded
     private PhoneNumber phoneNumber;
@@ -47,17 +52,27 @@ public class User extends BaseTimeEntity {
     @Embedded
     private UserLocation location;
 
+    @Column(name = "provider", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
     protected User() { /* empty */ }
 
     @Builder
-    private User(String email, String username, String nickname, String picture, Role role, PhoneNumber phoneNumber, UserLocation location) {
+    private User(String email, String username, String nickname, String picture, PhoneNumber phoneNumber,
+                 UserLocation location, AuthProvider provider, String providerId, String password) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
         this.picture = picture;
-        this.role = role;
         this.phoneNumber = phoneNumber;
         this.location = location;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.password = password;
     }
 
     public void changeUserLocation(UserLocation location) {
@@ -70,13 +85,13 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
-    public void changeUserRole(Role role) {
-        this.role = role;
-    }
+//    public void changeUserRole(Role role) {
+//        this.role = role;
+//    }
 
-    public String getRoleKey() {
-        return this.role.getKey();
-    }
+//    public String getRoleKey() {
+//        return this.role.getKey();
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -99,7 +114,6 @@ public class User extends BaseTimeEntity {
                 ", username='" + username + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", picture='" + picture + '\'' +
-                ", role=" + role +
                 ", phoneNumber=" + phoneNumber +
                 ", location=" + location +
                 '}';

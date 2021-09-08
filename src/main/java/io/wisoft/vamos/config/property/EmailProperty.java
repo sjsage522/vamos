@@ -1,4 +1,4 @@
-package io.wisoft.vamos.property;
+package io.wisoft.vamos.config.property;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
