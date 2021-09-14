@@ -7,9 +7,6 @@ spring:
     active: pg
     include: oauth,property
 
-#  session:
-#    store-type: jdbc
-
   web:
     resources:
       add-mappings: false
