@@ -59,7 +59,7 @@ public class Board extends BaseTimeEntity {
     private BoardStatus status;     /* default -> SALE */
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE) /* owner 가 아닌쪽을 정의 */
-    private List<UploadFile> uploadFiles = new ArrayList<>();
+    private final List<UploadFile> uploadFiles = new ArrayList<>();
 
     protected Board() {}
 
