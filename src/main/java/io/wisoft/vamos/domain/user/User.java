@@ -42,9 +42,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "password")
     private String password;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private Role role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Embedded
     private PhoneNumber phoneNumber;
