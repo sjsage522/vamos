@@ -1,5 +1,6 @@
 package io.wisoft.vamos.security.oauth2;
 
+import io.wisoft.vamos.domain.user.Role;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.exception.OAuth2AuthenticationProcessingException;
 import io.wisoft.vamos.repository.UserRepository;
@@ -72,6 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .picture(oAuth2UserInfo.getImageUrl())
                 .provider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))
                 .providerId(oAuth2UserInfo.getId())
+                .role(Role.USER)
                 .build();
         return userRepository.save(user);
     }

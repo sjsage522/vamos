@@ -63,7 +63,7 @@ public class User extends BaseTimeEntity {
 
     @Builder
     private User(String email, String username, String nickname, String picture, PhoneNumber phoneNumber,
-                 UserLocation location, AuthProvider provider, String providerId, String password) {
+                 UserLocation location, AuthProvider provider, String providerId, String password, Role role) {
         this.email = email;
         this.username = username;
         this.nickname = nickname;
@@ -73,6 +73,7 @@ public class User extends BaseTimeEntity {
         this.provider = provider;
         this.providerId = providerId;
         this.password = password;
+        this.role = role;
     }
 
     public void changeUserLocation(UserLocation location) {
@@ -85,13 +86,9 @@ public class User extends BaseTimeEntity {
         return this;
     }
 
-//    public void changeUserRole(Role role) {
-//        this.role = role;
-//    }
-
-//    public String getRoleKey() {
-//        return this.role.getKey();
-//    }
+    public void changeUserRole(Role role) {
+        this.role = role;
+    }
 
     @Override
     public boolean equals(Object o) {
