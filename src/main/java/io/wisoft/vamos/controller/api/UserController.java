@@ -64,18 +64,13 @@ public class UserController {
      * @param request dto
      * @return user info
      */
-    @PatchMapping("/user/{email}/location")
+    @PatchMapping("/user/location")
     public ApiResult<UserResponse> userLocationUpdate(
-            @PathVariable String email,
             @RequestBody UserLocationUpdateRequest request,
             @CurrentUser UserPrincipal userPrincipal) {
-        checkUser(email, userPrincipal);
         return succeed(
-                new UserResponse(userService.updateUserLocation(email, request))
+                new UserResponse(userService.updateUserLocation(userPrincipal.getEmail(), request))
         );
     }
 
-    private void checkUser(@PathVariable String email, UserPrincipal userPrincipal) {
-        if (!email.equals(userPrincipal.getEmail())) throw new NoMatchUserInfoException();
-    }
 }

@@ -103,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/",
+                .antMatchers("/**", //임시 모두 허용
                         "/h2-console/**",
                         "/error",
                         "/favicon.ico",

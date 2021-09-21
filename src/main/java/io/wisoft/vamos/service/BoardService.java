@@ -3,24 +3,23 @@ package io.wisoft.vamos.service;
 import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.domain.category.Category;
 import io.wisoft.vamos.domain.comment.Comment;
-import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
 import io.wisoft.vamos.exception.NoMatchBoardInfoException;
 import io.wisoft.vamos.exception.NoMatchCategoryInfoException;
 import io.wisoft.vamos.exception.NoMatchUserInfoException;
-import io.wisoft.vamos.repository.*;
+import io.wisoft.vamos.repository.BoardRepository;
+import io.wisoft.vamos.repository.CategoryRepository;
+import io.wisoft.vamos.repository.CommentRepository;
+import io.wisoft.vamos.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static io.wisoft.vamos.util.FileUtils.saveFilesOnDisc;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +28,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final UploadFileRepository uploadFileRepository;
     private final CommentRepository commentRepository;
+    private final FileService fileService;
+
     private static final int MAX_FILE_LENGTH = 5;
 
     @Transactional
@@ -42,13 +42,8 @@ public class BoardService {
         Board uploadBoard = getBoard(boardUploadRequest, email);
         Board saveBoard = boardRepository.save(uploadBoard);
 
-        List<UploadFile> fileList = saveFilesOnDisc(saveBoard, files);
-
-        /* 게시글 첨부 이미지가 존재하는 경우 */
-        if (!CollectionUtils.isEmpty(fileList)) {
-            uploadFileRepository.saveAll(fileList);
-            saveBoard.addFiles(fileList);
-        }
+        if (files != null && files.length > 0)
+            fileService.uploadFiles(saveBoard, files);
 
         return saveBoard;
     }
