@@ -84,7 +84,7 @@ class AuthControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        System.out.println("response = " + response);
+
         int certificationIndex = response.indexOf("certification");
 
         String body = response.substring(certificationIndex);

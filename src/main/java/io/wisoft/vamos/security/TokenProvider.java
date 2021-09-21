@@ -5,8 +5,10 @@ import io.wisoft.vamos.config.property.JwtProperty;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
@@ -30,6 +32,16 @@ public class TokenProvider {
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtProperty.getAuth().getTokenSecret())
                 .compact();
+    }
+
+    public ResponseCookie createTokenCookie(final String token) {
+        long ageInSeconds = StringUtils.hasText(token) ? jwtProperty.getAuth().getTokenExpirationMsec() : 0;
+        return ResponseCookie.from("accessToken", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(ageInSeconds)
+                .build();
     }
 
     public Long getUserIdFromToken(String token) {

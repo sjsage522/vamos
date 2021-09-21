@@ -1,6 +1,7 @@
 package io.wisoft.vamos.controller.api;
 
 import io.wisoft.vamos.domain.user.PhoneNumber;
+import io.wisoft.vamos.domain.user.Role;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.user.AuthResponse;
@@ -12,6 +13,8 @@ import io.wisoft.vamos.security.oauth2.AuthProvider;
 import io.wisoft.vamos.service.SmsCertificationService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,13 +61,16 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = tokenProvider.createToken(authentication);
-        return ResponseEntity.ok(new AuthResponse(token));
+        ResponseCookie responseCookie = tokenProvider.createTokenCookie(token);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(token);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new IllegalStateException("Email address already in use.");
+            throw new IllegalArgumentException("Email address already in use.");
         }
 
         // Creating user's account
@@ -73,6 +79,7 @@ public class AuthController {
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
+                .role(Role.USER)
                 .build();
 
         User result = userRepository.save(user);
