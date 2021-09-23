@@ -103,7 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/**", //임시 모두 허용
+                .antMatchers(//임시 모두 허용
                         "/h2-console/**",
                         "/error",
                         "/favicon.ico",
@@ -115,7 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/api/auth/**")
+                .antMatchers("/api/auth/**", "/api/boards")
                 .permitAll()
                 .anyRequest().authenticated()
                 .expressionHandler(expressionHandler())

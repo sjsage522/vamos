@@ -1,5 +1,6 @@
 package io.wisoft.vamos.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+@Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -40,6 +42,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("jwt filer call");
             }
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);
