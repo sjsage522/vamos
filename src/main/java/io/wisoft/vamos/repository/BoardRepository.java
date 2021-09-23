@@ -16,7 +16,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                     "ll_to_earth(:latitude, :longitude)) < :radius",
             nativeQuery = true
     )
-    List<Board> findByEarthDistance(@Param("longitude") Double x, @Param("latitude") Double y, int radius);
+    List<Board> findByEarthDistance(@Param("longitude") Double x, @Param("latitude") Double y, @Param("radius") int radius);
 
     List<Board> findAllByUserId(Long userId);
 
