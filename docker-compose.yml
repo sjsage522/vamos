@@ -23,8 +23,8 @@ services:
     restart: always
 
   app:
-    image: server
-    container_name: server
+    image: vamos-server
+    container_name: vamos-server
     ports:
       - '8080:8080'
     build:
