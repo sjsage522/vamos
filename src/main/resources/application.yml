@@ -4,7 +4,7 @@ spring:
     name: vamos
 
   profiles:
-    active: pg
+    active: dev
     include: oauth,property
 
   web:

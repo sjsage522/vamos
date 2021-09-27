@@ -52,6 +52,9 @@ class BoardServiceTest {
     @Mock
     CategoryRepository categoryRepository;
 
+    @Mock
+    FileService fileService;
+
     @Test
     @DisplayName("게시글 업로드 테스트 (첨부이미지가 없는 경우)")
     void board_upload_not_include_files_test() {
@@ -111,8 +114,6 @@ class BoardServiceTest {
                 .willReturn(Optional.of(user));
         given(boardRepository.save(any()))
                 .willReturn(board);
-        given(uploadFileRepository.saveAll(any()))
-                .willReturn(any());
         given(categoryRepository.findByName(category.getName()))
                 .willReturn(Optional.of(category));
 
@@ -120,7 +121,7 @@ class BoardServiceTest {
         boardService.upload(boardUploadRequest, multipartFiles, email);
 
         //then
-        then(uploadFileRepository).should(times(1)).saveAll(any());
+        then(fileService).should(times(1)).uploadFiles(board, multipartFiles);
     }
 
     private Category getCategory(BoardUploadRequest boardUploadRequest) {

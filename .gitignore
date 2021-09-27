@@ -213,6 +213,8 @@ gradle-app.setting
 **/build/
 
 # Custom
+application-dev.yml
+application-prod.yml
 application-oauth.yml
-application-*property.yml
-EntityManagerTest.java
+application-property.yml
+import.sql
