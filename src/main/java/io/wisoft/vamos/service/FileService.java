@@ -55,6 +55,11 @@ public class FileService {
         return result;
     }
 
+    @Transactional
+    public void deleteAllByBoardId(Long boardId) {
+        uploadFileRepository.deleteAllByBoardId(boardId);
+    }
+
     private boolean checkImageMineType(MultipartFile multipartFile) throws IOException {
         InputStream inputStream = multipartFile.getInputStream();
 
