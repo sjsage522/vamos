@@ -3,7 +3,6 @@ package io.wisoft.vamos.controller.api;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.dto.user.UserResponse;
-import io.wisoft.vamos.exception.NoMatchUserInfoException;
 import io.wisoft.vamos.security.CurrentUser;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.UserService;
@@ -34,13 +33,13 @@ public class UserController {
     /**
      * 쿼리 파라미터를 통해 특정 사용자 조회
      *
-     * @param email
+     * @param name
      * @return user info
      */
     @GetMapping("/user")
-    public ApiResult<UserResponse> getUser(@RequestParam String email) {
+    public ApiResult<UserResponse> getUser(@RequestParam("name") String name) {
         return succeed(
-                new UserResponse(userService.findByEmail(email))
+                new UserResponse(userService.findByUsername(name))
         );
     }
 
@@ -60,7 +59,6 @@ public class UserController {
     /**
      * 사용자 위치정보 등록 및 수정
      *
-     * @param email
      * @param request dto
      * @return user info
      */
