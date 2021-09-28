@@ -87,10 +87,11 @@ public class BoardController {
     public ApiResult<BoardResponse> boardUpdate(
             @PathVariable Long boardId,
             @ModelAttribute BoardUploadRequest request,
+            @RequestPart(value = "files", required = false) MultipartFile[] files,
             @CurrentUser UserPrincipal userPrincipal) {
         return succeed(
                 new BoardResponse(
-                        boardService.update(boardId, request, userPrincipal.getEmail())
+                        boardService.update(boardId, request, files, userPrincipal.getEmail())
                 )
         );
     }
