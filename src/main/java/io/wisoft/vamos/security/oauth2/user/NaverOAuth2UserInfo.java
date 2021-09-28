@@ -12,7 +12,7 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
 
     @Override
     public String getId() {
-        return ((Integer) attributes.get("id")).toString();
+        return (String) attributes.get("id");
     }
 
     @Override
@@ -28,5 +28,12 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo {
     @Override
     public String getImageUrl() {
         return (String) response.get("profile_image");
+    }
+
+    @Override
+    public String toString() {
+        return "NaverOAuth2UserInfo{" +
+                "response=" + response +
+                '}';
     }
 }
