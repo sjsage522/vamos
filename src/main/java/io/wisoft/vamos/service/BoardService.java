@@ -72,13 +72,18 @@ public class BoardService {
     }
 
     @Transactional
-    public Board update(Long boardId, BoardUploadRequest request, String email) {
+    public Board update(Long boardId, BoardUploadRequest request, MultipartFile[] files, String email) {
         Board modifiedBoard = getBoard(request, email);
         Board updateBoard = findById(boardId);
 
         compareUser(updateBoard.getUser(), modifiedBoard.getUser());
 
         updateBoard.updateBoard(modifiedBoard);
+
+        fileService.deleteAllByBoardId(boardId);
+        if (files != null && files.length > 0)
+            fileService.uploadFiles(updateBoard, files);
+
         return updateBoard;
     }
 
