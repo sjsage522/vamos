@@ -11,6 +11,8 @@ public interface UploadFileRepository extends JpaRepository<UploadFile, Long> {
 
     List<UploadFile> findAllByBoardId(Long boardId);
 
+    void deleteAllByBoardId(Long boardId);
+
     @Modifying
     @Query("DELETE FROM UploadFile uf WHERE uf.id IN :ids")
     void deleteWithIds(List<Long> ids);
