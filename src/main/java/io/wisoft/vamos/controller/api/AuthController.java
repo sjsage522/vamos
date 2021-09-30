@@ -65,7 +65,7 @@ public class AuthController {
         ResponseCookie responseCookie = tokenProvider.createTokenCookie(token);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(token); //TODO
+                .build();
     }
 
     @PostMapping("/logout")
