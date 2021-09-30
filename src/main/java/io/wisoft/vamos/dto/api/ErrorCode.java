@@ -14,6 +14,8 @@ public enum ErrorCode {
     INCORRECT_SERVLET_REQUEST(400, "잘못된 서블릿 요청입니다."),
     INCORRECT_HTTP_BODY_FORMAT(400, "잘못된 HTTP BODY 요청 형식입니다."),
     ILLEGAL_ARGUMENT(400, "잘못된 매개변수입니다."),
+    AUTH_INFO(400, "인증정보가 존재하지 않습니다."),
+    NOT_SET_USER_LOCATION(400, "사용자 위치정보가 설정되어 있지 않습니다."),
 
     HANDLER_NOT_FOUND(404, "요청 주소가 잘못되었습니다."),
 
