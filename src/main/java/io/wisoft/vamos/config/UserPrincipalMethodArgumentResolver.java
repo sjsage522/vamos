@@ -25,7 +25,7 @@ public class UserPrincipalMethodArgumentResolver implements HandlerMethodArgumen
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new AuthenticationPrincipalException(ErrorCode.AUTH_INFO);
+            throw new AuthenticationPrincipalException(ErrorCode.AUTHENTICATION_INFO);
         }
 
         return authentication.getPrincipal();

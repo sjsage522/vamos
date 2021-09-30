@@ -13,8 +13,6 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -153,7 +151,24 @@ public class RestControllersExceptionHandler {
         log.error("handleBadCredentialsException", ex);
 
         final ErrorResponse response = ErrorResponse.of(
-                ex.getBindingResult(), ErrorCode.AUTH_INFO
+                ex.getBindingResult(), ErrorCode.AUTHENTICATION_INFO
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
+    }
+
+    /**
+     * 인가 예외
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleAccessDeniedException(
+            final AccessDeniedException ex) {
+        log.error("handleAccessDeniedException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getMessage(), ErrorCode.AUTHORIZATION_INFO
         );
 
         return ResponseEntity

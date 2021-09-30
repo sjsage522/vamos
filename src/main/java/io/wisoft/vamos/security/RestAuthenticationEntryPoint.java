@@ -1,5 +1,6 @@
 package io.wisoft.vamos.security;
 
+import io.wisoft.vamos.dto.api.ErrorCode;
 import net.minidev.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +24,18 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         logger.error("Responding with unauthorized error. Message - {}", e.getMessage());
 
         httpServletResponse.setStatus(SC_UNAUTHORIZED);
+        httpServletResponse.setContentType("application/json; charset=UTF-8");
+        httpServletResponse.setCharacterEncoding("UTF-8");
+
         JSONObject json = new JSONObject();
         json.put("data", null);
 
         JSONObject errorJson = new JSONObject();
-        errorJson.put("message", e.getLocalizedMessage());
+        errorJson.put("message", ErrorCode.AUTHENTICATION_INFO.getMessage());
         errorJson.put("status", SC_UNAUTHORIZED);
         json.put("error", errorJson);
 
-        httpServletResponse.getOutputStream()
-                .println(json.toJSONString());
+        httpServletResponse.getWriter()
+                .println(json);
     }
 }

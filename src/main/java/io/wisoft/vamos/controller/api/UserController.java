@@ -22,7 +22,6 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/me")
-    @PreAuthorize("hasRole('USER')")
     public ApiResult<UserResponse> getCurrentUser(UserPrincipal userPrincipal) {
         return succeed(
                 new UserResponse(userService.findByEmail(userPrincipal.getEmail()))
