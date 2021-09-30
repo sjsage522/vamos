@@ -4,10 +4,11 @@ import io.wisoft.vamos.config.property.JwtProperty;
 import io.wisoft.vamos.security.TokenProvider;
 import io.wisoft.vamos.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import static io.wisoft.vamos.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @RequiredArgsConstructor
+@Slf4j
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -32,6 +34,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        log.info("OAuth2AuthenticationSuccessHandler.onAuthenticationSuccess");
+        log.info("OAuth2AuthenticationToken(authentication) = {}", SecurityContextHolder.getContext().getAuthentication());
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
