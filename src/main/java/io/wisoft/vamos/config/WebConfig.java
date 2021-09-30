@@ -18,6 +18,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final BoardInfoCriteriaResolver boardInfoCriteriaResolver;
+    private final UserPrincipalMethodArgumentResolver userPrincipalMethodArgumentResolver;
     private final long MAX_AGE_SECS = 3600;
 
 
@@ -35,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(boardInfoCriteriaResolver);
+        argumentResolvers.addAll(List.of(boardInfoCriteriaResolver, userPrincipalMethodArgumentResolver));
     }
 
     @Override
@@ -46,12 +47,5 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(MAX_AGE_SECS);
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new AuthCheckInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/api/auth/**");
     }
 }

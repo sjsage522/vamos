@@ -3,7 +3,6 @@ package io.wisoft.vamos.controller.api;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.dto.user.UserResponse;
-import io.wisoft.vamos.security.CurrentUser;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class UserController {
 
     @GetMapping("/user/me")
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<UserResponse> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public ApiResult<UserResponse> getCurrentUser(UserPrincipal userPrincipal) {
         return succeed(
                 new UserResponse(userService.findByEmail(userPrincipal.getEmail()))
         );
@@ -65,7 +64,7 @@ public class UserController {
     @PatchMapping("/user/location")
     public ApiResult<UserResponse> userLocationUpdate(
             @RequestBody UserLocationUpdateRequest request,
-            @CurrentUser UserPrincipal userPrincipal) {
+            UserPrincipal userPrincipal) {
         return succeed(
                 new UserResponse(userService.updateUserLocation(userPrincipal.getEmail(), request))
         );

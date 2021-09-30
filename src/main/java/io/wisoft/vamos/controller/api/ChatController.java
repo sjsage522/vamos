@@ -6,7 +6,6 @@ import io.wisoft.vamos.domain.chatting.ChattingRoom;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.chat.ChatContentRequest;
 import io.wisoft.vamos.dto.chat.ChatRoomResponse;
-import io.wisoft.vamos.security.CurrentUser;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.BoardService;
 import io.wisoft.vamos.service.ChatService;
@@ -45,7 +44,7 @@ public class ChatController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResult<ChatRoomResponse> startChatting(
             BoardInfoCriteria boardInfoCriteria,
-            @CurrentUser UserPrincipal userPrincipal) {
+            UserPrincipal userPrincipal) {
 
         Long boardId = boardInfoCriteria.getId();
         String buyerEmail = userPrincipal.getEmail();

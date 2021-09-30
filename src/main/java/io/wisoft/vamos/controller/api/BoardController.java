@@ -4,7 +4,6 @@ import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.board.BoardResponse;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
-import io.wisoft.vamos.security.CurrentUser;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +35,9 @@ public class BoardController {
     public ApiResult<BoardResponse> boardUpload(
             @ModelAttribute BoardUploadRequest boardUploadRequest,
             @RequestPart(value = "files", required = false) MultipartFile[] files,
-            @CurrentUser UserPrincipal userPrincipal
+            UserPrincipal userPrincipal
     ) {
+        log.info("[BoardController.boardUpload] userPrincipal = {}", userPrincipal);
         return succeed(new BoardResponse(
                         boardService.upload(boardUploadRequest, files, userPrincipal.getEmail())
                 )
@@ -51,7 +51,7 @@ public class BoardController {
      */
     //TODO 사용자 반경 몇 키로미터 내의 게시글들 조회, 페이징
     @GetMapping("/boards")
-    public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(@CurrentUser UserPrincipal userPrincipal) {
+    public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(UserPrincipal userPrincipal) {
         List<Board> boards = boardService.findByEarthDistance(userPrincipal.getEmail());
 
         List<BoardResponse> boardResponses = boards.stream()
@@ -88,7 +88,7 @@ public class BoardController {
             @PathVariable Long boardId,
             @ModelAttribute BoardUploadRequest request,
             @RequestPart(value = "files", required = false) MultipartFile[] files,
-            @CurrentUser UserPrincipal userPrincipal) {
+            UserPrincipal userPrincipal) {
         return succeed(
                 new BoardResponse(
                         boardService.update(boardId, request, files, userPrincipal.getEmail())
@@ -104,7 +104,7 @@ public class BoardController {
      */
     @DeleteMapping("/board/{boardId}")
     public ApiResult<String> boardDelete(@PathVariable Long boardId,
-                                         @CurrentUser UserPrincipal userPrincipal) {
+                                         UserPrincipal userPrincipal) {
         boardService.delete(boardId, userPrincipal.getEmail());
         return succeed("board is deleted successfully");
     }
