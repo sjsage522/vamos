@@ -9,10 +9,12 @@ import io.wisoft.vamos.dto.board.BoardUploadRequest;
 import io.wisoft.vamos.exception.NoMatchBoardInfoException;
 import io.wisoft.vamos.exception.NoMatchCategoryInfoException;
 import io.wisoft.vamos.exception.NoMatchUserInfoException;
+import io.wisoft.vamos.exception.NotYetSettingUserLocationException;
 import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CategoryRepository;
 import io.wisoft.vamos.repository.CommentRepository;
 import io.wisoft.vamos.repository.UserRepository;
+import io.wisoft.vamos.util.UserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +54,10 @@ public class BoardService {
     public List<Board> findByEarthDistance(String email) {
         User user = findCurrentUser(email);
 
-        final UserLocation location = user.getLocation();
-        final Double x = location.getX(); //longitude (경도)
-        final Double y = location.getY(); //latitude (위도)
+        UserLocation location = UserUtils.getUserLocation(user)
+                .orElseThrow(NotYetSettingUserLocationException::new);
+        Double x = location.getX(); //longitude (경도)
+        Double y = location.getY(); //latitude (위도)
         //TODO 페이징, EX) user.getRadius() 를 통해 사용자가 지정한 범위에 따라 조회하는 기능
         final int radius = 2000; //2km
         return boardRepository.findByEarthDistance(x, y, radius);
