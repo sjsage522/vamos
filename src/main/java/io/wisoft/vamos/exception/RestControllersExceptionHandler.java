@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +25,9 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 public class RestControllersExceptionHandler {
 
+    /**
+     * 지원하지 않는 요청메서드 타입
+     */
     @ExceptionHandler(HttpMediaTypeException.class)
     protected ResponseEntity<ApiResult<ErrorResponse>> handleHttpMediaTypeException(
             final HttpMediaTypeException ex) {
@@ -133,6 +137,23 @@ public class RestControllersExceptionHandler {
 
         final ErrorResponse response = ErrorResponse.of(
                 ex.getBindingResult(), ErrorCode.INCORRECT_FORMAT
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
+    }
+
+    /**
+     * validation 에러
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleBadCredentialsException(
+            final MethodArgumentNotValidException ex) {
+        log.error("handleBadCredentialsException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getBindingResult(), ErrorCode.AUTH_INFO
         );
 
         return ResponseEntity
