@@ -24,7 +24,7 @@ public class CommentController {
     private final CommentService commentService;
 
     /**
-     * 게시글 작성
+     * 답글 작성
      * @param boardId 게시글 고유 id
      * @param request dto
      * @return comment info
