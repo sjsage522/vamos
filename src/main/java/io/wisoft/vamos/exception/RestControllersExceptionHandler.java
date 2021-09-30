@@ -145,7 +145,7 @@ public class RestControllersExceptionHandler {
     }
 
     /**
-     * validation 에러
+     * 인증 예외
      */
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<ApiResult<ErrorResponse>> handleBadCredentialsException(
