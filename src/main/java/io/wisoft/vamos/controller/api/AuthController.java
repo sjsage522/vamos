@@ -36,7 +36,8 @@ import java.net.URI;
 import static io.wisoft.vamos.dto.api.ApiResult.succeed;
 
 /**
- * TODO 로그인 방식 OAuth 를 이용하도록 변경.. 문자인증은 남겨두고 JWT는 삭제.. 레디스도 삭제..
+ * TODO
+ * 문자인증 후 인가 로직 고민
  */
 @RequiredArgsConstructor
 @RestController
