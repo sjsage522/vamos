@@ -14,7 +14,7 @@ import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CategoryRepository;
 import io.wisoft.vamos.repository.CommentRepository;
 import io.wisoft.vamos.repository.UserRepository;
-import io.wisoft.vamos.util.UserUtils;
+import io.wisoft.vamos.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static io.wisoft.vamos.util.UserUtils.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,12 +38,12 @@ public class BoardService {
     private static final int MAX_FILE_LENGTH = 5;
 
     @Transactional
-    public Board upload(BoardUploadRequest boardUploadRequest, MultipartFile[] files, String email) {
+    public Board upload(BoardUploadRequest boardUploadRequest, MultipartFile[] files, UserPrincipal currentUser) {
 
         if (files != null && files.length > MAX_FILE_LENGTH)
             throw new IllegalArgumentException("이미지 갯수는 5개를 초과할 수 없습니다.");
 
-        Board uploadBoard = getBoard(boardUploadRequest, email);
+        Board uploadBoard = getBoard(boardUploadRequest, currentUser.getEmail());
         Board saveBoard = boardRepository.save(uploadBoard);
 
         if (files != null && files.length > 0)
@@ -51,10 +53,10 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<Board> findByEarthDistance(String email) {
-        User user = findCurrentUser(email);
+    public List<Board> findByEarthDistance(UserPrincipal currentUser) {
+        User user = findUserByEmail(currentUser.getEmail());
 
-        UserLocation location = UserUtils.getUserLocation(user)
+        UserLocation location = getUserLocation(user)
                 .orElseThrow(NotYetSettingUserLocationException::new);
         Double x = location.getX(); //longitude (경도)
         Double y = location.getY(); //latitude (위도)
@@ -75,30 +77,30 @@ public class BoardService {
     }
 
     @Transactional
-    public Board update(Long boardId, BoardUploadRequest request, MultipartFile[] files, String email) {
-        Board modifiedBoard = getBoard(request, email);
-        Board updateBoard = findById(boardId);
+    public Board update(Long boardId, BoardUploadRequest request, MultipartFile[] files, UserPrincipal currentUser) {
+        Board modifiedBoard = getBoard(request, currentUser.getEmail());
+        Board target = findById(boardId);
 
-        compareUser(updateBoard.getUser(), modifiedBoard.getUser());
+        compareUser(target.getUser(), modifiedBoard.getUser(), "다른 사용자의 게시글 입니다.");
 
-        updateBoard.updateBoard(modifiedBoard);
+        target.updateBoard(modifiedBoard);
 
         fileService.deleteAllByBoardId(boardId);
         if (files != null && files.length > 0)
-            fileService.uploadFiles(updateBoard, files);
+            fileService.uploadFiles(target, files);
 
-        return updateBoard;
+        return target;
     }
 
     @Transactional
-    public void delete(Long boardId, String email) {
-        User currentUser = findCurrentUser(email);
-        Board deleteBoard = findById(boardId);
+    public void delete(Long boardId, UserPrincipal currentUser) {
+        User user = findUserByEmail(currentUser.getEmail());
+        Board target = findById(boardId);
 
-        compareUser(deleteBoard.getUser(), currentUser);
+        compareUser(target.getUser(), user, "다른 사용자의 게시글 입니다.");
 
         deleteComments(boardId);
-        boardRepository.delete(deleteBoard);
+        boardRepository.delete(target);
     }
 
     private void deleteComments(Long boardId) {
@@ -109,7 +111,7 @@ public class BoardService {
     }
 
     private Board getBoard(BoardUploadRequest boardUploadRequest, String email) {
-        User user = findCurrentUser(email);
+        User user = findUserByEmail(email);
         Category category = getCategory(boardUploadRequest);
 
         return Board.from(
@@ -121,11 +123,7 @@ public class BoardService {
         );
     }
 
-    private void compareUser(User target, User current) {
-        if (!current.equals(target)) throw new NoMatchBoardInfoException("다른 사용자의 게시글입니다.");
-    }
-
-    private User findCurrentUser(String email) {
+    private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(NoMatchUserInfoException::new);
     }

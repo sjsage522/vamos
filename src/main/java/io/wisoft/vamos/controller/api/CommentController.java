@@ -5,6 +5,7 @@ import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.comment.CommentApplyRequest;
 import io.wisoft.vamos.dto.comment.CommentResponse;
 import io.wisoft.vamos.dto.comment.CommentUpdateRequest;
+import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,11 @@ public class CommentController {
     @PostMapping("/comment/board/{boardId}")
     public ApiResult<CommentResponse> commentApply(
             @PathVariable Long boardId,
-            @Valid @RequestBody CommentApplyRequest request) {
+            @Valid @RequestBody CommentApplyRequest request,
+            UserPrincipal userPrincipal) {
         return succeed(
                 getCommentResponse(
-                        commentService.apply(boardId, request)
+                        commentService.apply(boardId, request, userPrincipal)
                 )
         );
     }
@@ -64,10 +66,11 @@ public class CommentController {
     @PatchMapping("/comment/{commentId}")
     public ApiResult<CommentResponse> commentUpdate(
             @PathVariable Long commentId,
-            @Valid @RequestBody CommentUpdateRequest request) {
+            @Valid @RequestBody CommentUpdateRequest request,
+            UserPrincipal userPrincipal) {
         return succeed(
                 new CommentResponse(
-                        commentService.update(commentId, request)
+                        commentService.update(commentId, request, userPrincipal)
                 )
         );
     }
@@ -79,8 +82,9 @@ public class CommentController {
      */
     @DeleteMapping("/comment/{commentId}")
     public ApiResult<String> commentDelete(
-            @PathVariable Long commentId) {
-        commentService.delete(commentId);
+            @PathVariable Long commentId,
+            UserPrincipal userPrincipal) {
+        commentService.delete(commentId, userPrincipal);
         return succeed("comment is deleted successfully");
     }
 

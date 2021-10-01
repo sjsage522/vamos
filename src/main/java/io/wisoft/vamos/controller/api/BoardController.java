@@ -37,9 +37,8 @@ public class BoardController {
             @RequestPart(value = "files", required = false) MultipartFile[] files,
             UserPrincipal userPrincipal
     ) {
-        log.info("[BoardController.boardUpload] userPrincipal = {}", userPrincipal);
         return succeed(new BoardResponse(
-                        boardService.upload(boardUploadRequest, files, userPrincipal.getEmail())
+                        boardService.upload(boardUploadRequest, files, userPrincipal)
                 )
         );
     }
@@ -52,7 +51,7 @@ public class BoardController {
     //TODO 사용자 반경 몇 키로미터 내의 게시글들 조회, 페이징
     @GetMapping("/boards")
     public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(UserPrincipal userPrincipal) {
-        List<Board> boards = boardService.findByEarthDistance(userPrincipal.getEmail());
+        List<Board> boards = boardService.findByEarthDistance(userPrincipal);
 
         List<BoardResponse> boardResponses = boards.stream()
                 .map(BoardResponse::new)
@@ -91,7 +90,7 @@ public class BoardController {
             UserPrincipal userPrincipal) {
         return succeed(
                 new BoardResponse(
-                        boardService.update(boardId, request, files, userPrincipal.getEmail())
+                        boardService.update(boardId, request, files, userPrincipal)
                 )
         );
     }
@@ -105,7 +104,7 @@ public class BoardController {
     @DeleteMapping("/board/{boardId}")
     public ApiResult<String> boardDelete(@PathVariable Long boardId,
                                          UserPrincipal userPrincipal) {
-        boardService.delete(boardId, userPrincipal.getEmail());
+        boardService.delete(boardId, userPrincipal);
         return succeed("board is deleted successfully");
     }
 }

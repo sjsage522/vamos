@@ -6,7 +6,6 @@ import io.wisoft.vamos.dto.user.UserResponse;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

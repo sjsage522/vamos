@@ -7,14 +7,18 @@ import io.wisoft.vamos.dto.comment.CommentApplyRequest;
 import io.wisoft.vamos.dto.comment.CommentUpdateRequest;
 import io.wisoft.vamos.exception.NoMatchBoardInfoException;
 import io.wisoft.vamos.exception.NoMatchCommentInfoException;
+import io.wisoft.vamos.exception.NoMatchUserInfoException;
 import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CommentRepository;
 import io.wisoft.vamos.repository.UserRepository;
+import io.wisoft.vamos.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static io.wisoft.vamos.util.UserUtils.compareUser;
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +29,11 @@ public class CommentService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Comment apply(Long boardId, CommentApplyRequest request) {
-        User currentUser = findCurrentUser();
+    public Comment apply(Long boardId, CommentApplyRequest request, UserPrincipal currentUser) {
+        User user = findUserByEmail(currentUser.getEmail());
         Board targetBoard = findBoard(boardId);
 
-        Comment newComment = Comment.from(currentUser, targetBoard, request.getContent());
+        Comment newComment = Comment.from(user, targetBoard, request.getContent());
         applyToParent(newComment, request.getParentId());
 
         return commentRepository.save(newComment);
@@ -42,27 +46,23 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment update(Long commentId, CommentUpdateRequest request) {
-        Comment updateComment = findCommentWithUser(commentId);
-        User currentUser = findCurrentUser();
+    public Comment update(Long commentId, CommentUpdateRequest request, UserPrincipal currentUser) {
+        Comment target = findCommentWithUser(commentId);
+        User user = findUserByEmail(currentUser.getEmail());
 
-        compareUser(updateComment.getUser(), currentUser);
-        updateComment.updateContent(request.getContent());
+        compareUser(target.getUser(), user, "다른 사용자의 답글 입니다.");
+        target.updateContent(request.getContent());
 
-        return updateComment;
+        return target;
     }
 
     @Transactional
-    public void delete(Long commentId) {
-        Comment deleteComment = findCommentWithUser(commentId);
-        User currentUser = findCurrentUser();
+    public void delete(Long commentId, UserPrincipal currentUser) {
+        Comment target = findCommentWithUser(commentId);
+        User user = findUserByEmail(currentUser.getEmail());
 
-        compareUser(deleteComment.getUser(), currentUser);
-        commentRepository.delete(deleteComment);
-    }
-
-    private void compareUser(User target, User current) {
-        if (!current.equals(target)) throw new NoMatchCommentInfoException("다른 사용자의 답글입니다.");
+        compareUser(target.getUser(), user, "다른 사용자의 답글 입니다.");
+        commentRepository.delete(target);
     }
 
     private void applyToParent(Comment comment, Long parentId) {
@@ -83,11 +83,9 @@ public class CommentService {
                 .orElseThrow(NoMatchCommentInfoException::new);
     }
 
-    private User findCurrentUser() {
-//        String username = SecurityUtils.getCurrentUsername();
-//        return userRepository.findByUsername(username)
-//                .orElseThrow(() -> new DataNotFoundException("존재하지 않는 사용자입니다."));
-        return null;
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(NoMatchUserInfoException::new);
     }
 
     private Board findBoard(Long boardId) {

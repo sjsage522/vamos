@@ -12,6 +12,7 @@ import io.wisoft.vamos.repository.BoardRepository;
 import io.wisoft.vamos.repository.CategoryRepository;
 import io.wisoft.vamos.repository.UploadFileRepository;
 import io.wisoft.vamos.repository.UserRepository;
+import io.wisoft.vamos.security.UserPrincipal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,6 +67,7 @@ class BoardServiceTest {
         String username = "testUser";
         String email = "junseok@gmail.com";
         User user = getUser(username, email);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
 
         Category category = getCategory(boardUploadRequest);
 
@@ -81,7 +83,7 @@ class BoardServiceTest {
         List<UploadFile> uploadFiles = List.of(uploadFile);
 
         //when
-        boardService.upload(boardUploadRequest, null, email);
+        boardService.upload(boardUploadRequest, null, userPrincipal);
 
         //then
         then(uploadFileRepository).should(times(0)).saveAll(uploadFiles);
@@ -97,6 +99,7 @@ class BoardServiceTest {
         String username = "testUser";
         String email = "junseok@gmail.com";
         User user = getUser(username, email);
+        UserPrincipal userPrincipal = UserPrincipal.create(user);
 
         Category category = getCategory(boardUploadRequest);
 
@@ -118,7 +121,7 @@ class BoardServiceTest {
                 .willReturn(Optional.of(category));
 
         //when
-        boardService.upload(boardUploadRequest, multipartFiles, email);
+        boardService.upload(boardUploadRequest, multipartFiles, userPrincipal);
 
         //then
         then(fileService).should(times(1)).uploadFiles(board, multipartFiles);
