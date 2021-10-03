@@ -34,7 +34,7 @@ public class UploadFile extends BaseTimeEntity {
     @Column(name = "stored_file_name")
     private String storedFileName;
 
-    @Column(name = "file_download_uri")
+    @Column(name = "file_download_uri", length = 512)
     private String fileDownloadUri;
 
     @Column(name = "file_type")

@@ -9,8 +9,8 @@ import io.wisoft.vamos.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,18 +27,16 @@ public class BoardController {
     /**
      * 게시글 업로드
      *
-     * @param boardUploadRequest dto
-     * @param files              첨부 이미지
+     * @param request dto
      * @return board info
      */
     @PostMapping("/board")
     public ApiResult<BoardResponse> boardUpload(
-            @ModelAttribute BoardUploadRequest boardUploadRequest,
-            @RequestPart(value = "files", required = false) MultipartFile[] files,
+            @ModelAttribute @Valid BoardUploadRequest request,
             UserPrincipal userPrincipal
     ) {
         return succeed(new BoardResponse(
-                        boardService.upload(boardUploadRequest, files, userPrincipal)
+                        boardService.upload(request, userPrincipal)
                 )
         );
     }
@@ -85,12 +83,11 @@ public class BoardController {
     @PatchMapping("/board/{boardId}")
     public ApiResult<BoardResponse> boardUpdate(
             @PathVariable Long boardId,
-            @ModelAttribute BoardUploadRequest request,
-            @RequestPart(value = "files", required = false) MultipartFile[] files,
+            @ModelAttribute @Valid BoardUploadRequest request,
             UserPrincipal userPrincipal) {
         return succeed(
                 new BoardResponse(
-                        boardService.update(boardId, request, files, userPrincipal)
+                        boardService.update(boardId, request, userPrincipal)
                 )
         );
     }

@@ -83,7 +83,7 @@ class BoardServiceTest {
         List<UploadFile> uploadFiles = List.of(uploadFile);
 
         //when
-        boardService.upload(boardUploadRequest, null, userPrincipal);
+        boardService.upload(boardUploadRequest, userPrincipal);
 
         //then
         then(uploadFileRepository).should(times(0)).saveAll(uploadFiles);
@@ -112,6 +112,7 @@ class BoardServiceTest {
                 "image/png",
                 fis);
         MultipartFile[] multipartFiles = {multipartFile};
+        boardUploadRequest.setFiles(multipartFiles);
 
         given(userRepository.findByEmail(email))
                 .willReturn(Optional.of(user));
@@ -121,7 +122,7 @@ class BoardServiceTest {
                 .willReturn(Optional.of(category));
 
         //when
-        boardService.upload(boardUploadRequest, multipartFiles, userPrincipal);
+        boardService.upload(boardUploadRequest, userPrincipal);
 
         //then
         then(fileService).should(times(1)).uploadFiles(board, multipartFiles);

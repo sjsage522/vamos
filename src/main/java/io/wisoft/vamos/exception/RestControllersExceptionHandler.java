@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -135,6 +136,23 @@ public class RestControllersExceptionHandler {
 
         final ErrorResponse response = ErrorResponse.of(
                 ex.getBindingResult(), ErrorCode.INCORRECT_FORMAT
+        );
+
+        return ResponseEntity
+                .status(response.getStatus())
+                .body(failed(response));
+    }
+
+    /**
+     * validation 에러
+     */
+    @ExceptionHandler(BindException.class)
+    protected ResponseEntity<ApiResult<ErrorResponse>> handleMBindException(
+            final BindException ex) {
+        log.error("BindException", ex);
+
+        final ErrorResponse response = ErrorResponse.of(
+                ex.getBindingResult(), ErrorCode.ILLEGAL_ARGUMENT
         );
 
         return ResponseEntity

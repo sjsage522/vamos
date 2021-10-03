@@ -35,17 +35,12 @@ public class BoardService {
     private final CommentRepository commentRepository;
     private final FileService fileService;
 
-    private static final int MAX_FILE_LENGTH = 5;
-
     @Transactional
-    public Board upload(BoardUploadRequest boardUploadRequest, MultipartFile[] files, UserPrincipal currentUser) {
-
-        if (files != null && files.length > MAX_FILE_LENGTH)
-            throw new IllegalArgumentException("이미지 갯수는 5개를 초과할 수 없습니다.");
-
+    public Board upload(BoardUploadRequest boardUploadRequest, UserPrincipal currentUser) {
         Board uploadBoard = getBoard(boardUploadRequest, currentUser.getEmail());
         Board saveBoard = boardRepository.save(uploadBoard);
 
+        MultipartFile[] files = boardUploadRequest.getFiles();
         if (files != null && files.length > 0)
             fileService.uploadFiles(saveBoard, files);
 
@@ -77,8 +72,8 @@ public class BoardService {
     }
 
     @Transactional
-    public Board update(Long boardId, BoardUploadRequest request, MultipartFile[] files, UserPrincipal currentUser) {
-        Board modifiedBoard = getBoard(request, currentUser.getEmail());
+    public Board update(Long boardId, BoardUploadRequest boardUploadRequest, UserPrincipal currentUser) {
+        Board modifiedBoard = getBoard(boardUploadRequest, currentUser.getEmail());
         Board target = findById(boardId);
 
         compareUser(target.getUser(), modifiedBoard.getUser(), "다른 사용자의 게시글 입니다.");
@@ -86,6 +81,8 @@ public class BoardService {
         target.updateBoard(modifiedBoard);
 
         fileService.deleteAllByBoardId(boardId);
+
+        MultipartFile[] files = boardUploadRequest.getFiles();
         if (files != null && files.length > 0)
             fileService.uploadFiles(target, files);
 
