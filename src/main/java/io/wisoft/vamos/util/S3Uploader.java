@@ -30,14 +30,15 @@ public class S3Uploader {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("can not convert multipartFile to file."));
 
-        String fileName = dirName + "/" + UUID.randomUUID() + uploadFile.getName(); //S3 save name
+        String storedFileName = UUID.randomUUID() + uploadFile.getName();
+        String fileName = dirName + "/" + storedFileName; //S3 save name
         String uploadImageUrl = putS3(uploadFile, fileName); //upload
         removeNewFile(uploadFile);
 
         return new UploadFileResponse(
                 uploadImageUrl,
                 multipartFile.getOriginalFilename(),
-                fileName,
+                storedFileName,
                 multipartFile.getSize(),
                 FilenameUtils.getExtension(multipartFile.getOriginalFilename())
         );
