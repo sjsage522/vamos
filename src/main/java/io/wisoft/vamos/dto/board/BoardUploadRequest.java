@@ -18,7 +18,7 @@ public class BoardUploadRequest {
 
     private String categoryNameEN;
 
-    @FileArrayLength
+    @FileArrayLength(message = "파일의 갯수가 유효한지 확인해 주세요.")
     private MultipartFile[] files;
 
     public BoardUploadRequest() {}
