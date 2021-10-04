@@ -48,6 +48,25 @@ public class ValidationTest {
         }
     }
 
+    @Test
+    void boardUploadRequestValidation() {
+        final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        final Validator validator = factory.getValidator();
+
+        final BoardUploadRequest request = BoardUploadRequest.builder()
+                .title("")
+                .content("")
+                .price(-1)
+                .categoryNameEN("")
+                .build();
+
+        final Set<ConstraintViolation<BoardUploadRequest>> violations = validator.validate(request);
+        for (ConstraintViolation<BoardUploadRequest> violation : violations) {
+            System.out.println("violation = " + violation);
+            System.out.println("violation.getMessage() = " + violation.getMessage());
+        }
+    }
+
     private MockMultipartFile getMockMultipartFile(String fileName, String contentType, String path) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(path);
         return new MockMultipartFile(fileName, fileName + "." + contentType, contentType, fileInputStream);
