@@ -38,7 +38,7 @@ public class TokenProvider {
         long ageInSeconds = StringUtils.hasText(token) ? jwtProperty.getAuth().getTokenExpirationMsec() : 0;
         return ResponseCookie.from("accessToken", token)
                 .httpOnly(true)
-                .secure(false) //TODO
+                .secure(true)
                 .sameSite("None")
                 .path("/")
                 .maxAge(ageInSeconds)
