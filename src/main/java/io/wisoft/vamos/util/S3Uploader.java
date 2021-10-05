@@ -2,6 +2,7 @@ package io.wisoft.vamos.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.transfer.Upload;
 import io.wisoft.vamos.config.property.AmazonS3Property;
@@ -27,13 +28,9 @@ public class S3Uploader {
     private final AmazonS3Property amazonS3Property;
 
     public UploadFileResponse upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("can not convert multipartFile to file."));
-
-        String storedFileName = UUID.randomUUID() + uploadFile.getName();
+        String storedFileName = UUID.randomUUID() + multipartFile.getName();
         String fileName = dirName + "/" + storedFileName; //S3 save name
-        String uploadImageUrl = putS3(uploadFile, fileName); //upload
-        removeNewFile(uploadFile);
+        String uploadImageUrl = putS3(multipartFile, fileName); //upload
 
         return new UploadFileResponse(
                 uploadImageUrl,
@@ -44,7 +41,7 @@ public class S3Uploader {
         );
     }
 
-    private String putS3(File uploadFile, String fileName) {
+    private String putS3(MultipartFile uploadFile, String fileName) throws IOException {
         String bucket = amazonS3Property
                 .getAws()
                 .getS3()
@@ -53,35 +50,11 @@ public class S3Uploader {
         amazonS3Client.putObject(new PutObjectRequest(
                 bucket,
                 fileName,
-                uploadFile
+                uploadFile.getInputStream(),
+                new ObjectMetadata()
         ).withCannedAcl(CannedAccessControlList.PublicRead));
 
         return amazonS3Client.getUrl(bucket, fileName).toString();
-    }
-
-    private void removeNewFile(File target) {
-        if (target.delete()) {
-            log.info("File delete success.");
-            return;
-        }
-        throw new IllegalStateException("File delete fail");
-    }
-
-    private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-        File convertFile = new File(
-                System.getProperty("user.dir") +
-                        "/" +
-                        multipartFile.getOriginalFilename());
-
-        if (convertFile.createNewFile()) {
-            //try-with-resource
-            try(FileOutputStream fileOutputStream = new FileOutputStream(convertFile)) {
-                fileOutputStream.write(multipartFile.getBytes());
-            }
-            return Optional.of(convertFile);
-        }
-
-        return Optional.empty();
     }
 
     @Getter
