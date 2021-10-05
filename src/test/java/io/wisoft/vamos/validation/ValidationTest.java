@@ -37,6 +37,10 @@ public class ValidationTest {
 
 
         final BoardUploadRequest request = BoardUploadRequest.builder()
+                .title("title")
+                .content("content")
+                .price(100)
+                .categoryNameEN("ETC")
                 .files(files)
                 .build();
 
