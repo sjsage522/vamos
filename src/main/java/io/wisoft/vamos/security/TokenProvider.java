@@ -39,6 +39,7 @@ public class TokenProvider {
         return ResponseCookie.from("accessToken", token)
                 .httpOnly(true)
                 .secure(false) //TODO
+                .sameSite("None")
                 .path("/")
                 .maxAge(ageInSeconds)
                 .build();
