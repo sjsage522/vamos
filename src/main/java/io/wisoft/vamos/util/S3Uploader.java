@@ -47,11 +47,13 @@ public class S3Uploader {
                 .getS3()
                 .getBucket();
 
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(uploadFile.getContentType());
         amazonS3Client.putObject(new PutObjectRequest(
                 bucket,
                 fileName,
                 uploadFile.getInputStream(),
-                new ObjectMetadata()
+                metadata
         ).withCannedAcl(CannedAccessControlList.PublicRead));
 
         return amazonS3Client.getUrl(bucket, fileName).toString();
