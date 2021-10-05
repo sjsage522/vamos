@@ -215,3 +215,4 @@ gradle-app.setting
 # Custom
 application*.yml
 import.sql
+*.log
