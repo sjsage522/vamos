@@ -38,7 +38,6 @@ import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 public class SmsCertificationService {
 
     private static final int MILLIS_MAX_LIMITS = 180000;
-//    private final SmsCertificationRepository smsCertificationRepository;
     private final MMSRepository mmsRepository;
     private final NaverSmsProperty naverSmsProperty;
 
@@ -54,8 +53,6 @@ public class SmsCertificationService {
             throw new IllegalStateException();
         }
 
-        /* 발송 정보를 redis 에 저장 */
-//        smsCertificationRepository.createSmsCertification(phone.getPhoneNumber(), certification);
         mmsRepository.save(MMS.from(phone.getPhoneNumber(), certification));
 
         return certification;
@@ -79,12 +76,6 @@ public class SmsCertificationService {
         if (!findMMS.getCertificationNumber().equals(certification) || isOverTime(findMMS, requestMillis, currentTimeMillis))
             throw new IllegalArgumentException("인증번호가 일치하지 않거나 만료되었습니다.");
         else mmsRepository.delete(findMMS);
-
-//        if (isValid(phoneNumber, certification)) {
-//            smsCertificationRepository.removeSmsCertification(phoneNumber);
-//        } else {
-//            throw new IllegalStateException("인증번호가 일치하지 않습니다.");
-//        }
     }
 
     private boolean isOverTime(MMS target, long requestMillis, long currentTimeMillis) {
@@ -94,12 +85,6 @@ public class SmsCertificationService {
         } else {
             return false;
         }
-    }
-
-    private boolean isValid(String phoneNumber, String certification) {
-//        return smsCertificationRepository.hasKey(phoneNumber)
-//                && smsCertificationRepository.getSmsCertification(phoneNumber).equals(certification);
-        return false;
     }
 
     private void sending(PhoneNumber phone, String certification, String currentTime) throws JsonProcessingException, URISyntaxException {

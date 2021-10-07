@@ -60,8 +60,6 @@ public class AuthController {
                 )
         );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String token = tokenProvider.createToken(authentication);
         ResponseCookie responseCookie = tokenProvider.createTokenCookie(token);
         return ResponseEntity.ok()
