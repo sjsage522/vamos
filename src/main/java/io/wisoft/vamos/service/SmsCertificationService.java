@@ -3,8 +3,9 @@ package io.wisoft.vamos.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.wisoft.vamos.config.property.NaverSmsProperty;
+import io.wisoft.vamos.domain.user.MMS;
 import io.wisoft.vamos.domain.user.PhoneNumber;
-import io.wisoft.vamos.repository.SmsCertificationRepository;
+import io.wisoft.vamos.repository.MMSRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -19,23 +20,26 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.nio.charset.StandardCharsets.*;
-import static org.apache.commons.lang3.RandomStringUtils.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SmsCertificationService {
 
-    private final SmsCertificationRepository smsCertificationRepository;
+    private static final int MILLIS_MAX_LIMITS = 180000;
+//    private final SmsCertificationRepository smsCertificationRepository;
+    private final MMSRepository mmsRepository;
     private final NaverSmsProperty naverSmsProperty;
 
     @Transactional
@@ -51,23 +55,51 @@ public class SmsCertificationService {
         }
 
         /* 발송 정보를 redis 에 저장 */
-        smsCertificationRepository.createSmsCertification(phone.getPhoneNumber(), certification);
+//        smsCertificationRepository.createSmsCertification(phone.getPhoneNumber(), certification);
+        mmsRepository.save(MMS.from(phone.getPhoneNumber(), certification));
 
         return certification;
     }
 
     @Transactional
     public void verifySms(String phoneNumber, String certification) {
-        if (isValid(phoneNumber, certification)) {
-            smsCertificationRepository.removeSmsCertification(phoneNumber);
+
+        final MMS findMMS = mmsRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new IllegalArgumentException("인증 정보가 존재하지 않습니다."));
+
+        final LocalDateTime createdAt = findMMS.getCreatedAt();
+
+        final long requestMillis = createdAt
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+
+        final long currentTimeMillis = System.currentTimeMillis();
+
+        if (!findMMS.getCertificationNumber().equals(certification) || isOverTime(findMMS, requestMillis, currentTimeMillis))
+            throw new IllegalArgumentException("인증번호가 일치하지 않거나 만료되었습니다.");
+        else mmsRepository.delete(findMMS);
+
+//        if (isValid(phoneNumber, certification)) {
+//            smsCertificationRepository.removeSmsCertification(phoneNumber);
+//        } else {
+//            throw new IllegalStateException("인증번호가 일치하지 않습니다.");
+//        }
+    }
+
+    private boolean isOverTime(MMS target, long requestMillis, long currentTimeMillis) {
+        if (MILLIS_MAX_LIMITS < (currentTimeMillis - requestMillis)) {
+            mmsRepository.delete(target);
+            return true;
         } else {
-            throw new IllegalStateException("인증번호가 일치하지 않습니다.");
+            return false;
         }
     }
 
     private boolean isValid(String phoneNumber, String certification) {
-        return smsCertificationRepository.hasKey(phoneNumber)
-                && smsCertificationRepository.getSmsCertification(phoneNumber).equals(certification);
+//        return smsCertificationRepository.hasKey(phoneNumber)
+//                && smsCertificationRepository.getSmsCertification(phoneNumber).equals(certification);
+        return false;
     }
 
     private void sending(PhoneNumber phone, String certification, String currentTime) throws JsonProcessingException, URISyntaxException {
