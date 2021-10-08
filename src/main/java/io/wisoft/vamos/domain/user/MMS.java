@@ -32,9 +32,6 @@ public class MMS extends BaseTimeEntity {
     @Column(name = "certification_number", nullable = false)
     private String certificationNumber;
 
-    @Column(name = "checked")
-    private boolean checked;
-
     protected MMS() {}
 
     private MMS(String phoneNumber, String certificationNumber) {
