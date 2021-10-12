@@ -215,4 +215,5 @@ gradle-app.setting
 # Custom
 src/main/resources/application*.yml
 src/main/resources/import.sql
+src/test/resources/application.yml
 *.log
