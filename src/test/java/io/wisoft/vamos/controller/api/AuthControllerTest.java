@@ -61,6 +61,7 @@ class AuthControllerTest {
                 .build();
     }
 
+    @Disabled
     @Test
     @DisplayName("01. 문자 메시지 인증번호 요청 테스트")
     @WithMockUser(roles = {"USER", "GUEST"})
@@ -101,6 +102,7 @@ class AuthControllerTest {
         ;
     }
 
+    @Disabled
     @Test
     @DisplayName("02. 인증번호 검증 요청 성공 테스트")
     @WithMockUser(roles = {"USER", "GUEST"})
