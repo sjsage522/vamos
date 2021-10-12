@@ -9,10 +9,26 @@ cache:
   - "$HOME/.m2/repository"
   - "$HOME/.gradle"
 script: "./gradlew clean build"
-notifications:
-  email:
-    recipients:
-    - sjsage522.dev@gmail.com
+#notifications:
+#  email:
+#    recipients:
+#    - sjsage522.dev@gmail.com
 before_install:
 - openssl aes-256-cbc -K $encrypted_1116e8e6e492_key -iv $encrypted_1116e8e6e492_iv
   -in application.yml.enc -out application.yml -d
+
+before_deploy:
+  - zip -r vamos *
+  - mkdir -p deploy
+  - mv vamos.zip deploy/vamos.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: vamos-bucket
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir: deploy
+    wait-until-deployed: true
