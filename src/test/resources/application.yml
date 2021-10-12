@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: vamos
+  profiles:
+    active: test
+    include: property
