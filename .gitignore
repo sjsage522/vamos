@@ -213,6 +213,6 @@ gradle-app.setting
 **/build/
 
 # Custom
-application*.yml
-import.sql
+src/main/resources/application*.yml
+src/main/resources/import.sql
 *.log
