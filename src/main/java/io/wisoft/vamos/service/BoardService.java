@@ -126,7 +126,7 @@ public class BoardService {
     }
 
     private Category getCategory(BoardUploadRequest boardUploadRequest) {
-        Category instance = Category.of(boardUploadRequest.getCategoryNameEN());
+        Category instance = Category.of(boardUploadRequest.getCategoryNumber());
         return categoryRepository.findByName(instance.getName())
                 .orElseThrow(NoMatchCategoryInfoException::new);
     }

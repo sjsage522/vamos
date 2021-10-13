@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -22,8 +23,8 @@ public class BoardUploadRequest {
     @Range(min = 0, max = Integer.MAX_VALUE)
     private int price;
 
-    @NotBlank
-    private String categoryNameEN;
+    @NotNull
+    private Long categoryNumber;
 
     @FileArrayLength(message = "파일의 갯수가 유효한지 확인해 주세요.")
     private MultipartFile[] files;
@@ -31,11 +32,11 @@ public class BoardUploadRequest {
     public BoardUploadRequest() {}
 
     @Builder
-    private BoardUploadRequest(String title, String content, int price, String categoryNameEN, MultipartFile[] files) {
+    private BoardUploadRequest(String title, String content, int price, Long categoryNumber, MultipartFile[] files) {
         this.title = title;
         this.content = content;
         this.price = price;
-        this.categoryNameEN = categoryNameEN;
+        this.categoryNumber = categoryNumber;
         this.files = files;
     }
 
@@ -45,7 +46,8 @@ public class BoardUploadRequest {
                 "title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", price=" + price +
-                ", categoryNameEN='" + categoryNameEN + '\'' +
+                ", categoryNumber=" + categoryNumber +
+                ", files.size=" + files.length +
                 '}';
     }
 }
