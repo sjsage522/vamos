@@ -22,7 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.test.web.servlet.MockMvc;
@@ -154,7 +153,7 @@ class BoardControllerTest {
                         .param("title", "글제목")
                         .param("content", "글내용")
                         .param("price", "1")
-                        .param("categoryNameEN", "DIGITAL_DEVICE")
+                        .param("categoryNumber", String.valueOf(1L))
                         .contentType(mediaType)
         );
 
