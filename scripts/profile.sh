@@ -11,7 +11,7 @@ function find_idle_profile()
     then
         CURRENT_PROFILE=prod2
     else
-        CURRENT_PROFILE=$(curl -s -k http://localhost/profile)
+        CURRENT_PROFILE=$(curl -s -k https://localhost/profile)
     fi
 
     if [ "${CURRENT_PROFILE}" == prod1 ]
