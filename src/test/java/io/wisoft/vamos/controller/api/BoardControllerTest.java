@@ -193,7 +193,7 @@ class BoardControllerTest {
                         .param("title", "글제목")
                         .param("content", "글내용")
                         .param("price", "1")
-                        .param("categoryNameEN", "DIGITAL_DEVICE")
+                        .param("categoryNumber", String.valueOf(1L))
                         .contentType(mediaType)
         );
 
@@ -237,7 +237,7 @@ class BoardControllerTest {
                         .param("title", "글제목")
                         .param("content", "글내용")
                         .param("price", "1")
-                        .param("categoryNameEN", "DIGITAL_DEVICE")
+                        .param("categoryNumber", String.valueOf(1L))
                         .contentType(mediaType)
         );
 

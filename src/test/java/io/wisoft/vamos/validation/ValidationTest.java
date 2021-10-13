@@ -40,7 +40,7 @@ public class ValidationTest {
                 .title("title")
                 .content("content")
                 .price(100)
-                .categoryNameEN("ETC")
+                .categoryNumber(1L)
                 .files(files)
                 .build();
 
@@ -61,7 +61,7 @@ public class ValidationTest {
                 .title("")
                 .content("")
                 .price(-1)
-                .categoryNameEN("")
+                .categoryNumber(null)
                 .build();
 
         final Set<ConstraintViolation<BoardUploadRequest>> violations = validator.validate(request);

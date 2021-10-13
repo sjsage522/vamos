@@ -61,7 +61,7 @@ class BoardServiceTest {
     @DisplayName("게시글 업로드 테스트 (첨부이미지가 없는 경우)")
     void board_upload_not_include_files_test() {
         //given
-        BoardUploadRequest boardUploadRequest = getBoardUploadRequest("title", "content", 1000, "DIGITAL_DEVICE");
+        BoardUploadRequest boardUploadRequest = getBoardUploadRequest("title", "content", 1000, 1L);
 
         UploadFile uploadFile = mock(UploadFile.class);
 
@@ -96,7 +96,7 @@ class BoardServiceTest {
     @DisplayName("게시글 업로드 테스트 (첨부이미지가 있는 경우)")
     void board_upload_include_files_test() throws IOException {
         //given
-        BoardUploadRequest boardUploadRequest = getBoardUploadRequest("title", "content", 1000, "DIGITAL_DEVICE");
+        BoardUploadRequest boardUploadRequest = getBoardUploadRequest("title", "content", 1000, 1L);
 
         String username = "testUser";
         String email = "junseok@gmail.com";
@@ -131,7 +131,7 @@ class BoardServiceTest {
     }
 
     private Category getCategory(BoardUploadRequest boardUploadRequest) {
-        return Category.of(boardUploadRequest.getCategoryNameEN());
+        return Category.of(boardUploadRequest.getCategoryNumber());
     }
 
     private User getUser(String username, String email) {
@@ -149,12 +149,12 @@ class BoardServiceTest {
         return Board.from(title, content, price, user, category);
     }
 
-    private BoardUploadRequest getBoardUploadRequest(String title, String content, int price, String categoryNameEN) {
+    private BoardUploadRequest getBoardUploadRequest(String title, String content, int price, Long categoryNumber) {
         BoardUploadRequest boardUploadRequest = new BoardUploadRequest();
         boardUploadRequest.setTitle(title);
         boardUploadRequest.setContent(content);
         boardUploadRequest.setPrice(price);
-        boardUploadRequest.setCategoryNameEN(categoryNameEN);
+        boardUploadRequest.setCategoryNumber(categoryNumber);
         return boardUploadRequest;
     }
 }
