@@ -1,9 +1,5 @@
-package io.wisoft.vamos.config;
+package io.wisoft.vamos.config.property;
 
-import io.wisoft.vamos.config.property.AmazonS3Property;
-import io.wisoft.vamos.config.property.EmailProperty;
-import io.wisoft.vamos.config.property.JwtProperty;
-import io.wisoft.vamos.config.property.NaverSmsProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
