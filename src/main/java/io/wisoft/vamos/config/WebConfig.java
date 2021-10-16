@@ -30,8 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
         resourceHandlerRegistry
-                .addResourceHandler("/js/app/**")
-                .addResourceLocations("classpath:/static/js/app/");
+                .addResourceHandler("/**")
+//                .addResourceHandler("*.html", "*.js", "*.css", "assets/**", "forms/**", "*.txt")
+                .addResourceLocations("classpath:/static/")
+        ;
     }
 
     @Override

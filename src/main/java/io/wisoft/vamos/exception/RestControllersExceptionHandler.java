@@ -108,24 +108,7 @@ public class RestControllersExceptionHandler {
                 .status(response.getStatus())
                 .body(failed(response));
     }
-
-    /**
-     * 요청 url mapping 핸들러를 찾지 못한 경우
-     */
-    @ExceptionHandler(NoHandlerFoundException.class)
-    protected ResponseEntity<ApiResult<ErrorResponse>> handleNoHandlerFoundException(
-            final NoHandlerFoundException ex) {
-        log.error("handleNoHandlerFoundException", ex);
-
-        final ErrorResponse response = ErrorResponse.from(
-                ErrorCode.HANDLER_NOT_FOUND
-        );
-
-        return ResponseEntity
-                .status(valueOf(response.getStatus()))
-                .body(failed(response));
-    }
-
+    
     /**
      * validation 에러
      */
