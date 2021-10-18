@@ -115,7 +115,7 @@ public class AuthController {
      * 인증번호 검증 요청
      */
     @PostMapping("/sms-certification/confirms")
-    public ApiResult<?> SmsVerification(@RequestBody SmsCertificationRequest request) {
+    public ApiResult<?> verifySms(@RequestBody SmsCertificationRequest request) {
         smsCertificationService.verifySms(request.getFrom(), request.getCertification());
         return succeed(ResponseEntity.ok("인증에 성공했습니다."));
     }

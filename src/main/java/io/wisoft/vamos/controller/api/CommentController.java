@@ -31,7 +31,7 @@ public class CommentController {
      * @return comment info
      */
     @PostMapping("/comment/board/{boardId}")
-    public ApiResult<CommentResponse> commentApply(
+    public ApiResult<CommentResponse> applyComment(
             @PathVariable Long boardId,
             @Valid @RequestBody CommentApplyRequest request,
             UserPrincipal userPrincipal) {
@@ -64,7 +64,7 @@ public class CommentController {
      * @return comment info
      */
     @PatchMapping("/comment/{commentId}")
-    public ApiResult<CommentResponse> commentUpdate(
+    public ApiResult<CommentResponse> updateComment(
             @PathVariable Long commentId,
             @Valid @RequestBody CommentUpdateRequest request,
             UserPrincipal userPrincipal) {
@@ -81,7 +81,7 @@ public class CommentController {
      * @return comment info
      */
     @DeleteMapping("/comment/{commentId}")
-    public ApiResult<String> commentDelete(
+    public ApiResult<String> deleteComment(
             @PathVariable Long commentId,
             UserPrincipal userPrincipal) {
         commentService.delete(commentId, userPrincipal);

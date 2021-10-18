@@ -31,7 +31,7 @@ public class BoardController {
      * @return board info
      */
     @PostMapping("/board")
-    public ApiResult<BoardResponse> boardUpload(
+    public ApiResult<BoardResponse> uploadBoard(
             @ModelAttribute @Valid BoardUploadRequest request,
             UserPrincipal userPrincipal
     ) {
@@ -81,7 +81,7 @@ public class BoardController {
      * @return board info
      */
     @PatchMapping("/board/{boardId}")
-    public ApiResult<BoardResponse> boardUpdate(
+    public ApiResult<BoardResponse> updateBoard(
             @PathVariable Long boardId,
             @ModelAttribute @Valid BoardUploadRequest request,
             UserPrincipal userPrincipal) {
@@ -99,7 +99,7 @@ public class BoardController {
      * 첨부파일의 경우에는 cascade 옵션을 통해 삭제한다.
      */
     @DeleteMapping("/board/{boardId}")
-    public ApiResult<String> boardDelete(@PathVariable Long boardId,
+    public ApiResult<String> deleteBoard(@PathVariable Long boardId,
                                          UserPrincipal userPrincipal) {
         boardService.delete(boardId, userPrincipal);
         return succeed("board is deleted successfully");

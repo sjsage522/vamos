@@ -60,7 +60,7 @@ public class UserController {
      * @return user info
      */
     @PatchMapping("/user/location")
-    public ApiResult<UserResponse> userLocationUpdate(
+    public ApiResult<UserResponse> updateUserLocation(
             @RequestBody UserLocationUpdateRequest request,
             UserPrincipal userPrincipal) {
         return succeed(

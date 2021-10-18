@@ -19,7 +19,7 @@ public class CategoryController {
     private final CategoryRepository categoryRepository;
 
     @GetMapping("/categories")
-    public ApiResult<List<CategoryResponse>> allCategories() {
+    public ApiResult<List<CategoryResponse>> getCategories() {
 
         return ApiResult.succeed(categoryRepository.findAll()
                 .stream()
