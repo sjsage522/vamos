@@ -31,8 +31,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
         resourceHandlerRegistry
                 .addResourceHandler("/**")
-//                .addResourceHandler("*.html", "*.js", "*.css", "assets/**", "forms/**", "*.txt")
                 .addResourceLocations("classpath:/static/")
+                .addResourceLocations("classpath:/templates/")
         ;
     }
 
