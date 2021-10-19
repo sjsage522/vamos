@@ -43,12 +43,12 @@ public class ChattingRoom extends BaseTimeEntity {
     @OneToMany(mappedBy = "chattingRoom")
     private List<ChattingContent> chattingContent = new ArrayList<>();
 
-    @Column(name = "chatting_category")
+    @Column(name = "chatting_room_status")
     @Enumerated(EnumType.STRING)
-    private ChattingCategory category;
+    private ChattingRoomStatus category;
 
     @Builder
-    private ChattingRoom(User buyer, Board board, List<ChattingContent> chattingContent, ChattingCategory category) {
+    private ChattingRoom(User buyer, Board board, List<ChattingContent> chattingContent, ChattingRoomStatus category) {
         this.seller = board.getUser();
         this.buyer = buyer;
         this.board = board;
