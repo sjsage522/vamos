@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users
     username     varchar(256) NOT NULL, --사용자 이름
     nickname     varchar(256),          --사용자 별명
     picture      varchar(512),          --사용자 프로필 사진
-    password     varchar(256) NOT NULL, --사용자 비밀번호
+    password     varchar(256),          --사용자 비밀번호
     role         varchar(256) NOT NULL, --사용자 권한
     phone_number varchar(256),          --사용자 연락처
     x            float8,                --사용자 위치(경도)
