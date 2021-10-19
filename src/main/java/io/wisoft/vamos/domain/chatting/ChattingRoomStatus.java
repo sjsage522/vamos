@@ -1,5 +1,5 @@
 package io.wisoft.vamos.domain.chatting;
 
-public enum ChattingCategory {
+public enum ChattingRoomStatus {
     NORMAL, TRADE
 }
