@@ -1,6 +1,8 @@
 package io.wisoft.vamos.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 /**
@@ -8,10 +10,19 @@ import lombok.Getter;
  * @param <T>
  */
 @Getter
+@ApiModel("응답 포맷")
 public class ApiResult<T> {
 
+    @ApiModelProperty(
+            value = "정상 응답 데이터",
+            name = "data"
+    )
     private final T data;
 
+    @ApiModelProperty(
+            value = "에러 응답 데이터",
+            name = "error"
+    )
     @JsonProperty("error")
     private final ErrorResponse errorTemplate;
 

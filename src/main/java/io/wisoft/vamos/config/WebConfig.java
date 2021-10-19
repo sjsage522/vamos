@@ -17,7 +17,6 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final BoardInfoCriteriaResolver boardInfoCriteriaResolver;
     private final UserPrincipalMethodArgumentResolver userPrincipalMethodArgumentResolver;
     private final long MAX_AGE_SECS = 3600;
 
@@ -38,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.addAll(List.of(boardInfoCriteriaResolver, userPrincipalMethodArgumentResolver));
+        argumentResolvers.addAll(List.of(userPrincipalMethodArgumentResolver));
     }
 
     @Override

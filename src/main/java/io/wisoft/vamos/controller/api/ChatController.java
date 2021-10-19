@@ -1,6 +1,8 @@
 package io.wisoft.vamos.controller.api;
 
-import io.wisoft.vamos.domain.board.BoardInfoCriteria;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import io.wisoft.vamos.domain.chatting.ChattingContent;
 import io.wisoft.vamos.domain.chatting.ChattingRoom;
 import io.wisoft.vamos.dto.api.ApiResult;
@@ -14,17 +16,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
 import static io.wisoft.vamos.dto.api.ApiResult.succeed;
 
-@RestController
 @RequiredArgsConstructor
+@Api(tags = "ChatController")
+@RestController
 @RequestMapping("api")
 public class ChatController {
 
@@ -36,17 +37,18 @@ public class ChatController {
     /**
      * 채팅으로 거래하기
      *
-     * @param boardInfoCriteria 게시글 정보 폼데이터
-     * @param userPrincipal      현재 로그인 사용자
+     * @param boardId       게시글 고유 id
+     * @param userPrincipal 현재 로그인 사용자
      * @return 채팅방 정보
      */
-    @GetMapping("/chat")
+    @ApiOperation(value = "채팅하기", notes = "판매자와 구매자의 채팅을 진행합니다.")
+    @ApiImplicitParam(name = "boardId", value = "게시글 고유 id", example = "1", required = true, dataTypeClass = Long.class, paramType = "path")
+    @GetMapping("/chat/{boardId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResult<ChatRoomResponse> startChatting(
-            BoardInfoCriteria boardInfoCriteria,
-            UserPrincipal userPrincipal) {
+            @PathVariable Long boardId,
+            @ApiIgnore UserPrincipal userPrincipal) {
 
-        Long boardId = boardInfoCriteria.getId();
         String buyerEmail = userPrincipal.getEmail();
 
         ChattingRoom chatRoom = chatService.findChatRoom(boardId, buyerEmail).orElse(
@@ -64,7 +66,7 @@ public class ChatController {
         return succeed(new ChatRoomResponse(chatRoom));
     }
 
-
+    @ApiOperation(value = "메시지 보내기", notes = "채팅 메시지를 전송합니다.")
     @MessageMapping("/broadcast")
     public void sendChat(ChatContentRequest request) {
         chatService.createChatContent(request);

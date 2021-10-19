@@ -1,6 +1,8 @@
 package io.wisoft.vamos.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 import javax.persistence.Column;
@@ -13,8 +15,14 @@ import static java.util.regex.Pattern.*;
 
 @Embeddable
 @Getter
+@ApiModel("사용자 연락처 공통 응답")
 public class PhoneNumber {
 
+    @ApiModelProperty(
+            value = "사용자 연락처",
+            name = "value",
+            example = "01012345678"
+    )
     @Column(name = "phone_number", unique = true)
     @JsonProperty("value")
     private String phoneNumber;

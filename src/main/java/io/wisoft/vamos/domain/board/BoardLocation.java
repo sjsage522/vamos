@@ -2,17 +2,36 @@ package io.wisoft.vamos.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
+@ApiModel("게시글 위치 공통 응답")
 public class BoardLocation {
 
+    @ApiModelProperty(
+            value = "경도",
+            name = "x",
+            example = "0.0"
+    )
     private Double x;
+
+    @ApiModelProperty(
+            value = "위도",
+            name = "y",
+            example = "0.0"
+    )
     private Double y;
 
+    @ApiModelProperty(
+            value = "주소명",
+            name = "addressName",
+            example = "test address"
+    )
     @JsonProperty("address_name")
     private String addressName;
 
