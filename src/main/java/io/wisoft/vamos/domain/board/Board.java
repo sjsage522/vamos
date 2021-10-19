@@ -54,7 +54,7 @@ public class Board extends BaseTimeEntity {
     @Embedded
     private BoardLocation location;
 
-    @Column(name = "board_status")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BoardStatus status;     /* default -> SALE */
 
