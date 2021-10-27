@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +90,13 @@ public class BoardResponse {
     @JsonProperty("photos")
     private final List<UploadFileResponse> uploadFiles;
 
+    @ApiModelProperty(
+            value = "게시글 생성 시간",
+            name = "createdAt"
+    )
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
     public BoardResponse(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
@@ -101,6 +109,7 @@ public class BoardResponse {
         this.uploadFiles = board.getUploadFiles().stream()
                 .map(UploadFileResponse::new)
                 .collect(Collectors.toList());
+        this.createdAt = board.getCreatedAt();
     }
 }
 
