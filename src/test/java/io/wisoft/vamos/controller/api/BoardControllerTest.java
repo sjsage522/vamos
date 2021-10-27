@@ -192,7 +192,7 @@ class BoardControllerTest {
                         .param("title", "글제목")
                         .param("content", "글내용")
                         .param("price", "1")
-                        .param("categoryNumber", String.valueOf(1L))
+                        .param("categoryNumber", String.valueOf(0L))
                         .contentType(mediaType)
         );
 

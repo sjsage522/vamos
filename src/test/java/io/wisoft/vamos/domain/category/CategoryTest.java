@@ -13,7 +13,7 @@ public class CategoryTest {
     @Test
     @DisplayName("카테고리 생성 성공 테스트")
     void create_category_succeed_test() {
-        final Category category1 = Category.of(1L);
+        final Category category1 = Category.of(0L);
         assertThat(category1.getName().getEn()).isEqualTo("DIGITAL_DEVICE");
 
         final Category category2 = Category.of("DIGITAL_DEVICE");
