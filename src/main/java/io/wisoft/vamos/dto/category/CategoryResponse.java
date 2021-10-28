@@ -29,7 +29,7 @@ public class CategoryResponse {
     private String[] names = new String[2];
 
     public CategoryResponse(Category category) {
-        this.id = category.getId();
+        this.id = (category.getId() - 1);
         CategoryName name = category.getName();
         String kr = name.getKr();
         String en = name.getEn();
