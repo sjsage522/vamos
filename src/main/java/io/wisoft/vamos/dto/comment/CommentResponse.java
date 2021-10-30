@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.wisoft.vamos.domain.comment.Comment;
+import io.wisoft.vamos.dto.user.UserResponse;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,12 +44,11 @@ public class CommentResponse {
     private Long boardId;
 
     @ApiModelProperty(
-            value = "사용자명",
-            name = "writer",
-            example = "tester"
+            value = "게시자 정보",
+            name = "user"
     )
-    @JsonProperty("writer")
-    private String username;
+    @JsonProperty("user_info")
+    private UserResponse user;
 
     @ApiModelProperty(
             value = "답글 내용",
@@ -64,10 +65,19 @@ public class CommentResponse {
     @JsonProperty("children")
     private final List<CommentResponse> children = new ArrayList<>();
 
+    @ApiModelProperty(
+            value = "답글 생성 시간",
+            name = "createdAt"
+    )
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
+
     public CommentResponse(Comment comment) {
         this.commentId = comment.getId();
         this.boardId = comment.getBoard().getId();
-        this.username = comment.getUser().getUsername();
+        this.user = new UserResponse(comment.getUser());
         this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt();
     }
 }
