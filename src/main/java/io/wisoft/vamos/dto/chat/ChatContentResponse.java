@@ -7,6 +7,8 @@ import io.wisoft.vamos.domain.chatting.ChattingContent;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @ApiModel("채팅 내용 공통 응답")
 public class ChatContentResponse {
@@ -25,7 +27,7 @@ public class ChatContentResponse {
             example = "tester"
     )
     @JsonProperty("writer")
-    private String writer;
+    private Long writerId;
 
     @ApiModelProperty(
             value = "채팅 내용",
@@ -35,10 +37,18 @@ public class ChatContentResponse {
     @JsonProperty("content")
     private String content;
 
+    @ApiModelProperty(
+            value = "채팅내용 생성 시간",
+            name = "createdAt"
+    )
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
     @Builder
     public ChatContentResponse(ChattingContent source) {
         id = source.getId();
-        writer = source.getWriter().getEmail();
+        writerId = source.getWriter().getId();
         content = source.getContent();
+        createdAt = source.getCreatedAt();
     }
 }

@@ -29,7 +29,7 @@ public class ChatRoomResponse {
             example = "seller@gmail.com"
     )
     @JsonProperty("seller")
-    private String seller;
+    private Long sellerId;
 
     @ApiModelProperty(
             value = "구매자 이메일",
@@ -37,7 +37,7 @@ public class ChatRoomResponse {
             example = "buyer@gmail.com"
     )
     @JsonProperty("buyer")
-    private String buyer;
+    private Long buyerId;
 
     @ApiModelProperty(
             value = "채팅 기록들",
@@ -49,11 +49,13 @@ public class ChatRoomResponse {
     @Builder
     public ChatRoomResponse(ChattingRoom source) {
         id = source.getId();
-        seller = source.getSeller().getEmail();
-        buyer = source.getBuyer().getEmail();
-        chatContentResponse = source.getChattingContent()
+        sellerId = source.getSeller().getId();
+        buyerId = source.getBuyer().getId();
+
+        //null 일경우 채팅방 최초생성
+        chatContentResponse = source.getChattingContent() != null ? source.getChattingContent()
                 .stream()
                 .map(ChatContentResponse::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()) : null;
     }
 }
