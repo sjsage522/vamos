@@ -33,6 +33,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User findByUserId(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                NoMatchUserInfoException::new
+        );
+    }
+
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         //TODO 페이징 처리
         return userRepository.findAll();
