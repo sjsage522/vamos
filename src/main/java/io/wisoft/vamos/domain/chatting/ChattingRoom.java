@@ -40,10 +40,10 @@ public class ChattingRoom extends BaseTimeEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @OneToMany(mappedBy = "chattingRoom")
+    @OneToMany(mappedBy = "chattingRoom", cascade = CascadeType.REMOVE)
     private List<ChattingContent> chattingContent = new ArrayList<>();
 
-    @Column(name = "chatting_room_status")
+    @Column(name = "category")
     @Enumerated(EnumType.STRING)
     private ChattingRoomStatus category;
 
