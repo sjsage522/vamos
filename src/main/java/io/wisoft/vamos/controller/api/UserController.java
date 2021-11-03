@@ -50,6 +50,20 @@ public class UserController {
     }
 
     /**
+     * 고유 식별값으로 사용자 조회
+     *
+     * @param id
+     * @return user info
+     */
+    @GetMapping("/user/{id}")
+    @ApiOperation(value = "사용자 단건 조회", notes = "id로 특정 사용자를 조회합니다.")
+    public ApiResult<UserResponse> getUserById(@PathVariable("id") Long id) {
+        return succeed(
+                new UserResponse(userService.findByUserId(id))
+        );
+    }
+
+    /**
      * 전체 사용자 조회
      *
      * @return user infos
