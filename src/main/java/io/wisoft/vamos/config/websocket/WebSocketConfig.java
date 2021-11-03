@@ -6,23 +6,17 @@ import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer, WebSocketConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/user");
-        config.setApplicationDestinationPrefixes("/app");
+        config.enableSimpleBroker("/topic");
+        config.setApplicationDestinationPrefixes("/");
     }
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/broadcast")
-                .setAllowedOrigins("*")
+        registry.addEndpoint("/api/webSocket")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
-    }
-
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new CustomWebSocketHandler(), "/_chat");
     }
 }
