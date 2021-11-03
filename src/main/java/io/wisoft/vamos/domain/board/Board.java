@@ -2,6 +2,7 @@ package io.wisoft.vamos.domain.board;
 
 import io.wisoft.vamos.domain.BaseTimeEntity;
 import io.wisoft.vamos.domain.category.Category;
+import io.wisoft.vamos.domain.chatting.ChattingRoom;
 import io.wisoft.vamos.domain.uploadphoto.UploadFile;
 import io.wisoft.vamos.domain.user.User;
 import io.wisoft.vamos.domain.user.UserLocation;
@@ -60,6 +61,9 @@ public class Board extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE) /* owner 가 아닌쪽을 정의 */
     private final List<UploadFile> uploadFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private final List<ChattingRoom> chattingRooms = new ArrayList<>();
 
     protected Board() {}
 
