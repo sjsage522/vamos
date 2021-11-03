@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS chatting_room
     PRIMARY KEY (id),
     CONSTRAINT fk_chatting_room_to_seller FOREIGN KEY (seller_id) REFERENCES users (id),
     CONSTRAINT fk_chatting_room_to_buyer FOREIGN KEY (buyer_id) REFERENCES users (id),
-    CONSTRAINT fk_chatting_room_to_board FOREIGN KEY (board_id) REFERENCES users (id)
+    CONSTRAINT fk_chatting_room_to_board FOREIGN KEY (board_id) REFERENCES board (id)
 );
 
 CREATE TABLE IF NOT EXISTS chatting_content
