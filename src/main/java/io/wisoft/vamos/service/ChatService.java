@@ -31,7 +31,7 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public ChattingRoom findChatRoom(Long chatRoomId) {
-        return chatRoomRepository.findById(chatRoomId).orElseThrow(NoMatchChattingRoomException::new);
+        return chatRoomRepository.findByIdWithContents(chatRoomId).orElseThrow(NoMatchChattingRoomException::new);
     }
 
     @Transactional
