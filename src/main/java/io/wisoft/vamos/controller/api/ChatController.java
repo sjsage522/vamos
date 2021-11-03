@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.wisoft.vamos.domain.chatting.ChattingContent;
 import io.wisoft.vamos.domain.chatting.ChattingRoom;
+import io.wisoft.vamos.domain.chatting.ChattingRoomStatus;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.chat.ChatContentRequest;
 import io.wisoft.vamos.dto.chat.ChatRoomResponse;
@@ -55,6 +56,7 @@ public class ChatController {
                 ChattingRoom.builder()
                         .board(boardService.findById(boardId))
                         .buyer(userService.findByEmail(buyerEmail))
+                        .category(ChattingRoomStatus.NORMAL)
                         .build()
         );
 
@@ -67,11 +69,11 @@ public class ChatController {
     }
 
     @ApiOperation(value = "메시지 보내기", notes = "채팅 메시지를 전송합니다.")
-    @MessageMapping("/broadcast")
+    @MessageMapping("/send")
     public void sendChat(ChatContentRequest request) {
         chatService.createChatContent(request);
         Long chatRoomId = request.getChatRoomId();
-        String url = "/user/" + chatRoomId + "/queue/messages";
+        String url = "/topic/" + chatRoomId + "/queue/messages";
         simpMessagingTemplate.convertAndSend(
                 url,
                 new ChatRoomResponse(
