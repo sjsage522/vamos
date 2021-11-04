@@ -1,20 +1,15 @@
 package io.wisoft.vamos.dto.chat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.wisoft.vamos.domain.chatting.ChattingRoom;
 import lombok.Builder;
-import lombok.Getter;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@ApiModel("채팅방 공통 응답")
 public class ChatRoomResponse {
-
     @ApiModelProperty(
             value = "채팅방 고유 id",
             name = "id",
@@ -44,7 +39,14 @@ public class ChatRoomResponse {
             name = "chatting_info"
     )
     @JsonProperty("chatting_info")
-    private List<ChatContentResponse> chatContentResponse = new ArrayList<>();
+    private List<ChatContentResponse> chatContentResponse;
+
+    @ApiModelProperty(
+            value = "채팅방 생성 시간",
+            name = "createdAt"
+    )
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
 
     @Builder
     public ChatRoomResponse(ChattingRoom source) {
@@ -57,5 +59,7 @@ public class ChatRoomResponse {
                 .stream()
                 .map(ChatContentResponse::new)
                 .collect(Collectors.toList()) : null;
+
+        createdAt = source.getCreatedAt();
     }
 }
