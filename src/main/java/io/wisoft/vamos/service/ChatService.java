@@ -25,8 +25,8 @@ public class ChatService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Optional<ChattingRoom> findChatRoom(Long boardId, String buyerEmail) {
-        return chatRoomRepository.findByBoardIdAndBuyer_Email(boardId, buyerEmail);
+    public Optional<ChattingRoom> findChatRoom(Long boardId, Long buyerId) {
+        return chatRoomRepository.findByBoardIdAndBuyerId(boardId, buyerId);
     }
 
     @Transactional(readOnly = true)
@@ -42,6 +42,16 @@ public class ChatService {
     @Transactional(readOnly = true)
     public List<ChattingContent> findChatContentByChatRoomId(Long chatRoomId) {
         return chatContentRepository.findAllByChattingRoomId(chatRoomId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChattingRoom> findChatRoomBySellerId(Long sellerId) {
+        return chatRoomRepository.findChattingRoomBySellerId(sellerId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ChattingRoom> findChatRoomByBuyerId(Long sellerId) {
+        return chatRoomRepository.findChattingRoomByBuyerId(sellerId);
     }
 
     @Transactional
