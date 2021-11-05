@@ -7,10 +7,12 @@ import io.wisoft.vamos.domain.board.Board;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.board.BoardResponse;
 import io.wisoft.vamos.dto.board.BoardUploadRequest;
+import io.wisoft.vamos.exception.NotYetSettingUserNicknameException;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -56,6 +58,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 리스트 조회", notes = "사용자 반경 내 게시글들을 조회 합니다.")
     @GetMapping("/boards")
     public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(@ApiIgnore UserPrincipal userPrincipal) {
+        if (StringUtils.isBlank(userPrincipal.getNickname())) throw new NotYetSettingUserNicknameException();
         List<Board> boards = boardService.findByEarthDistance(userPrincipal);
 
         List<BoardResponse> boardResponses = boards.stream()
