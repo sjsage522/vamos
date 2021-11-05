@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.wisoft.vamos.dto.api.ApiResult;
 import io.wisoft.vamos.dto.user.UserLocationUpdateRequest;
 import io.wisoft.vamos.dto.user.UserResponse;
+import io.wisoft.vamos.dto.user.UserUpdateRequest;
 import io.wisoft.vamos.security.UserPrincipal;
 import io.wisoft.vamos.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -94,4 +95,18 @@ public class UserController {
         );
     }
 
+    /**
+     * 사용자 정보 수정
+     * @param request dto (닉네임, 패스워드, 프로필)
+     * @return user info
+     */
+    @ApiOperation(value = "사용자 정보 수정", notes = "사용자의 정보를 수정합니다.")
+    @PatchMapping("/user")
+    public ApiResult<UserResponse> updateUser(
+            @RequestBody UserUpdateRequest request,
+            @ApiIgnore UserPrincipal userPrincipal) {
+        return succeed(
+                new UserResponse(userService.updateUser(userPrincipal.getEmail(), request))
+        );
+    }
 }
