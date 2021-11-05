@@ -80,9 +80,16 @@ public class User extends BaseTimeEntity {
         this.location = location;
     }
 
-    public User update(String username, String picture) {
+    public User updateWithOauthInfo(String username, String picture) {
         this.username = username;
         this.picture = picture;
+        return this;
+    }
+
+    public User update(User source) {
+        this.nickname = (source.getNickname() != null ? source.getNickname() : this.nickname);
+        this.password = (source.getPassword() != null ? source.getPassword() : this.password);
+        this.picture = (source.getPicture() != null ? source.getPicture() : this.picture);
         return this;
     }
 
