@@ -4,6 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.wisoft.vamos.domain.board.Board;
+import io.wisoft.vamos.domain.board.BoardStatus;
 import io.wisoft.vamos.domain.chatting.ChattingContent;
 import io.wisoft.vamos.domain.chatting.ChattingRoom;
 import io.wisoft.vamos.domain.chatting.ChattingRoomStatus;
@@ -59,9 +61,12 @@ public class ChatController {
 
         String buyerEmail = userPrincipal.getEmail();
 
+        Board findBoard = boardService.findById(boardId);
+        findBoard.changeStatus(BoardStatus.RESERVE);
+
         ChattingRoom chatRoom = chatService.findChatRoom(boardId, buyerId).orElse(
                 ChattingRoom.builder()
-                        .board(boardService.findById(boardId))
+                        .board(findBoard)
                         .buyer(userService.findByEmail(buyerEmail))
                         .category(ChattingRoomStatus.NORMAL)
                         .build()
