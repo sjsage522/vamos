@@ -79,13 +79,17 @@ public class AuthController {
     @ApiOperation(value = "로컬 회원가입", notes = "서비스 자체 회원가입 기능입니다.")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new IllegalArgumentException("Email address already in use.");
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일 입니다.");
+        }
+        if (userRepository.existsByNickname(signUpRequest.getNickname())) {
+            throw new IllegalArgumentException("이미 존재하는 별명 입니다.");
         }
 
         // Creating user's account
         User user = User.builder()
-                .username(signUpRequest.getName())
+                .username(signUpRequest.getNickname())
+                .nickname(signUpRequest.getNickname())
                 .email(signUpRequest.getEmail())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .provider(AuthProvider.local)
