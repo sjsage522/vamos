@@ -34,6 +34,7 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
     private final CommentRepository commentRepository;
     private final FileService fileService;
+    private final ChatService chatService;
 
     @Transactional
     public Board upload(BoardUploadRequest boardUploadRequest, UserPrincipal currentUser) {
@@ -97,6 +98,7 @@ public class BoardService {
         compareUser(target.getUser(), user, "다른 사용자의 게시글 입니다.");
 
         deleteComments(boardId);
+        chatService.deleteChatRoomsByBoardId(boardId);
         boardRepository.delete(target);
     }
 
