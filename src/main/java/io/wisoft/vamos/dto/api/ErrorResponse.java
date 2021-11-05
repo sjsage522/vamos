@@ -17,6 +17,13 @@ public class ErrorResponse {
     private final String message;
 
     @ApiModelProperty(
+            value = "에러 응답 상세코드",
+            name = "code",
+            example = "C001"
+    )
+    private final String code;
+
+    @ApiModelProperty(
             value = "에러 응답 상태코드",
             name = "status",
             example = "404"
@@ -26,10 +33,12 @@ public class ErrorResponse {
     private ErrorResponse(final ErrorCode errorCode) {
         this.message = errorCode.getMessage();
         this.status = errorCode.getStatus();
+        this.code = errorCode.getCode();
     }
 
-    private ErrorResponse(final String message, final int status) {
+    private ErrorResponse(final String message, final int status, final String code) {
         this.message = message;
+        this.code = code;
         this.status = status;
     }
 
@@ -38,7 +47,7 @@ public class ErrorResponse {
     }
 
     public static ErrorResponse of(final String message, final ErrorCode errorCode) {
-        return new ErrorResponse(message, errorCode.getStatus());
+        return new ErrorResponse(message, errorCode.getStatus(), errorCode.getCode());
     }
 
     public static ErrorResponse of(final BindingResult bindingResult, final ErrorCode errorCode) {
@@ -48,6 +57,6 @@ public class ErrorResponse {
                 .getDefaultMessage();
         final int status = errorCode.getStatus();
 
-        return new ErrorResponse(message, status);
+        return new ErrorResponse(message, status, errorCode.getCode());
     }
 }
