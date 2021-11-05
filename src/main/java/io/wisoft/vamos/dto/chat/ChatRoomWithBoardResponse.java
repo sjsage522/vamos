@@ -68,7 +68,7 @@ public class ChatRoomWithBoardResponse {
         buyerId = source.getBuyer().getId();
 
         //null 일경우 채팅방 최초생성
-        chatContentResponse = source.getChattingContent() != null ? source.getChattingContent()
+        chatContentResponse = source.getChattingContents() != null ? source.getChattingContents()
                 .stream()
                 .map(ChatContentResponse::new)
                 .collect(Collectors.toList()) : null;
