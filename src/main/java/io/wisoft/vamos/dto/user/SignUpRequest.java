@@ -12,13 +12,13 @@ import javax.validation.constraints.NotBlank;
 public class SignUpRequest {
 
     @ApiModelProperty(
-            value = "회원가입 사용자명",
-            name = "name",
+            value = "회원가입 사용자 별명",
+            name = "nickname",
             example = "tester",
             required = true
     )
     @NotBlank
-    private String name;
+    private String nickname;
 
     @ApiModelProperty(
             value = "회원가입 이메일",
