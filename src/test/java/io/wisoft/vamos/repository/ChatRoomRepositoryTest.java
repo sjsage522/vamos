@@ -11,6 +11,7 @@ import io.wisoft.vamos.domain.user.UserLocation;
 import io.wisoft.vamos.security.oauth2.AuthProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 
+@Disabled
 @DataJpaTest
 class ChatRoomRepositoryTest {
 
