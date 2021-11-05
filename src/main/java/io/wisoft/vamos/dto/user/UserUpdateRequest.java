@@ -21,7 +21,7 @@ public class UserUpdateRequest {
     @ApiModelProperty(
             value = "사용자 프로필",
             name = "picture",
-            example = "[profile url]]"
+            example = "profile url"
     )
     private String picture;
 
