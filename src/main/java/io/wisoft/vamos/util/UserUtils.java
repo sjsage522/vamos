@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public class UserUtils {
 
+    //인스턴스화 방지
+    private UserUtils() {}
+
     public static Optional<UserLocation> getUserLocation(User user) {
         UserLocation location = user.getLocation();
         return Optional.ofNullable(location);
