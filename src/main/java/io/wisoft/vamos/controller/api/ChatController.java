@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -115,6 +116,17 @@ public class ChatController {
                         .stream()
                         .map(ChatRoomWithBoardResponse::new)
                         .collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation(value = "채팅방 갯수 조회", notes = "게시글 고유 id로 게시글에 종속된 채팅방 갯수를 가져옵니다.")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/chatRooms/board/{boardId}")
+    public ApiResult<Integer> getChatRoomCountByBoardId(
+            @PathVariable Long boardId
+    ) {
+        return succeed(
+                chatService.findChatRoomsCount(boardId)
         );
     }
 }

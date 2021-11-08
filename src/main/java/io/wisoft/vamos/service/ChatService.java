@@ -37,6 +37,10 @@ public class ChatService {
         return chatRoomRepository.findByIdWithContents(chatRoomId).orElseThrow(NoMatchChattingRoomException::new);
     }
 
+    public Integer findChatRoomsCount(Long boardId) {
+        return chatRoomRepository.countChattingRoomByBoardId(boardId);
+    }
+
     @Transactional
     public ChattingRoom createChatRoom(ChattingRoom initChatRoom) {
         return chatRoomRepository.save(initChatRoom);

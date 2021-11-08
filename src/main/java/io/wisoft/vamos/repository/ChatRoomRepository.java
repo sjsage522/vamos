@@ -27,6 +27,8 @@ public interface ChatRoomRepository extends JpaRepository<ChattingRoom, Long> {
     @EntityGraph(attributePaths = {"chattingContents"})
     List<ChattingRoom> findChattingRoomWithContentsByBoardId(Long id);
 
+    Integer countChattingRoomByBoardId(Long id);
+
     @Modifying
     @Query("delete from ChattingRoom cr where cr.id in :ids")
     void deleteWithIds(List<Long> ids);
