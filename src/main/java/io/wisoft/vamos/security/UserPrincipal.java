@@ -1,6 +1,7 @@
 package io.wisoft.vamos.security;
 
 import io.wisoft.vamos.domain.user.User;
+import io.wisoft.vamos.domain.user.UserLocation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,14 +17,16 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private String email;
     private String password;
     private String nickname;
+    private UserLocation userLocation;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long id, String email, String password, String nickname, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String email, String password, String nickname, UserLocation location, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.userLocation = location;
         this.authorities = authorities;
     }
 
@@ -36,6 +39,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getNickname(),
+                user.getLocation(),
                 authorities
         );
     }
@@ -55,6 +59,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     public String getNickname() { return nickname; }
+
+    public UserLocation getUserLocation() { return userLocation; }
 
     @Override
     public String getPassword() {
