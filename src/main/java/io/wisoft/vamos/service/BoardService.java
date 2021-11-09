@@ -50,9 +50,9 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public List<Board> findByEarthDistance(UserPrincipal currentUser) {
-        User user = findUserByEmail(currentUser.getEmail());
-
-        UserLocation location = getUserLocation(user)
+        UserLocation location = getUserLocation(User.builder()
+                .location(currentUser.getUserLocation())
+                .build())
                 .orElseThrow(NotYetSettingUserLocationException::new);
         Double x = location.getX(); //longitude (경도)
         Double y = location.getY(); //latitude (위도)
