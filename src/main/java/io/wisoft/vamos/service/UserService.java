@@ -59,6 +59,9 @@ public class UserService {
     public User updateUser(String email, UserUpdateRequest request) {
         User findUser = findByEmail(email);
 
+        if (userRepository.existsByNickname(request.getNickname()))
+            throw new IllegalArgumentException("이미 존재하는 별명입니다.");
+
         User updateUser = User.builder()
                 .nickname(request.getNickname())
                 .password(request.getPassword() != null ? passwordEncoder.encode(request.getPassword()) : null)
