@@ -31,6 +31,8 @@ public class IpAddressCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String port = environment.getProperty("local.server.port");
 
+        log.info("request uri = {}", request.getRequestURI());
+
         boolean isCheck = false;
         for (String key : keys) {
             String clientIp = request.getHeader(key);
