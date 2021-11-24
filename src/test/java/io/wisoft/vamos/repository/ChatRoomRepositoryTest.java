@@ -21,7 +21,7 @@ import javax.persistence.EntityManager;
 
 import java.util.List;
 
-@Disabled
+//@Disabled
 @DataJpaTest
 class ChatRoomRepositoryTest {
 
@@ -78,13 +78,19 @@ class ChatRoomRepositoryTest {
                 .build();
         chatRoomRepository.save(chattingRoom);
 
-        ChattingContent chattingContent = ChattingContent.builder()
+        ChattingContent chattingContent1 = ChattingContent.builder()
                 .writer(user)
                 .chattingRoom(chattingRoom)
-                .content("chatting content")
+                .content("chatting content1")
                 .isRead(false)
                 .build();
-        chatContentRepository.save(chattingContent);
+        ChattingContent chattingContent2 = ChattingContent.builder()
+                .writer(user)
+                .chattingRoom(chattingRoom)
+                .content("chatting content2")
+                .isRead(false)
+                .build();
+        chatContentRepository.saveAll(List.of(chattingContent1, chattingContent2));
 
         entityManager.flush();
         entityManager.clear();
@@ -96,6 +102,6 @@ class ChatRoomRepositoryTest {
         final List<ChattingRoom> chattingRooms = chatRoomRepository.findChattingRoomWithContentsByBoardId(1L);
 
         Assertions.assertThat(chattingRooms.size()).isEqualTo(1);
-        Assertions.assertThat(chattingRooms.get(0).getChattingContents().size()).isEqualTo(1);
+        Assertions.assertThat(chattingRooms.get(0).getChattingContents().size()).isEqualTo(2);
     }
 }
