@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
@@ -32,18 +33,14 @@ public class IpAddressCheckFilter extends OncePerRequestFilter {
         String port = environment.getProperty("local.server.port");
 
         log.info("request uri = {}", request.getRequestURI());
-
-        boolean isCheck = false;
-        for (String key : keys) {
-            String clientIp = request.getHeader(key);
-            if (clientIp != null) {
-                log.info("[{}] : client ip = {}", port, clientIp);
-                isCheck = true;
-                break;
-            }
-        }
-
-        if (!isCheck) log.info("[{}] client ip = {}", port, request.getRemoteAddr());
+        keys.stream()
+                .map(request::getHeader)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .ifPresentOrElse(
+                        (clientIp) -> log.info("[{}] : client ip = {}", port, clientIp),
+                        () -> log.info("[{}] client ip = {}", port, request.getRemoteAddr()))
+        ;
 
         filterChain.doFilter(request, response);
     }
