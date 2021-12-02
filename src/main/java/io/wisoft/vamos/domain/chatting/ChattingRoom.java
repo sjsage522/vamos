@@ -63,4 +63,16 @@ public class ChattingRoom extends BaseTimeEntity {
     protected ChattingRoom() {
 
     }
+
+    @Override
+    public String toString() {
+        return "ChattingRoom{" +
+                "id=" + id +
+                ", seller=" + seller.getId() +
+                ", buyer=" + buyer.getId() +
+                ", board=" + board.getId() +
+                ", chattingContents=" + chattingContents.size() +
+                ", category=" + category.toString() +
+                '}';
+    }
 }
