@@ -54,7 +54,7 @@ public class BoardController {
      *
      * @return boardList info
      */
-    //TODO 사용자 반경 몇 키로미터 내의 게시글들 조회, 페이징
+    //TODO 게시글 페이징 (branch -> feature-board-paging)
     @ApiOperation(value = "게시글 리스트 조회", notes = "사용자 반경 내 게시글들을 조회 합니다.")
     @GetMapping("/boards")
     public ApiResult<List<BoardResponse>> getBoardListByEarthDistance(@ApiIgnore UserPrincipal userPrincipal) {
